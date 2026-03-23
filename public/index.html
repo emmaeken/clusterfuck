@@ -515,7 +515,44 @@ const THEMES = {
   ukraine:  { color:'#E8332A', light:'#FF6B64', bg:'rgba(232,51,42,0.08)',   shape:'square',   label:'Conflict', type:'conflict' },
   climate:  { color:'#1A9E5C', light:'#4DC98A', bg:'rgba(26,158,92,0.08)',   shape:'triangle', label:'Climate',  type:'climate'  },
 };
+const RELATION_STYLES = {
+  core:          { alpha: 0.42, width: 2.4, dash: [] },
+  institutional: { alpha: 0.28, width: 1.8, dash: [] },
+  context:       { alpha: 0.18, width: 1.2, dash: [5, 5] },
+  impact:        { alpha: 0.24, width: 1.5, dash: [2, 4] },
+  actor:         { alpha: 0.22, width: 1.4, dash: [1, 4] },
+  solution:      { alpha: 0.26, width: 1.6, dash: [] },
+  territory:     { alpha: 0.22, width: 1.3, dash: [3, 4] }
+};
+const NODE_COLOR_STYLES = {
+  politics: {
+    core:  { fill: '#1A6FDB', stroke: '#1458AD', label: '#1A1814' },
+    inst:  { fill: '#4D90E8', stroke: '#1A6FDB', label: '#2A2A2A' },
+    actor: { fill: '#7BB2F2', stroke: '#4D90E8', label: '#3A3A3A' },
+    ctx:   { fill: '#A9CDF8', stroke: '#7BB2F2', label: '#4A4A4A' },
+    impact:{ fill: '#D6E8FC', stroke: '#A9CDF8', label: '#5A5A5A' },
+    policy:{ fill: '#5B9EF5', stroke: '#1A6FDB', label: '#2F2F2F' }
+  },
 
+  ukraine: {
+    core:  { fill: '#E8332A', stroke: '#B8221B', label: '#1A1814' },
+    inst:  { fill: '#F05F58', stroke: '#E8332A', label: '#2A2A2A' },
+    actor: { fill: '#F58A84', stroke: '#F05F58', label: '#3A3A3A' },
+    ctx:   { fill: '#F9B7B3', stroke: '#F58A84', label: '#4A4A4A' },
+    impact:{ fill: '#FCDDDC', stroke: '#F9B7B3', label: '#5A5A5A' },
+    policy:{ fill: '#FF6B64', stroke: '#E8332A', label: '#333333' },
+    territory:{ fill: '#F7A19B', stroke: '#F05F58', label: '#3A3A3A' }
+  },
+
+  climate: {
+    core:   { fill: '#1A9E5C', stroke: '#127445', label: '#1A1814' },
+    inst:   { fill: '#46B97C', stroke: '#1A9E5C', label: '#2A2A2A' },
+    soln:   { fill: '#72CFA0', stroke: '#46B97C', label: '#2F2F2F' },
+    impact: { fill: '#9FDFC0', stroke: '#72CFA0', label: '#3F3F3F' },
+    policy: { fill: '#4DC98A', stroke: '#1A9E5C', label: '#2F2F2F' },
+    ctx:    { fill: '#CDEFE0', stroke: '#9FDFC0', label: '#5A5A5A' }
+  }
+};
 /* Icons as SVG path data for canvas drawing */
 const ICONS = {
   politics: (ctx, x, y, s) => {
@@ -592,17 +629,29 @@ const TOPICS = {
       media:'US political media', economy:'US economy inflation', foreign:'US foreign policy'
     },
     nodes:[
-      {id:'elections',    label:'Elections',      x:.50,y:.35,r:26,tier:'core'},
-      {id:'congress',     label:'Congress',       x:.30,y:.52,r:17,tier:'inst'},
-      {id:'supremecourt', label:'Supreme court',  x:.70,y:.50,r:17,tier:'inst'},
-      {id:'history',      label:'US history',     x:.22,y:.28,r:14,tier:'ctx'},
-      {id:'policy',       label:'Policy',         x:.72,y:.28,r:15,tier:'core'},
-      {id:'parties',      label:'Parties',        x:.38,y:.72,r:14,tier:'actor'},
-      {id:'media',        label:'Media',          x:.62,y:.72,r:13,tier:'actor'},
-      {id:'economy',      label:'Economy',        x:.82,y:.60,r:13,tier:'ctx'},
-      {id:'foreign',      label:'Foreign policy', x:.82,y:.38,r:12,tier:'ctx'},
+  {id:'elections',    label:'Elections',      x:.50,y:.35,r:26,tier:'core',  group:'core'},
+  {id:'congress',     label:'Congress',       x:.30,y:.52,r:17,tier:'inst',  group:'institutions'},
+  {id:'supremecourt', label:'Supreme court',  x:.70,y:.50,r:17,tier:'inst',  group:'institutions'},
+  {id:'history',      label:'US history',     x:.22,y:.28,r:14,tier:'ctx',   group:'context'},
+  {id:'policy',       label:'Policy',         x:.72,y:.28,r:15,tier:'core',  group:'institutions'},
+  {id:'parties',      label:'Parties',        x:.38,y:.72,r:14,tier:'actor', group:'actors'},
+  {id:'media',        label:'Media',          x:.62,y:.72,r:13,tier:'actor', group:'actors'},
+  {id:'economy',      label:'Economy',        x:.82,y:.60,r:13,tier:'ctx',   group:'impact'},
+  {id:'foreign',      label:'Foreign policy', x:.82,y:.38,r:12,tier:'ctx',   group:'impact'},
     ],
-    edges:[['elections','congress'],['elections','supremecourt'],['elections','history'],['elections','policy'],['congress','parties'],['congress','policy'],['supremecourt','policy'],['policy','economy'],['policy','foreign'],['parties','media'],['elections','media']],
+edges:[
+  {from:'elections', to:'congress',     rel:'core'},
+  {from:'elections', to:'supremecourt', rel:'core'},
+  {from:'elections', to:'history',      rel:'context'},
+  {from:'elections', to:'policy',       rel:'core'},
+  {from:'congress',  to:'parties',      rel:'actor'},
+  {from:'congress',  to:'policy',       rel:'institutional'},
+  {from:'supremecourt', to:'policy',    rel:'institutional'},
+  {from:'policy',    to:'economy',      rel:'impact'},
+  {from:'policy',    to:'foreign',      rel:'impact'},
+  {from:'parties',   to:'media',        rel:'actor'},
+  {from:'elections', to:'media',        rel:'actor'},
+],
     mapMarkers:[{x:155,y:185,label:'Washington D.C.',size:11},{x:148,y:178,label:'New York',size:8},{x:125,y:175,label:'Chicago',size:7},{x:72,y:190,label:'California',size:9},{x:178,y:200,label:'Atlanta',size:6}],
     tlEvents:[{x:60,label:"Midterms '22",hi:true},{x:230,label:'Speaker crisis',hi:false},{x:315,label:'Indictments',hi:true},{x:660,label:'Election',hi:true},{x:860,label:'Inauguration',hi:true}],
     staticData:{
@@ -622,17 +671,29 @@ const TOPICS = {
       energy:'Ukraine Russia energy infrastructure'
     },
     nodes:[
-      {id:'frontlines', label:'Frontlines',    x:.50,y:.35,r:26,tier:'core'},
-      {id:'diplomacy',  label:'Diplomacy',     x:.28,y:.52,r:17,tier:'core'},
-      {id:'aid',        label:'Western aid',   x:.72,y:.50,r:17,tier:'actor'},
-      {id:'nato',       label:'NATO',           x:.22,y:.28,r:15,tier:'inst'},
-      {id:'kyiv',       label:'Kyiv',           x:.72,y:.28,r:14,tier:'ctx'},
-      {id:'russia',     label:'Russia',         x:.36,y:.72,r:16,tier:'actor'},
-      {id:'sanctions',  label:'Sanctions',     x:.64,y:.72,r:13,tier:'policy'},
-      {id:'refugees',   label:'Refugees',      x:.82,y:.60,r:12,tier:'ctx'},
-      {id:'energy',     label:'Energy',         x:.82,y:.38,r:13,tier:'ctx'},
+  {id:'frontlines', label:'Frontlines',    x:.50,y:.35,r:26,tier:'core',   group:'core'},
+  {id:'diplomacy',  label:'Diplomacy',     x:.28,y:.52,r:17,tier:'core',   group:'process'},
+  {id:'aid',        label:'Western aid',   x:.72,y:.50,r:17,tier:'actor',  group:'allies'},
+  {id:'nato',       label:'NATO',          x:.22,y:.28,r:15,tier:'inst',   group:'allies'},
+  {id:'kyiv',       label:'Kyiv',          x:.72,y:.28,r:14,tier:'ctx',    group:'territory'},
+  {id:'russia',     label:'Russia',        x:.36,y:.72,r:16,tier:'actor',  group:'actors'},
+  {id:'sanctions',  label:'Sanctions',     x:.64,y:.72,r:13,tier:'policy', group:'effects'},
+  {id:'refugees',   label:'Refugees',      x:.82,y:.60,r:12,tier:'ctx',    group:'effects'},
+  {id:'energy',     label:'Energy',        x:.82,y:.38,r:13,tier:'ctx',    group:'effects'},
     ],
-    edges:[['frontlines','diplomacy'],['frontlines','aid'],['frontlines','kyiv'],['diplomacy','nato'],['diplomacy','russia'],['aid','nato'],['russia','sanctions'],['frontlines','refugees'],['energy','sanctions'],['kyiv','aid'],['russia','energy']],
+edges:[
+  {from:'frontlines', to:'diplomacy', rel:'core'},
+  {from:'frontlines', to:'aid',       rel:'core'},
+  {from:'frontlines', to:'kyiv',      rel:'territory'},
+  {from:'diplomacy',  to:'nato',      rel:'institutional'},
+  {from:'diplomacy',  to:'russia',    rel:'actor'},
+  {from:'aid',        to:'nato',      rel:'institutional'},
+  {from:'russia',     to:'sanctions', rel:'impact'},
+  {from:'frontlines', to:'refugees',  rel:'impact'},
+  {from:'energy',     to:'sanctions', rel:'impact'},
+  {from:'kyiv',       to:'aid',       rel:'core'},
+  {from:'russia',     to:'energy',    rel:'actor'},
+],
     mapMarkers:[{x:410,y:118,label:'Kyiv',size:12},{x:420,y:124,label:'Kharkiv',size:9},{x:415,y:132,label:'Zaporizhzhia',size:8},{x:455,y:108,label:'Moscow',size:11},{x:392,y:140,label:'Odesa',size:8}],
     tlEvents:[{x:30,label:'Invasion',hi:true},{x:175,label:'Mariupol',hi:false},{x:260,label:'Kherson liberated',hi:true},{x:440,label:'Counteroffensive',hi:true},{x:660,label:'Ceasefire talks',hi:true}],
     staticData:{
@@ -652,17 +713,29 @@ const TOPICS = {
       oceans:'ocean temperature coral reef'
     },
     nodes:[
-      {id:'emissions',    label:'Emissions',        x:.50,y:.35,r:26,tier:'core'},
-      {id:'policy',       label:'Policy',            x:.28,y:.52,r:17,tier:'core'},
-      {id:'xweather',     label:'Extreme weather',  x:.72,y:.50,r:17,tier:'impact'},
-      {id:'energy',       label:'Energy transition',x:.22,y:.28,r:15,tier:'soln'},
-      {id:'cop',          label:'COP summits',      x:.72,y:.28,r:14,tier:'inst'},
-      {id:'tech',         label:'Clean tech',       x:.36,y:.72,r:14,tier:'soln'},
-      {id:'finance',      label:'Climate finance',  x:.64,y:.72,r:13,tier:'policy'},
-      {id:'biodiversity', label:'Biodiversity',     x:.82,y:.60,r:12,tier:'impact'},
-      {id:'oceans',       label:'Oceans',            x:.82,y:.38,r:12,tier:'impact'},
+  {id:'emissions',    label:'Emissions',         x:.50,y:.35,r:26,tier:'core',   group:'core'},
+  {id:'policy',       label:'Policy',            x:.28,y:.52,r:17,tier:'core',   group:'governance'},
+  {id:'xweather',     label:'Extreme weather',   x:.72,y:.50,r:17,tier:'impact', group:'impacts'},
+  {id:'energy',       label:'Energy transition', x:.22,y:.28,r:15,tier:'soln',   group:'solutions'},
+  {id:'cop',          label:'COP summits',       x:.72,y:.28,r:14,tier:'inst',   group:'governance'},
+  {id:'tech',         label:'Clean tech',        x:.36,y:.72,r:14,tier:'soln',   group:'solutions'},
+  {id:'finance',      label:'Climate finance',   x:.64,y:.72,r:13,tier:'policy', group:'governance'},
+  {id:'biodiversity', label:'Biodiversity',      x:.82,y:.60,r:12,tier:'impact', group:'impacts'},
+  {id:'oceans',       label:'Oceans',            x:.82,y:.38,r:12,tier:'impact', group:'impacts'},
     ],
-    edges:[['emissions','xweather'],['emissions','policy'],['emissions','oceans'],['policy','cop'],['policy','energy'],['energy','tech'],['cop','finance'],['xweather','biodiversity'],['oceans','biodiversity'],['tech','finance'],['emissions','cop']],
+edges:[
+  {from:'emissions', to:'xweather',     rel:'impact'},
+  {from:'emissions', to:'policy',       rel:'core'},
+  {from:'emissions', to:'oceans',       rel:'impact'},
+  {from:'policy',    to:'cop',          rel:'institutional'},
+  {from:'policy',    to:'energy',       rel:'solution'},
+  {from:'energy',    to:'tech',         rel:'solution'},
+  {from:'cop',       to:'finance',      rel:'institutional'},
+  {from:'xweather',  to:'biodiversity', rel:'impact'},
+  {from:'oceans',    to:'biodiversity', rel:'impact'},
+  {from:'tech',      to:'finance',      rel:'solution'},
+  {from:'emissions', to:'cop',          rel:'institutional'},
+],
     mapMarkers:[{x:72,y:178,label:'California fires',size:10},{x:175,y:310,label:'Amazon',size:10},{x:400,y:285,label:'Sahel drought',size:9},{x:595,y:285,label:'Bangladesh floods',size:10},{x:665,y:348,label:'Great Barrier Reef',size:9}],
     tlEvents:[{x:55,label:'COP27',hi:false},{x:220,label:'IRA enacted',hi:true},{x:405,label:'COP28',hi:true},{x:500,label:'1.5°C breached',hi:true},{x:840,label:'COP29',hi:false}],
     staticData:{
@@ -752,11 +825,35 @@ function initGraph(key) {
   canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
   const now=performance.now();
-  nodes=TOPICS[key].nodes.map(n=>({
-    ...n, px:n.x*W, py:n.y*H,
-    alpha:0, scale:0.1,
-    bd:Math.random()*300, bt:now
-  }));
+  const centerX = W / 2;
+const centerY = H / 2;
+const outerRadius = Math.min(W, H) * 0.32;
+
+nodes = TOPICS[key].nodes.map((n, i, arr) => {
+  if (i === 0) {
+    return {
+      ...n,
+      px: centerX,
+      py: centerY,
+      alpha: 0,
+      scale: 0.1,
+      bd: Math.random() * 300,
+      bt: now
+    };
+  }
+
+  const angle = ((i - 1) / (arr.length - 1)) * Math.PI * 2 - Math.PI / 2;
+
+  return {
+    ...n,
+    px: centerX + Math.cos(angle) * outerRadius,
+    py: centerY + Math.sin(angle) * outerRadius,
+    alpha: 0,
+    scale: 0.1,
+    bd: Math.random() * 300,
+    bt: now
+  };
+});
   edgeList=TOPICS[key].edges;
   if(animId) cancelAnimationFrame(animId);
   loop(key);
@@ -784,12 +881,24 @@ function loop(key) {
   });
 
   // Edges
-  edgeList.forEach(([a,b])=>{
-    const na=nm[a],nb=nm[b]; if(!na||!nb) return;
-    const al=Math.min(na.alpha,nb.alpha)*0.3;
-    ctx.beginPath(); ctx.moveTo(na.px,na.py); ctx.lineTo(nb.px,nb.py);
-    ctx.strokeStyle=theme.color; ctx.globalAlpha=al; ctx.lineWidth=1; ctx.stroke();
-    ctx.globalAlpha=1;
+  edgeList.forEach(edge => {
+    const na = nm[edge.from];
+    const nb = nm[edge.to];
+    if (!na || !nb) return;
+
+    const style = RELATION_STYLES[edge.rel] || RELATION_STYLES.context;
+    const al = Math.min(na.alpha, nb.alpha) * style.alpha;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(na.px, na.py);
+    ctx.lineTo(nb.px, nb.py);
+    ctx.strokeStyle = theme.color;
+    ctx.globalAlpha = al;
+    ctx.lineWidth = style.width;
+    ctx.setLineDash(style.dash);
+    ctx.stroke();
+    ctx.restore();
   });
 
   // Nodes
@@ -810,12 +919,17 @@ function loop(key) {
     }
 
     // Node fill
-    const opac = n.tier==='core'?'ee': n.tier==='inst'?'99':'66';
-    ctx.fillStyle=color+opac;
-    ctx.strokeStyle=sel?color:color+'88';
-    ctx.lineWidth=sel?2.5:1;
-    drawShape(ctx,shape,n.px,n.py,r);
-    ctx.fill(); ctx.stroke();
+  const palette =
+    (NODE_COLOR_STYLES[key] && NODE_COLOR_STYLES[key][n.tier]) ||
+    { fill: color, stroke: color, label: '#5A574F' };
+
+      ctx.fillStyle = palette.fill;
+      ctx.strokeStyle = sel ? theme.color : palette.stroke;
+      ctx.lineWidth = sel ? 2.5 : 1.2;
+
+      drawShape(ctx, shape, n.px, n.py, r);
+      ctx.fill();
+      ctx.stroke();
 
     // Icon inside node (for core nodes only)
     if(n.tier==='core' && n.scale>0.7) {
@@ -832,7 +946,7 @@ function loop(key) {
     // Label
     ctx.font=`${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
     ctx.textAlign='center';
-    ctx.fillStyle=n.tier==='core'?'#1A1814':'#5A574F';
+    ctx.fillStyle = palette.label;
     ctx.globalAlpha=n.alpha;
     const labelY = shape==='triangle' ? n.py+r*1.05+14 : n.py+r+13;
     ctx.fillText(n.label, n.px, labelY);
@@ -954,7 +1068,7 @@ async function fetchNews(query, nodeId) {
 
     const text = await res.text();
     console.log("RAW RESPONSE:", text); 
-    const data = JSON.parse(text);
+  const data = JSON.parse(text);
     if(data.error) return{error:data.error};
     cache[nodeId]=data.articles||[];
     return cache[nodeId];
