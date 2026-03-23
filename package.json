@@ -1,0 +1,14 @@
+{
+  "name": "newsphere",
+  "version": "1.0.0",
+  "description": "Live news explorer with graph, timeline, and map",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
+  }
+}

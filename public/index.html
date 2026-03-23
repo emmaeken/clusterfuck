@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsphere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* Theme colors */
+  --red:    #E8332A;
+  --red2:   #FF6B64;
+  --redBg:  rgba(232,51,42,0.08);
+  --blue:   #1A6FDB;
+  --blue2:  #5B9EF5;
+  --blueBg: rgba(26,111,219,0.08);
+  --green:  #1A9E5C;
+  --green2: #4DC98A;
+  --greenBg:rgba(26,158,92,0.08);
+  /* Base */
+  --bg:     #F4F2EE;
+  --bg2:    #ECEAE5;
+  --bg3:    #E3E0D9;
+  --ink:    #1A1814;
+  --ink2:   #5A574F;
+  --ink3:   #9A9589;
+  --white:  #FDFCFA;
+  --border: rgba(26,24,20,0.1);
+  --border2:rgba(26,24,20,0.18);
+  --serif:  'Syne', sans-serif;
+  --body:   'Instrument Sans', sans-serif;
+  --r:      6px;
+  --rl:     12px;
+}
+html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
+.screen { position: absolute; inset: 0; display: none; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ═══════════════════════════════
+   SHARED SHAPE SYSTEM
+═══════════════════════════════ */
+/* Circles = politics (blue) */
+/* Squares = conflict (red) */
+/* Triangles = climate (green) */
+
+.shape-circle { border-radius: 50%; }
+.shape-square { border-radius: 3px; }
+.shape-triangle { /* via clip-path */ clip-path: polygon(50% 0%, 0% 100%, 100% 100%); border-radius: 0; }
+
+/* Category badges */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--serif); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px 3px 6px; border-radius: 4px;
+}
+.badge-shape { width: 8px; height: 8px; flex-shrink: 0; }
+.badge-shape.sq { border-radius: 1px; }
+.badge-shape.tr { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
+.badge.politics { background: var(--blueBg); color: var(--blue); }
+.badge.conflict { background: var(--redBg);  color: var(--red);  }
+.badge.climate  { background: var(--greenBg);color: var(--green);}
+.badge.politics .badge-shape { background: var(--blue); border-radius: 50%; }
+.badge.conflict .badge-shape { background: var(--red);  border-radius: 1px; }
+.badge.climate  .badge-shape { background: var(--green); clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
+
+/* ═══════════════════════════════
+   LANDING
+═══════════════════════════════ */
+#landing {
+  background: var(--bg);
+  align-items: center; justify-content: center;
+  overflow-y: auto; padding: 32px 24px;
+  position: relative;
+}
+
+/* Background geometric decoration */
+.bg-geo {
+  position: absolute; pointer-events: none; opacity: 0.04;
+}
+.bg-geo svg { width: 100%; height: 100%; }
+
+.land-inner {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 900px;
+  display: flex; flex-direction: column; align-items: center; gap: 40px;
+}
+
+.land-header { text-align: center; }
+.land-wordmark {
+  font-family: var(--serif); font-size: clamp(48px,8vw,80px);
+  font-weight: 800; letter-spacing: -2px; line-height: 0.95;
+  color: var(--ink);
+}
+.land-wordmark em { font-style: normal; opacity: 0.3; }
+.land-sub {
+  font-size: 14px; color: var(--ink2); margin-top: 12px;
+  font-weight: 400; letter-spacing: 0.01em;
+}
+
+/* Legend row */
+.legend-row {
+  display: flex; gap: 24px; align-items: center;
+  padding: 12px 20px; background: var(--white);
+  border: 1px solid var(--border); border-radius: var(--rl);
+}
+.legend-row span { font-size: 11px; color: var(--ink3); font-family: var(--serif); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; }
+.leg-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink2); font-weight: 500; }
+.leg-shape { width: 14px; height: 14px; flex-shrink: 0; }
+.leg-shape.circ { border-radius: 50%; background: var(--blue); }
+.leg-shape.sq   { border-radius: 2px; background: var(--red); }
+.leg-shape.tri  { background: var(--green); clip-path: polygon(50% 0%,0% 100%,100% 100%); }
+
+/* Topic cards */
+.topic-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; width: 100%; }
+
+.tc {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--rl); padding: 28px 24px 22px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 0.22s cubic-bezier(.22,.68,0,1.2), border-color 0.18s, box-shadow 0.2s;
+}
+.tc:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
+.tc:active { transform: scale(0.98); }
+
+.tc-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.tc-icon-area {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; position: relative;
+}
+.tc-shape-bg {
+  position: absolute; inset: 0;
+  opacity: 0.12;
+}
+.tc-shape-bg.circ { border-radius: 50%; }
+.tc-shape-bg.sq   { border-radius: 6px; }
+.tc-shape-bg.tri  { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
+.tc-icon { width: 26px; height: 26px; position: relative; z-index: 1; }
+.tc-name { font-family: var(--serif); font-size: 22px; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
+.tc-desc { font-size: 12px; color: var(--ink2); line-height: 1.6; }
+.tc-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.tc-nodes { font-size: 11px; color: var(--ink3); font-family: var(--serif); font-weight: 600; }
+.tc-arrow { font-size: 16px; opacity: 0.3; transition: opacity 0.15s, transform 0.15s; }
+.tc:hover .tc-arrow { opacity: 0.8; transform: translateX(4px); }
+
+.tc.politics .tc-top-bar { background: var(--blue); }
+.tc.politics .tc-name    { color: var(--blue); }
+.tc.politics .tc-shape-bg { background: var(--blue); }
+.tc.conflict .tc-top-bar { background: var(--red); }
+.tc.conflict .tc-name    { color: var(--red); }
+.tc.conflict .tc-shape-bg { background: var(--red); }
+.tc.climate  .tc-top-bar { background: var(--green); }
+.tc.climate  .tc-name    { color: var(--green); }
+.tc.climate  .tc-shape-bg { background: var(--green); }
+
+/* How-it-works strip */
+.how-strip {
+  display: flex; gap: 0; width: 100%;
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--rl);
+  overflow: hidden;
+}
+.how-item { flex: 1; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+.how-item:not(:last-child) { border-right: 1px solid var(--border); }
+.how-num { font-family: var(--serif); font-size: 22px; font-weight: 800; opacity: 0.15; line-height: 1; }
+.how-text { font-size: 12px; color: var(--ink2); line-height: 1.4; }
+.how-text strong { display: block; color: var(--ink); font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+
+/* ═══════════════════════════════
+   EXPLORE
+═══════════════════════════════ */
+#explore { background: var(--bg); }
+
+/* TOPBAR */
+.topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 16px; height: 48px; flex-shrink: 0;
+  background: var(--white); border-bottom: 1px solid var(--border);
+}
+.back-btn {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--ink2); cursor: pointer;
+  padding: 5px 9px; border: 1px solid var(--border); border-radius: 6px;
+  background: none; font-family: var(--body);
+  transition: background 0.15s;
+}
+.back-btn:hover { background: var(--bg2); }
+.tb-badge { margin-right: 4px; }
+.tb-title { font-family: var(--serif); font-size: 16px; font-weight: 700; flex: 1; }
+.view-sw { display: flex; gap: 2px; background: var(--bg2); padding: 3px; border-radius: 7px; }
+.vbtn { font-size: 11px; font-family: var(--body); cursor: pointer; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--ink3); transition: background 0.15s, color 0.15s; font-weight: 500; }
+.vbtn.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+/* GRID */
+.main-grid { flex: 1; display: grid; grid-template-columns: 1fr 300px; grid-template-rows: 1fr 90px; min-height: 0; }
+
+/* CANVAS */
+.canvas-wrap { grid-column:1; grid-row:1; position: relative; overflow: hidden; background: var(--bg); }
+#gc { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-wrap { position: absolute; inset: 0; display: none; background: var(--bg2); overflow: hidden; }
+.map-wrap.on { display: block; }
+#map-svg { width: 100%; height: 100%; }
+.canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink3); background: var(--white); border: 1px solid var(--border); padding: 3px 8px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* SIDEBAR */
+.sidebar { grid-column:2; grid-row:1/3; background: var(--white); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.sb-top { padding: 14px 14px 11px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sb-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.2; margin-top: 6px; }
+.sb-scroll { flex: 1; overflow-y: auto; padding: 14px; }
+.sb-scroll::-webkit-scrollbar { width: 3px; }
+.sb-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+.sb-empty { font-size: 13px; color: var(--ink3); line-height: 1.7; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.chip { font-size: 11px; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border); color: var(--ink2); cursor: pointer; background: var(--bg); transition: background 0.12s; font-weight: 500; }
+.chip:hover { background: var(--bg2); }
+
+/* NEWS CARD in sidebar */
+.news-card { border: 1.5px solid var(--border); border-radius: var(--rl); overflow: hidden; margin-bottom: 12px; }
+.nc-head { padding: 12px 13px 10px; }
+.nc-headline { font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-top: 7px; }
+.nc-body { padding: 0 13px 13px; }
+.nc-summary { font-size: 12px; color: var(--ink2); line-height: 1.75; }
+.nc-divider { height: 1px; background: var(--border); margin: 10px 0; }
+.nc-facts-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 6px; font-family: var(--serif); font-weight: 700; display: flex; align-items: center; gap: 5px; }
+.fact { font-size: 12px; color: var(--ink2); line-height: 1.5; padding: 3px 0 3px 12px; position: relative; }
+.fact::before { content: '—'; position: absolute; left: 0; color: var(--ink3); font-size: 10px; top: 5px; }
+
+.live-section { margin-top: 12px; }
+.live-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: var(--serif); font-weight: 700; }
+.ldot { width: 5px; height: 5px; border-radius: 50%; animation: lp 2s infinite; }
+@keyframes lp { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.article-item { padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.12s; }
+.article-item:last-child { border-bottom: none; }
+.article-item:hover { opacity: 0.65; }
+.art-src { font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; font-family: var(--serif); font-weight: 600; }
+.art-title { font-size: 12px; color: var(--ink); line-height: 1.4; font-weight: 400; }
+.art-time { font-size: 10px; color: var(--ink3); margin-top: 3px; }
+.art-loading { font-size: 12px; color: var(--ink3); padding: 8px 0; font-style: italic; display: flex; gap: 7px; align-items: center; }
+.mini-spin { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border2); animation: spin 0.75s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.err-box { background: #FFF5F5; border: 1px solid rgba(232,51,42,0.2); border-radius: var(--r); padding: 10px 12px; font-size: 12px; color: #A02020; line-height: 1.6; margin-top: 8px; }
+
+/* TIMELINE */
+.tl-area { grid-column:1; grid-row:2; background: var(--white); border-top: 1px solid var(--border); padding: 10px 16px; }
+.tl-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.tl-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); font-family: var(--serif); font-weight: 700; }
+.tl-date { font-size: 12px; color: var(--ink2); font-family: var(--serif); font-weight: 600; }
+#tl-svg { width: 100%; height: 44px; cursor: ew-resize; display: block; }
+
+/* TOOLTIP */
+#tt { position: fixed; background: var(--ink); color: var(--white); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-family: var(--serif); font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.1s; white-space: nowrap; z-index: 100; letter-spacing: 0.02em; }
+#tt.show { opacity: 1; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.land-inner > * { animation: fadeUp 0.5s cubic-bezier(.22,.68,0,1.2) both; }
+.land-inner > *:nth-child(2){animation-delay:.07s}
+.land-inner > *:nth-child(3){animation-delay:.13s}
+.land-inner > *:nth-child(4){animation-delay:.19s}
+.land-inner > *:nth-child(5){animation-delay:.24s}
+</style>
+</head>
+<body>
+<div id="tt"></div>
+
+<!-- ═══════════════════════
+     LANDING
+═══════════════════════ -->
+<div class="screen active" id="landing">
+
+  <!-- Background geometric pattern -->
+  <svg class="bg-geo" style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+    <!-- scattered shapes as texture -->
+    <circle cx="80" cy="120" r="40" fill="#1A6FDB"/>
+    <rect x="1080" y="80" width="55" height="55" rx="4" fill="#E8332A"/>
+    <polygon points="600,30 570,80 630,80" fill="#1A9E5C"/>
+    <circle cx="1150" cy="400" r="28" fill="#1A6FDB"/>
+    <rect x="20" y="500" width="45" height="45" rx="3" fill="#E8332A"/>
+    <polygon points="900,620 875,665 925,665" fill="#1A9E5C"/>
+    <circle cx="350" cy="640" r="20" fill="#1A6FDB"/>
+    <rect x="700" y="580" width="32" height="32" rx="2" fill="#E8332A"/>
+    <circle cx="1050" cy="600" r="15" fill="#1A9E5C"/>
+    <polygon points="150,680 130,715 170,715" fill="#1A6FDB"/>
+    <rect x="480" y="30" width="25" height="25" rx="2" fill="#1A9E5C"/>
+    <circle cx="820" cy="50" r="18" fill="#E8332A"/>
+  </svg>
+
+  <div class="land-inner">
+
+    <!-- HEADER -->
+    <div class="land-header">
+      <div class="land-wordmark">News<em>sphere</em></div>
+      <div class="land-sub">Explore news as connected knowledge — not a scroll</div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend-row">
+      <span>Visual system</span>
+      <div class="leg-item"><div class="leg-shape circ"></div>Circle = Politics</div>
+      <div class="leg-item"><div class="leg-shape sq"></div>Square = Conflict</div>
+      <div class="leg-item"><div class="leg-shape tri"></div>Triangle = Climate</div>
+      <div style="width:1px;height:16px;background:var(--border);margin:0 4px"></div>
+      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="var(--blue)"/></svg>Blue = Politics</div>
+      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" rx="1" fill="var(--red)"/></svg>Red = Conflict</div>
+      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 1,11 11,11" fill="var(--green)"/></svg>Green = Climate</div>
+    </div>
+
+    <!-- TOPIC CARDS -->
+    <div class="topic-row">
+
+      <!-- POLITICS -->
+      <div class="tc politics" onclick="openTopic('politics')">
+        <div class="tc-top-bar"></div>
+        <div class="tc-icon-area">
+          <div class="tc-shape-bg circ"></div>
+          <!-- Government building icon -->
+          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
+            <rect x="2" y="22" width="22" height="2" rx="1" fill="var(--blue)"/>
+            <rect x="4" y="10" width="18" height="12" fill="none" stroke="var(--blue)" stroke-width="1.5"/>
+            <path d="M13 4L22 10H4L13 4Z" fill="var(--blue)" opacity="0.4"/>
+            <path d="M13 4L22 10H4L13 4Z" stroke="var(--blue)" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="10" y="14" width="6" height="8" rx="0.5" fill="var(--blue)" opacity="0.5"/>
+            <rect x="6" y="13" width="3" height="4" rx="0.5" fill="var(--blue)" opacity="0.4"/>
+            <rect x="17" y="13" width="3" height="4" rx="0.5" fill="var(--blue)" opacity="0.4"/>
+            <line x1="13" y1="1" x2="13" y2="4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge politics" style="margin-bottom:10px">
+          <div class="badge-shape" style="border-radius:50%;background:var(--blue)"></div>
+          Politics · Circle
+        </div>
+        <div class="tc-name">US Politics</div>
+        <div class="tc-desc">Elections, Congress, Supreme Court, and the forces shaping American governance</div>
+        <div class="tc-meta">
+          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- CONFLICT -->
+      <div class="tc conflict" onclick="openTopic('ukraine')">
+        <div class="tc-top-bar"></div>
+        <div class="tc-icon-area">
+          <div class="tc-shape-bg sq"></div>
+          <!-- Explosion/warning icon -->
+          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
+            <polygon points="13,2 16,9 23,9 17.5,14 20,21 13,17 6,21 8.5,14 3,9 10,9" fill="var(--red)" opacity="0.3"/>
+            <polygon points="13,2 16,9 23,9 17.5,14 20,21 13,17 6,21 8.5,14 3,9 10,9" stroke="var(--red)" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="13" cy="13" r="2" fill="var(--red)"/>
+          </svg>
+        </div>
+        <div class="badge conflict" style="margin-bottom:10px">
+          <div class="badge-shape sq" style="background:var(--red)"></div>
+          Conflict · Square
+        </div>
+        <div class="tc-name">Ukraine Conflict</div>
+        <div class="tc-desc">Frontlines, diplomacy, aid flows, and the geopolitical fault lines shifting Europe</div>
+        <div class="tc-meta">
+          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- CLIMATE -->
+      <div class="tc climate" onclick="openTopic('climate')">
+        <div class="tc-top-bar"></div>
+        <div class="tc-icon-area">
+          <div class="tc-shape-bg tri"></div>
+          <!-- Globe/wave icon -->
+          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
+            <circle cx="13" cy="11" r="8" stroke="var(--green)" stroke-width="1.5"/>
+            <path d="M5 11 Q9 8 13 11 Q17 14 21 11" stroke="var(--green)" stroke-width="1.2" fill="none"/>
+            <path d="M7 7 Q10 5 13 7 Q16 5 19 7" stroke="var(--green)" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M13 3 L13 19" stroke="var(--green)" stroke-width="0.8" opacity="0.4"/>
+            <!-- Wave below -->
+            <path d="M3 21 Q6 19 9 21 Q12 23 15 21 Q18 19 21 21 Q22 21 23 21" stroke="var(--green)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="badge climate" style="margin-bottom:10px">
+          <div class="badge-shape tr" style="background:var(--green)"></div>
+          Climate · Triangle
+        </div>
+        <div class="tc-name">Climate</div>
+        <div class="tc-desc">Emissions, extreme weather, the energy transition, and the policy ambition gap</div>
+        <div class="tc-meta">
+          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-arrow">→</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-strip">
+      <div class="how-item">
+        <div class="how-num">01</div>
+        <div class="how-text"><strong>Pick a topic</strong>Each theme uses a consistent color + shape across all views</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">02</div>
+        <div class="how-text"><strong>Explore the graph</strong>Nodes cluster by relationship — click one to read live news</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">03</div>
+        <div class="how-text"><strong>Navigate the map</strong>Events are pinned geographically with color + shape markers</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">04</div>
+        <div class="how-text"><strong>Scrub the timeline</strong>Move through time and see how stories evolve</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════
+     EXPLORE
+═══════════════════════ -->
+<div class="screen" id="explore">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5L3.5 5.5L7 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Overview
+    </button>
+    <div class="tb-badge" id="tb-badge"></div>
+    <div class="tb-title" id="tb-title"></div>
+    <div class="view-sw">
+      <button class="vbtn active" id="vbtn-graph" onclick="switchView('graph')">Graph</button>
+      <button class="vbtn" id="vbtn-map" onclick="switchView('map')">Map</button>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- CANVAS AREA -->
+    <div class="canvas-wrap" id="canvas-wrap">
+      <canvas id="gc"></canvas>
+
+      <!-- MAP -->
+      <div class="map-wrap" id="map-wrap">
+        <svg id="map-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet">
+          <!-- ocean background -->
+          <rect width="800" height="480" fill="#D8E8F0"/>
+          <!-- Continents -->
+          <path d="M60 78 Q92 58 152 68 Q202 76 232 98 Q250 118 242 158 Q234 193 217 218 Q197 243 172 248 Q142 250 117 233 Q87 213 72 183 Q54 153 57 118 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M217 28 Q252 18 277 33 Q292 48 282 68 Q270 83 247 80 Q224 76 217 58 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M167 268 Q197 253 222 268 Q242 288 240 328 Q237 368 227 398 Q212 423 194 433 Q174 436 160 418 Q144 396 142 360 Q140 323 150 293 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M342 68 Q377 53 412 63 Q437 73 447 98 Q452 123 440 146 Q424 166 397 170 Q367 173 347 153 Q327 131 330 103 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M362 33 Q382 20 400 28 Q412 40 407 58 Q397 66 380 63 Q364 58 362 43 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M352 183 Q390 168 422 180 Q452 196 460 236 Q467 276 462 316 Q457 356 444 388 Q427 416 404 426 Q380 433 360 418 Q337 400 330 366 Q322 328 327 288 Q332 246 352 183 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M447 53 Q512 36 592 43 Q657 50 712 68 Q747 83 752 113 Q754 143 737 166 Q712 188 677 196 Q637 203 592 198 Q547 192 507 178 Q467 162 450 136 Q434 108 447 53 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M452 173 Q480 160 510 168 Q530 178 534 203 Q537 226 522 240 Q504 252 482 248 Q460 242 450 223 Q442 203 452 173 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M540 193 Q564 186 582 198 Q597 213 592 248 Q587 276 574 293 Q560 306 546 300 Q532 290 527 263 Q522 236 532 208 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M640 298 Q680 286 717 296 Q744 308 750 338 Q754 368 740 393 Q722 416 697 423 Q667 428 644 412 Q620 393 616 360 Q614 328 640 298 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <path d="M717 108 Q730 98 742 106 Q750 116 746 130 Q738 140 726 136 Q714 130 717 108 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.8"/>
+          <!-- Grid lines -->
+          <line x1="0" y1="240" x2="800" y2="240" stroke="rgba(0,0,0,0.05)" stroke-width="0.5" stroke-dasharray="4 4"/>
+          <line x1="400" y1="0" x2="400" y2="480" stroke="rgba(0,0,0,0.05)" stroke-width="0.5" stroke-dasharray="4 4"/>
+          <text x="8" y="236" font-size="8" fill="rgba(0,0,0,0.2)" font-family="'Syne',sans-serif">Equator</text>
+          <g id="map-markers"></g>
+        </svg>
+      </div>
+      <div class="canvas-hint" id="canvas-hint">Click node · Drag pan</div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-top">
+        <div id="sb-badge"></div>
+        <div class="sb-title" id="sb-title">Graph overview</div>
+      </div>
+      <div class="sb-scroll" id="sb-scroll">
+        <p class="sb-empty">Click any node in the graph to load live headlines and context.</p>
+        <div class="chip-row" id="chip-row"></div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="tl-area">
+      <div class="tl-meta">
+        <div class="tl-lbl">Timeline</div>
+        <div class="tl-date" id="tl-date">Drag to navigate</div>
+      </div>
+      <svg id="tl-svg" viewBox="0 0 1000 44" preserveAspectRatio="none">
+        <line x1="0" y1="28" x2="1000" y2="28" stroke="var(--border2)" stroke-width="1"/>
+        <line x1="0" y1="28" x2="600" y2="28" stroke-width="2" id="tl-prog" stroke-linecap="round"/>
+        <g id="tl-evts"></g>
+        <g id="tl-scrub-g">
+          <!-- scrubber shape changes per topic -->
+          <circle cx="600" cy="28" r="7" id="tl-scrub-circ" display="block"/>
+          <rect x="593" y="21" width="14" height="14" rx="2" id="tl-scrub-rect" display="none"/>
+          <polygon points="600,21 593,35 607,35" id="tl-scrub-tri" display="none"/>
+        </g>
+        <line x1="0"   y1="24" x2="0"   y2="32" stroke="var(--border2)" stroke-width="1"/>
+        <line x1="333" y1="25" x2="333" y2="31" stroke="var(--border2)" stroke-width="0.5"/>
+        <line x1="666" y1="25" x2="666" y2="31" stroke="var(--border2)" stroke-width="0.5"/>
+        <line x1="1000" y1="24" x2="1000" y2="32" stroke="var(--border2)" stroke-width="1"/>
+        <text x="4"   y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2022</text>
+        <text x="337" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2023</text>
+        <text x="670" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2024</text>
+        <text x="996" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600" text-anchor="end">2025</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════
+   VISUAL SYSTEM
+══════════════════════ */
+const THEMES = {
+  politics: { color:'#1A6FDB', light:'#5B9EF5', bg:'rgba(26,111,219,0.08)', shape:'circle', label:'Politics', type:'politics' },
+  ukraine:  { color:'#E8332A', light:'#FF6B64', bg:'rgba(232,51,42,0.08)',   shape:'square',   label:'Conflict', type:'conflict' },
+  climate:  { color:'#1A9E5C', light:'#4DC98A', bg:'rgba(26,158,92,0.08)',   shape:'triangle', label:'Climate',  type:'climate'  },
+};
+
+/* Icons as SVG path data for canvas drawing */
+const ICONS = {
+  politics: (ctx, x, y, s) => {
+    // Capitol building silhouette
+    ctx.beginPath();
+    ctx.rect(x-s*.4, y-s*.1, s*.8, s*.5);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x, y-s*.6); ctx.lineTo(x+s*.5, y-s*.1); ctx.lineTo(x-s*.5, y-s*.1);
+    ctx.fill();
+  },
+  ukraine: (ctx, x, y, s) => {
+    // Star burst / explosion
+    const pts = 8;
+    ctx.beginPath();
+    for (let i=0;i<pts*2;i++) {
+      const angle = (i*Math.PI)/pts - Math.PI/2;
+      const r = i%2===0 ? s*.5 : s*.22;
+      const px = x+r*Math.cos(angle), py = y+r*Math.sin(angle);
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+    }
+    ctx.closePath(); ctx.fill();
+  },
+  climate: (ctx, x, y, s) => {
+    // Globe + wave
+    ctx.beginPath();
+    ctx.arc(x, y-s*.1, s*.38, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x-s*.5, y+s*.3);
+    for(let i=0;i<=1;i+=0.1) {
+      ctx.lineTo(x-s*.5+i*s, y+s*.3+Math.sin(i*Math.PI*2)*s*.1);
+    }
+    ctx.stroke();
+  }
+};
+
+/* Shape drawing functions for canvas */
+function drawShape(ctx, shape, x, y, size) {
+  ctx.beginPath();
+  if (shape === 'circle') {
+    ctx.arc(x, y, size, 0, Math.PI*2);
+  } else if (shape === 'square') {
+    ctx.rect(x-size, y-size, size*2, size*2);
+  } else if (shape === 'triangle') {
+    ctx.moveTo(x, y-size*1.1);
+    ctx.lineTo(x-size, y+size*.8);
+    ctx.lineTo(x+size, y+size*.8);
+    ctx.closePath();
+  }
+}
+
+/* Badge HTML generator */
+function badgeHTML(topicKey) {
+  const t = THEMES[topicKey];
+  const shapeStyle = t.shape === 'circle'
+    ? `border-radius:50%;background:${t.color}`
+    : t.shape === 'square'
+    ? `border-radius:1px;background:${t.color}`
+    : `clip-path:polygon(50% 0%,0% 100%,100% 100%);background:${t.color}`;
+  return `<span class="badge ${t.type}" style="background:${t.bg};color:${t.color}"><span class="badge-shape" style="${shapeStyle}"></span>${t.label}</span>`;
+}
+
+/* ══════════════════════
+   TOPIC DATA
+══════════════════════ */
+const TOPICS = {
+  politics: {
+    label:'US Politics', key:'politics',
+    queries:{
+      elections:'US elections 2024 2025', congress:'US Congress legislation',
+      supremecourt:'Supreme Court ruling', history:'American democracy history',
+      policy:'US federal policy White House', parties:'Republican Democrat party',
+      media:'US political media', economy:'US economy inflation', foreign:'US foreign policy'
+    },
+    nodes:[
+      {id:'elections',    label:'Elections',      x:.50,y:.35,r:26,tier:'core'},
+      {id:'congress',     label:'Congress',       x:.30,y:.52,r:17,tier:'inst'},
+      {id:'supremecourt', label:'Supreme court',  x:.70,y:.50,r:17,tier:'inst'},
+      {id:'history',      label:'US history',     x:.22,y:.28,r:14,tier:'ctx'},
+      {id:'policy',       label:'Policy',         x:.72,y:.28,r:15,tier:'core'},
+      {id:'parties',      label:'Parties',        x:.38,y:.72,r:14,tier:'actor'},
+      {id:'media',        label:'Media',          x:.62,y:.72,r:13,tier:'actor'},
+      {id:'economy',      label:'Economy',        x:.82,y:.60,r:13,tier:'ctx'},
+      {id:'foreign',      label:'Foreign policy', x:.82,y:.38,r:12,tier:'ctx'},
+    ],
+    edges:[['elections','congress'],['elections','supremecourt'],['elections','history'],['elections','policy'],['congress','parties'],['congress','policy'],['supremecourt','policy'],['policy','economy'],['policy','foreign'],['parties','media'],['elections','media']],
+    mapMarkers:[{x:155,y:185,label:'Washington D.C.',size:11},{x:148,y:178,label:'New York',size:8},{x:125,y:175,label:'Chicago',size:7},{x:72,y:190,label:'California',size:9},{x:178,y:200,label:'Atlanta',size:6}],
+    tlEvents:[{x:60,label:"Midterms '22",hi:true},{x:230,label:'Speaker crisis',hi:false},{x:315,label:'Indictments',hi:true},{x:660,label:'Election',hi:true},{x:860,label:'Inauguration',hi:true}],
+    staticData:{
+      elections:{headline:'2024: a polarised nation at the polls',summary:'Record voter registration and early turnout defined the race, shaped by deep partisan divisions and unprecedented legal proceedings around both major candidates.',facts:['~65% turnout — highest since 1900','7 swing states held ~80 decisive electoral votes','Campaign spending exceeded $10B for first time']},
+      policy:{headline:'Policy gridlock defines the 118th Congress',summary:'From debt ceiling standoffs to failed immigration bills, only 27 laws passed — the least productive session in modern history.',facts:['27 bills enacted — historic low','Debt ceiling resolved June 2023','Immigration bill failed despite bipartisan Senate support']},
+      congress:{headline:'A House divided by historic dysfunction',summary:'The ouster of Speaker Kevin McCarthy — the first ever — followed by weeks of failed replacement votes exposed how narrow margins can paralyse the chamber.',facts:['First Speaker removed by House vote in US history','4 Speaker votes failed before replacement','House GOP held a 5-seat majority for most of the term']},
+    }
+  },
+
+  ukraine: {
+    label:'Ukraine Conflict', key:'ukraine',
+    queries:{
+      frontlines:'Ukraine Russia frontline Donetsk', diplomacy:'Ukraine peace talks ceasefire',
+      aid:'Ukraine western military aid', nato:'NATO Ukraine alliance',
+      kyiv:'Kyiv Ukraine capital war', russia:'Russia war Ukraine military',
+      sanctions:'Russia sanctions economy', refugees:'Ukraine refugees displaced',
+      energy:'Ukraine Russia energy infrastructure'
+    },
+    nodes:[
+      {id:'frontlines', label:'Frontlines',    x:.50,y:.35,r:26,tier:'core'},
+      {id:'diplomacy',  label:'Diplomacy',     x:.28,y:.52,r:17,tier:'core'},
+      {id:'aid',        label:'Western aid',   x:.72,y:.50,r:17,tier:'actor'},
+      {id:'nato',       label:'NATO',           x:.22,y:.28,r:15,tier:'inst'},
+      {id:'kyiv',       label:'Kyiv',           x:.72,y:.28,r:14,tier:'ctx'},
+      {id:'russia',     label:'Russia',         x:.36,y:.72,r:16,tier:'actor'},
+      {id:'sanctions',  label:'Sanctions',     x:.64,y:.72,r:13,tier:'policy'},
+      {id:'refugees',   label:'Refugees',      x:.82,y:.60,r:12,tier:'ctx'},
+      {id:'energy',     label:'Energy',         x:.82,y:.38,r:13,tier:'ctx'},
+    ],
+    edges:[['frontlines','diplomacy'],['frontlines','aid'],['frontlines','kyiv'],['diplomacy','nato'],['diplomacy','russia'],['aid','nato'],['russia','sanctions'],['frontlines','refugees'],['energy','sanctions'],['kyiv','aid'],['russia','energy']],
+    mapMarkers:[{x:410,y:118,label:'Kyiv',size:12},{x:420,y:124,label:'Kharkiv',size:9},{x:415,y:132,label:'Zaporizhzhia',size:8},{x:455,y:108,label:'Moscow',size:11},{x:392,y:140,label:'Odesa',size:8}],
+    tlEvents:[{x:30,label:'Invasion',hi:true},{x:175,label:'Mariupol',hi:false},{x:260,label:'Kherson liberated',hi:true},{x:440,label:'Counteroffensive',hi:true},{x:660,label:'Ceasefire talks',hi:true}],
+    staticData:{
+      frontlines:{headline:'Eastern front: a war of attrition',summary:'Donetsk and Zaporizhzhia have settled into grinding positional warfare as Russia deploys mass infantry with drone and glide-bomb support.',facts:['Ukraine controls ~80% of pre-2022 territory','Russia occupies ~18% of Ukrainian land','Drones account for ~40% of all strike attempts']},
+      diplomacy:{headline:'Peace talks: fragile openings, deep scepticism',summary:'Multiple ceasefire frameworks floated — no agreement reached as both sides maintain incompatible positions on territory and sovereignty.',facts:['90+ countries signed Swiss peace communiqué','US, China, Turkey all claim mediator roles','No formal ceasefire line agreed']},
+      russia:{headline:"Russia's war economy and the sustainability question",summary:'Sanctions disrupted the economy while the Kremlin pivoted to a war footing, dramatically increasing defence spending. Parallel imports and Chinese trade partially offset the impact.',facts:["Defence budget exceeded 6% of GDP in 2024",'Oil exports rerouted to China and India','300,000+ casualties according to US estimates']},
+    }
+  },
+
+  climate: {
+    label:'Climate', key:'climate',
+    queries:{
+      emissions:'carbon emissions greenhouse gas', policy:'climate policy COP agreement',
+      xweather:'extreme weather flooding heatwave', energy:'renewable energy solar wind',
+      cop:'COP climate summit UNFCCC', tech:'clean technology battery EV',
+      finance:'climate finance green investment', biodiversity:'biodiversity species loss',
+      oceans:'ocean temperature coral reef'
+    },
+    nodes:[
+      {id:'emissions',    label:'Emissions',        x:.50,y:.35,r:26,tier:'core'},
+      {id:'policy',       label:'Policy',            x:.28,y:.52,r:17,tier:'core'},
+      {id:'xweather',     label:'Extreme weather',  x:.72,y:.50,r:17,tier:'impact'},
+      {id:'energy',       label:'Energy transition',x:.22,y:.28,r:15,tier:'soln'},
+      {id:'cop',          label:'COP summits',      x:.72,y:.28,r:14,tier:'inst'},
+      {id:'tech',         label:'Clean tech',       x:.36,y:.72,r:14,tier:'soln'},
+      {id:'finance',      label:'Climate finance',  x:.64,y:.72,r:13,tier:'policy'},
+      {id:'biodiversity', label:'Biodiversity',     x:.82,y:.60,r:12,tier:'impact'},
+      {id:'oceans',       label:'Oceans',            x:.82,y:.38,r:12,tier:'impact'},
+    ],
+    edges:[['emissions','xweather'],['emissions','policy'],['emissions','oceans'],['policy','cop'],['policy','energy'],['energy','tech'],['cop','finance'],['xweather','biodiversity'],['oceans','biodiversity'],['tech','finance'],['emissions','cop']],
+    mapMarkers:[{x:72,y:178,label:'California fires',size:10},{x:175,y:310,label:'Amazon',size:10},{x:400,y:285,label:'Sahel drought',size:9},{x:595,y:285,label:'Bangladesh floods',size:10},{x:665,y:348,label:'Great Barrier Reef',size:9}],
+    tlEvents:[{x:55,label:'COP27',hi:false},{x:220,label:'IRA enacted',hi:true},{x:405,label:'COP28',hi:true},{x:500,label:'1.5°C breached',hi:true},{x:840,label:'COP29',hi:false}],
+    staticData:{
+      emissions:{headline:'Global CO₂ hits 3-million-year high',summary:'GHG emissions reached record levels in 2024 despite accelerating renewables. The gap between current policy and 1.5°C widened for the third consecutive year.',facts:['CO₂: 424 ppm — 3M-year high','Fossil fuel subsidies: $7T globally in 2023','295 GW of renewables added in 2023']},
+      xweather:{headline:'Extreme weather breaks records everywhere',summary:"Attribution science detects climate fingerprints in virtually every major weather event, accelerating insurance losses and displacing tens of millions.",facts:['2024: hottest year on record','Extreme weather losses exceeded $280B','32M people displaced by climate disasters in 2023']},
+      energy:{headline:'The energy transition: faster than expected, still too slow',summary:'Solar and wind capacity additions broke records, with solar alone adding more than all other sources combined for the first time. Yet absolute emissions kept rising.',facts:['Solar capacity: 447 GW added in 2023 — a record','EVs reached 18% of new global car sales','Coal consumption hit all-time high despite clean growth']},
+    }
+  }
+};
+
+/* ══════════════════════
+   STATE
+══════════════════════ */
+let currentTopic=null, selectedNode=null, currentView='graph';
+let nodes=[], edgeList=[], animId=null;
+let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
+let cache={};
+
+/* ══════════════════════
+   NAVIGATION
+══════════════════════ */
+function openTopic(key) {
+  currentTopic=key; selectedNode=null; currentView='graph';
+  panOffset={x:0,y:0}; cache={};
+  const topic=TOPICS[key]; const theme=THEMES[key];
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('explore').classList.add('active');
+  document.getElementById('tb-title').textContent=topic.label;
+  document.getElementById('tb-badge').innerHTML=badgeHTML(key);
+  document.getElementById('sb-badge').innerHTML=badgeHTML(key);
+  document.getElementById('sb-title').textContent='Graph overview';
+  document.getElementById('vbtn-graph').classList.add('active');
+  document.getElementById('vbtn-map').classList.remove('active');
+  document.getElementById('map-wrap').classList.remove('on');
+  document.getElementById('canvas-hint').style.display='';
+  // Update timeline scrubber shape
+  updateScrubShape(key, theme.color);
+  renderSidebarDefault(topic);
+  renderTimeline(topic, theme);
+  renderMap(topic, theme);
+  requestAnimationFrame(()=>initGraph(key));
+}
+
+function goBack() {
+  document.getElementById('explore').classList.remove('active');
+  document.getElementById('landing').classList.add('active');
+  if(animId){cancelAnimationFrame(animId);animId=null;}
+}
+
+function switchView(v) {
+  currentView=v;
+  document.getElementById('vbtn-graph').classList.toggle('active',v==='graph');
+  document.getElementById('vbtn-map').classList.toggle('active',v==='map');
+  document.getElementById('map-wrap').classList.toggle('on',v==='map');
+  document.getElementById('canvas-hint').style.display=v==='map'?'none':'';
+}
+
+function renderSidebarDefault(topic) {
+  const s=document.getElementById('sb-scroll');
+  s.innerHTML='<p class="sb-empty">Click any node to load live headlines and context for that perspective.</p>';
+  const row=document.createElement('div'); row.className='chip-row';
+  topic.nodes.slice(0,6).forEach(n=>{
+    const c=document.createElement('div'); c.className='chip'; c.textContent=n.label;
+    c.onclick=()=>selectNode(n.id); row.appendChild(c);
+  });
+  s.appendChild(row);
+}
+
+function updateScrubShape(key, color) {
+  const circ=document.getElementById('tl-scrub-circ');
+  const rect=document.getElementById('tl-scrub-rect');
+  const tri=document.getElementById('tl-scrub-tri');
+  [circ,rect,tri].forEach(el=>{el.setAttribute('display','none');el.setAttribute('fill',color);});
+  if (key==='politics') circ.setAttribute('display','block');
+  else if (key==='ukraine') rect.setAttribute('display','block');
+  else tri.setAttribute('display','block');
+  document.getElementById('tl-prog').setAttribute('stroke',color);
+}
+
+/* ══════════════════════
+   GRAPH ENGINE
+══════════════════════ */
+function initGraph(key) {
+  const canvas=document.getElementById('gc');
+  const wrap=document.getElementById('canvas-wrap');
+  const W=wrap.clientWidth, H=wrap.clientHeight;
+  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const now=performance.now();
+  nodes=TOPICS[key].nodes.map(n=>({
+    ...n, px:n.x*W, py:n.y*H,
+    alpha:0, scale:0.1,
+    bd:Math.random()*300, bt:now
+  }));
+  edgeList=TOPICS[key].edges;
+  if(animId) cancelAnimationFrame(animId);
+  loop(key);
+}
+
+function loop(key) {
+  const canvas=document.getElementById('gc'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), dpr=devicePixelRatio;
+  const topic=TOPICS[key], theme=THEMES[key];
+  const now=performance.now();
+  const W=canvas.width/dpr, H=canvas.height/dpr;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save(); ctx.scale(dpr,dpr); ctx.translate(panOffset.x,panOffset.y);
+
+  // Subtle grid
+  ctx.strokeStyle='rgba(0,0,0,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const nm={};
+  nodes.forEach(n=>{
+    const e=now-n.bt-n.bd;
+    if(e>0){n.alpha=Math.min(1,e/460);n.scale=0.1+0.9*Math.min(1,e/360);}
+    nm[n.id]=n;
+  });
+
+  // Edges
+  edgeList.forEach(([a,b])=>{
+    const na=nm[a],nb=nm[b]; if(!na||!nb) return;
+    const al=Math.min(na.alpha,nb.alpha)*0.3;
+    ctx.beginPath(); ctx.moveTo(na.px,na.py); ctx.lineTo(nb.px,nb.py);
+    ctx.strokeStyle=theme.color; ctx.globalAlpha=al; ctx.lineWidth=1; ctx.stroke();
+    ctx.globalAlpha=1;
+  });
+
+  // Nodes
+  nodes.forEach(n=>{
+    if(n.alpha<=0) return;
+    const sel=selectedNode===n.id;
+    const r=n.r*n.scale;
+    const {color,light,shape}=theme;
+    ctx.save(); ctx.globalAlpha=n.alpha;
+
+    // Selection glow
+    if(sel){
+      ctx.save();
+      ctx.globalAlpha=n.alpha*0.18;
+      drawShape(ctx,shape,n.px,n.py,r+14);
+      ctx.fillStyle=color; ctx.fill();
+      ctx.restore();
+    }
+
+    // Node fill
+    const opac = n.tier==='core'?'ee': n.tier==='inst'?'99':'66';
+    ctx.fillStyle=color+opac;
+    ctx.strokeStyle=sel?color:color+'88';
+    ctx.lineWidth=sel?2.5:1;
+    drawShape(ctx,shape,n.px,n.py,r);
+    ctx.fill(); ctx.stroke();
+
+    // Icon inside node (for core nodes only)
+    if(n.tier==='core' && n.scale>0.7) {
+      ctx.save();
+      ctx.fillStyle='rgba(255,255,255,0.7)';
+      ctx.strokeStyle='rgba(255,255,255,0.7)';
+      ctx.lineWidth=1.2;
+      ctx.globalAlpha=n.alpha*0.8;
+      const iconFn=ICONS[key];
+      if(iconFn) iconFn(ctx, n.px, n.py, r*0.55);
+      ctx.restore();
+    }
+
+    // Label
+    ctx.font=`${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
+    ctx.textAlign='center';
+    ctx.fillStyle=n.tier==='core'?'#1A1814':'#5A574F';
+    ctx.globalAlpha=n.alpha;
+    const labelY = shape==='triangle' ? n.py+r*1.05+14 : n.py+r+13;
+    ctx.fillText(n.label, n.px, labelY);
+    ctx.restore();
+  });
+
+  ctx.restore();
+  animId=requestAnimationFrame(()=>loop(key));
+}
+
+/* ══════════════════════
+   CANVAS EVENTS
+══════════════════════ */
+function lp(e){
+  const r=document.getElementById('gc').getBoundingClientRect();
+  return{x:e.clientX-r.left-panOffset.x,y:e.clientY-r.top-panOffset.y};
+}
+
+function hitTest(pos) {
+  const theme=THEMES[currentTopic];
+  for(const n of nodes){
+    const dx=pos.x-n.px,dy=pos.y-n.py;
+    let hit=false;
+    if(theme.shape==='circle') hit=Math.sqrt(dx*dx+dy*dy)<n.r+10;
+    else if(theme.shape==='square') hit=Math.abs(dx)<n.r+8&&Math.abs(dy)<n.r+8;
+    else hit=Math.sqrt(dx*dx+dy*dy)<n.r+10;
+    if(hit) return n;
+  }
+  return null;
+}
+
+document.getElementById('gc').addEventListener('click',async e=>{
+  const n=hitTest(lp(e));
+  if(n){await selectNode(n.id);}
+  else{selectedNode=null;if(currentTopic)renderSidebarDefault(TOPICS[currentTopic]);}
+});
+document.getElementById('gc').addEventListener('mousemove',e=>{
+  if(isPanning){panOffset.x=e.clientX-panStart.x;panOffset.y=e.clientY-panStart.y;return;}
+  const p=lp(e), tt=document.getElementById('tt');
+  const n=hitTest(p);
+  if(n){tt.textContent=n.label;tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-6)+'px';tt.classList.add('show');document.getElementById('gc').style.cursor='pointer';}
+  else{tt.classList.remove('show');document.getElementById('gc').style.cursor='default';}
+});
+document.getElementById('gc').addEventListener('mousedown',e=>{
+  if(!hitTest(lp(e))){isPanning=true;panStart.x=e.clientX-panOffset.x;panStart.y=e.clientY-panOffset.y;document.getElementById('gc').style.cursor='grabbing';}
+});
+document.addEventListener('mouseup',()=>{isPanning=false;});
+
+/* ══════════════════════
+   SELECT NODE
+══════════════════════ */
+async function selectNode(id) {
+  selectedNode=id;
+  const topic=TOPICS[currentTopic], theme=THEMES[currentTopic];
+  const n=topic.nodes.find(x=>x.id===id); if(!n) return;
+  const s=document.getElementById('sb-scroll');
+  document.getElementById('sb-title').textContent=n.label;
+  const st=topic.staticData&&topic.staticData[id];
+
+  // Build nc-head border color
+  const borderStyle=`border-left:3px solid ${theme.color}`;
+
+  s.innerHTML = st ? `
+    <div class="news-card" style="${borderStyle}">
+      <div class="nc-head" style="background:${theme.bg}">
+        ${badgeHTML(currentTopic)}
+        <div class="nc-headline">${st.headline}</div>
+      </div>
+      <div class="nc-body">
+        <div class="nc-summary">${st.summary}</div>
+        <div class="nc-divider"></div>
+        <div class="nc-facts-lbl">
+          <svg width="10" height="10" viewBox="0 0 10 10"><${theme.shape==='circle'?`circle cx="5" cy="5" r="4"`:theme.shape==='square'?`rect x="1" y="1" width="8" height="8" rx="1"`:theme.shape==='triangle'?`polygon points="5,1 1,9 9,9"`:'circle cx="5" cy="5" r="4"'} fill="${theme.color}"/></svg>
+          Key facts
+        </div>
+        ${st.facts.map(f=>`<div class="fact">${f}</div>`).join('')}
+      </div>
+    </div>` : '';
+
+  // Live articles
+  const live=document.createElement('div'); live.className='live-section';
+  live.innerHTML=`<div class="live-lbl"><span class="ldot" style="background:${theme.color}"></span>Live headlines</div><div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI…</div>`;
+  s.appendChild(live);
+
+  const q=topic.queries[id]||n.label;
+  const result=await fetchNews(q,id);
+  const sp=document.getElementById(`asp-${id}`);
+  if(sp) sp.remove();
+
+  if(!result||result.error){
+    live.innerHTML+=`<div class="err-box"><strong>Could not load articles</strong>${result?.error||'Unknown error — is the server running?'}</div>`;
+  } else if(result.length===0){
+    live.innerHTML+=`<div class="art-loading">No recent articles found.</div>`;
+  } else {
+    result.forEach(art=>{
+      const d=new Date(art.publishedAt);
+      const ts=isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const el=document.createElement('div'); el.className='article-item';
+      el.innerHTML=`
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+          ${badgeHTML(currentTopic)}
+          <div class="art-src">${art.source?.name||'Unknown'}</div>
+        </div>
+        <div class="art-title">${art.title}</div>
+        <div class="art-time">${ts}</div>`;
+      el.onclick=()=>window.open(art.url,'_blank');
+      live.appendChild(el);
+    });
+  }
+}
+
+/* ══════════════════════
+   FETCH PROXY
+══════════════════════ */
+async function fetchNews(query, nodeId) {
+  if(cache[nodeId]) return cache[nodeId];
+  try {
+    const res = await fetch(`/api/news?q=${encodeURIComponent(query)}`);
+
+    const text = await res.text();
+    console.log("RAW RESPONSE:", text); 
+    const data = JSON.parse(text);
+    if(data.error) return{error:data.error};
+    cache[nodeId]=data.articles||[];
+    return cache[nodeId];
+  } catch(e){return{error:e.message};}
+}
+
+/* ══════════════════════
+   TIMELINE
+══════════════════════ */
+function renderTimeline(topic, theme) {
+  const g=document.getElementById('tl-evts'); g.innerHTML='';
+  const shape=theme.shape, color=theme.color;
+
+  topic.tlEvents.forEach(ev=>{
+    const cx=ev.x, cy=28, sz=ev.hi?6:4;
+    let shapeEl;
+    const ns='http://www.w3.org/2000/svg';
+    if(shape==='circle'){
+      shapeEl=document.createElementNS(ns,'circle');
+      shapeEl.setAttribute('cx',cx);shapeEl.setAttribute('cy',cy);shapeEl.setAttribute('r',sz);
+    } else if(shape==='square'){
+      shapeEl=document.createElementNS(ns,'rect');
+      shapeEl.setAttribute('x',cx-sz);shapeEl.setAttribute('y',cy-sz);shapeEl.setAttribute('width',sz*2);shapeEl.setAttribute('height',sz*2);shapeEl.setAttribute('rx','1');
+    } else {
+      shapeEl=document.createElementNS(ns,'polygon');
+      shapeEl.setAttribute('points',`${cx},${cy-sz*1.1} ${cx-sz},${cy+sz*.8} ${cx+sz},${cy+sz*.8}`);
+    }
+    shapeEl.setAttribute('fill',ev.hi?color:color+'55');
+    shapeEl.setAttribute('stroke',color);shapeEl.setAttribute('stroke-width','0.8');
+    shapeEl.style.cursor='pointer';
+
+    const tx=document.createElementNS(ns,'text');
+    tx.setAttribute('x',cx);tx.setAttribute('y',ev.hi?'13':'15');tx.setAttribute('text-anchor','middle');
+    tx.setAttribute('font-size','8');tx.setAttribute('font-family',"'Syne',sans-serif");
+    tx.setAttribute('font-weight','600');tx.setAttribute('fill','rgba(26,24,20,0.45)');
+    tx.textContent=ev.label;
+    g.appendChild(tx); g.appendChild(shapeEl);
+  });
+}
+
+let tlDrag=false;
+const tlSvg=document.getElementById('tl-svg');
+tlSvg.addEventListener('mousedown',e=>{tlDrag=true;moveScrub(e);});
+document.addEventListener('mousemove',e=>{if(tlDrag)moveScrub(e);});
+document.addEventListener('mouseup',()=>{tlDrag=false;});
+
+function moveScrub(e){
+  const r=tlSvg.getBoundingClientRect(), pct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+  const x=Math.round(pct*1000);
+  // Move all 3 scrubbers, only the visible one matters
+  document.getElementById('tl-scrub-circ').setAttribute('cx',x);
+  const rx=x-7; document.getElementById('tl-scrub-rect').setAttribute('x',rx);
+  document.getElementById('tl-scrub-tri').setAttribute('points',`${x},${21} ${x-7},${35} ${x+7},${35}`);
+  document.getElementById('tl-prog').setAttribute('x2',x);
+  const ls=['Jan 2022','Apr 2022','Jul 2022','Oct 2022','Jan 2023','Apr 2023','Jul 2023','Oct 2023','Jan 2024','Apr 2024','Jul 2024','Oct 2024','Jan 2025'];
+  document.getElementById('tl-date').textContent=ls[Math.round(pct*(ls.length-1))];
+}
+
+/* ══════════════════════
+   MAP
+══════════════════════ */
+function renderMap(topic, theme) {
+  const g=document.getElementById('map-markers'); g.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+  const {color, shape}=theme;
+
+  topic.mapMarkers.forEach(m=>{
+    // Pulse ring
+    const pulse=document.createElementNS(ns,'circle');
+    pulse.setAttribute('cx',m.x);pulse.setAttribute('cy',m.y);pulse.setAttribute('r',m.size+6);
+    pulse.setAttribute('fill',color);pulse.setAttribute('opacity','0.12');
+    g.appendChild(pulse);
+
+    // Main marker — use the theme shape
+    let marker;
+    const sz=m.size;
+    if(shape==='circle'){
+      marker=document.createElementNS(ns,'circle');
+      marker.setAttribute('cx',m.x);marker.setAttribute('cy',m.y);marker.setAttribute('r',sz);
+    } else if(shape==='square'){
+      marker=document.createElementNS(ns,'rect');
+      marker.setAttribute('x',m.x-sz);marker.setAttribute('y',m.y-sz);marker.setAttribute('width',sz*2);marker.setAttribute('height',sz*2);marker.setAttribute('rx','2');
+    } else {
+      marker=document.createElementNS(ns,'polygon');
+      marker.setAttribute('points',`${m.x},${m.y-sz*1.1} ${m.x-sz},${m.y+sz*.8} ${m.x+sz},${m.y+sz*.8}`);
+    }
+    marker.setAttribute('fill',color);
+    marker.setAttribute('opacity','0.85');
+    marker.setAttribute('stroke','white');marker.setAttribute('stroke-width','1.5');
+    marker.style.cursor='pointer';
+    g.appendChild(marker);
+
+    // Label
+    const lbl=document.createElementNS(ns,'text');
+    lbl.setAttribute('x',m.x+sz+5);lbl.setAttribute('y',m.y+3.5);
+    lbl.setAttribute('font-size','9');lbl.setAttribute('font-family',"'Syne',sans-serif");
+    lbl.setAttribute('font-weight','600');lbl.setAttribute('fill','rgba(26,24,20,0.65)');
+    lbl.textContent=m.label;
+    g.appendChild(lbl);
+  });
+}
+
+window.addEventListener('resize',()=>{
+  if(currentTopic&&document.getElementById('explore').classList.contains('active'))initGraph(currentTopic);
+});
+</script>
+</body>
+</html>
