@@ -36,6 +36,25 @@
   --rl:     12px;
 }
 html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
+/* SCREEN LOGIC (lägg här, UTANFÖR media query) */
+.screen {
+  display: none;
+  min-height: 100vh;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+#landing {
+  align-items: center;
+  justify-content: center;
+}
+
+#explore {
+  min-height: 100vh;
+}
 
 @media (max-width: 700px) {
   body { overflow-y: auto; }
@@ -303,7 +322,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     background: var(--white);
     border-top: 2px solid var(--border2);
     border-radius: 16px 16px 0 0;
-    max-height: 55vh;
+    max-height: 42vh;
     overflow-y: auto;
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
@@ -333,7 +352,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   /* Hide desktop sidebar on mobile */
   .sidebar { display: none; }
   /* Graph takes full height on mobile */
-  .canvas-wrap { min-height: 60vh; }
+  .canvas-wrap { min-height: 72vh; }
 }
 </style>
 </head>
@@ -588,9 +607,9 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 ══════════════════════ */
 const THEMES = {
   politics: { color:'#1A6FDB', light:'#5B9EF5', bg:'rgba(26,111,219,0.08)', shape:'circle', label:'Politics', type:'politics' },
-  ukraine:  { color:'#E8332A', light:'#FF6B64', bg:'rgba(232,51,42,0.08)',   shape:'square',   label:'Conflict', type:'conflict' },
-  climate:  { color:'#1A9E5C', light:'#4DC98A', bg:'rgba(26,158,92,0.08)',   shape:'triangle', label:'Climate',  type:'climate'  },
-};
+  ukraine:  { color:'#E8332A', light:'#FF6B64', bg:'rgba(232,51,42,0.08)', shape:'circle', label:'Conflict', type:'conflict' },
+  climate:  { color:'#1A9E5C', light:'#4DC98A', bg:'rgba(26,158,92,0.08)', shape:'circle', label:'Climate', type:'climate' },
+}; 
 const RELATION_STYLES = {
   core:          { alpha: 0.42, width: 2.4, dash: [] },
   institutional: { alpha: 0.28, width: 1.8, dash: [] },
@@ -707,29 +726,26 @@ politics: {
       policy:'US federal policy White House', parties:'Republican Democrat party',
       media:'US political media', economy:'US economy inflation', foreign:'US foreign policy'
     },
-    nodes:[
-  {id:'elections',    label:'Elections',      x:.50,y:.35,r:26,tier:'core',  group:'core'},
-  {id:'congress',     label:'Congress',       x:.30,y:.52,r:17,tier:'inst',  group:'institutions'},
-  {id:'supremecourt', label:'Supreme court',  x:.70,y:.50,r:17,tier:'inst',  group:'institutions'},
-  {id:'history',      label:'US history',     x:.22,y:.28,r:14,tier:'ctx',   group:'context'},
-  {id:'policy',       label:'Policy',         x:.72,y:.28,r:15,tier:'core',  group:'institutions'},
-  {id:'parties',      label:'Parties',        x:.38,y:.72,r:14,tier:'actor', group:'actors'},
-  {id:'media',        label:'Media',          x:.62,y:.72,r:13,tier:'actor', group:'actors'},
-  {id:'economy',      label:'Economy',        x:.82,y:.60,r:13,tier:'ctx',   group:'impact'},
-  {id:'foreign',      label:'Foreign policy', x:.82,y:.38,r:12,tier:'ctx',   group:'impact'},
-    ],
-edges:[
-  {from:'elections', to:'congress',     rel:'core'},
-  {from:'elections', to:'supremecourt', rel:'core'},
-  {from:'elections', to:'history',      rel:'context'},
-  {from:'elections', to:'policy',       rel:'core'},
-  {from:'congress',  to:'parties',      rel:'actor'},
-  {from:'congress',  to:'policy',       rel:'institutional'},
-  {from:'supremecourt', to:'policy',    rel:'institutional'},
-  {from:'policy',    to:'economy',      rel:'impact'},
-  {from:'policy',    to:'foreign',      rel:'impact'},
-  {from:'parties',   to:'media',        rel:'actor'},
-  {from:'elections', to:'media',        rel:'actor'},
+nodes: [
+  { id:'politics-main', label:'US Politics', tier:'main' },
+  { id:'elections', label:'Elections', tier:'core' },
+  { id:'congress', label:'Congress', tier:'core' },
+  { id:'supreme-court', label:'Supreme court', tier:'core' },
+  { id:'us-history', label:'US history', tier:'context' },
+  { id:'parties', label:'Parties', tier:'core' },
+  { id:'media', label:'Media', tier:'context' },
+  { id:'economy', label:'Economy', tier:'context' },
+  { id:'foreign-policy', label:'Foreign policy', tier:'context' }
+],
+edges: [
+  { from:'politics-main', to:'elections', rel:'strong' },
+  { from:'politics-main', to:'congress', rel:'strong' },
+  { from:'politics-main', to:'supreme-court', rel:'strong' },
+  { from:'politics-main', to:'us-history', rel:'context' },
+  { from:'politics-main', to:'parties', rel:'strong' },
+  { from:'politics-main', to:'media', rel:'context' },
+  { from:'politics-main', to:'economy', rel:'context' },
+  { from:'politics-main', to:'foreign-policy', rel:'context' }
 ],
     mapMarkers:[{x:155,y:185,label:'Washington D.C.',size:11},{x:148,y:178,label:'New York',size:8},{x:125,y:175,label:'Chicago',size:7},{x:72,y:190,label:'California',size:9},{x:178,y:200,label:'Atlanta',size:6}],
     tlEvents:[{x:60,label:"Midterms '22",hi:true},{x:230,label:'Speaker crisis',hi:false},{x:315,label:'Indictments',hi:true},{x:660,label:'Election',hi:true},{x:860,label:'Inauguration',hi:true}],
@@ -752,29 +768,28 @@ ukraine: {
       sanctions:'Russia sanctions economy', refugees:'Ukraine refugees displaced',
       energy:'Ukraine Russia energy infrastructure'
     },
-    nodes:[
-  {id:'frontlines', label:'Frontlines',    x:.50,y:.35,r:26,tier:'core',   group:'core'},
-  {id:'diplomacy',  label:'Diplomacy',     x:.28,y:.52,r:17,tier:'core',   group:'process'},
-  {id:'aid',        label:'Western aid',   x:.72,y:.50,r:17,tier:'actor',  group:'allies'},
-  {id:'nato',       label:'NATO',          x:.22,y:.28,r:15,tier:'inst',   group:'allies'},
-  {id:'kyiv',       label:'Kyiv',          x:.72,y:.28,r:14,tier:'ctx',    group:'territory'},
-  {id:'russia',     label:'Russia',        x:.36,y:.72,r:16,tier:'actor',  group:'actors'},
-  {id:'sanctions',  label:'Sanctions',     x:.64,y:.72,r:13,tier:'policy', group:'effects'},
-  {id:'refugees',   label:'Refugees',      x:.82,y:.60,r:12,tier:'ctx',    group:'effects'},
-  {id:'energy',     label:'Energy',        x:.82,y:.38,r:13,tier:'ctx',    group:'effects'},
-    ],
-edges:[
-  {from:'frontlines', to:'diplomacy', rel:'core'},
-  {from:'frontlines', to:'aid',       rel:'core'},
-  {from:'frontlines', to:'kyiv',      rel:'territory'},
-  {from:'diplomacy',  to:'nato',      rel:'institutional'},
-  {from:'diplomacy',  to:'russia',    rel:'actor'},
-  {from:'aid',        to:'nato',      rel:'institutional'},
-  {from:'russia',     to:'sanctions', rel:'impact'},
-  {from:'frontlines', to:'refugees',  rel:'impact'},
-  {from:'energy',     to:'sanctions', rel:'impact'},
-  {from:'kyiv',       to:'aid',       rel:'core'},
-  {from:'russia',     to:'energy',    rel:'actor'},
+nodes: [
+  { id:'ukraine-main', label:'Ukraine Conflict', tier:'main' },
+  { id:'frontlines', label:'Frontlines', tier:'core' },
+  { id:'diplomacy', label:'Diplomacy', tier:'core' },
+  { id:'nato', label:'NATO', tier:'core' },
+  { id:'western-aid', label:'Western aid', tier:'core' },
+  { id:'kyiv', label:'Kyiv', tier:'context' },
+  { id:'russia', label:'Russia', tier:'core' },
+  { id:'sanctions', label:'Sanctions', tier:'core' },
+  { id:'refugees', label:'Refugees', tier:'context' },
+  { id:'energy', label:'Energy', tier:'context' }
+],
+edges: [
+  { from:'ukraine-main', to:'frontlines', rel:'strong' },
+  { from:'ukraine-main', to:'diplomacy', rel:'strong' },
+  { from:'ukraine-main', to:'nato', rel:'strong' },
+  { from:'ukraine-main', to:'western-aid', rel:'strong' },
+  { from:'ukraine-main', to:'kyiv', rel:'context' },
+  { from:'ukraine-main', to:'russia', rel:'strong' },
+  { from:'ukraine-main', to:'sanctions', rel:'strong' },
+  { from:'ukraine-main', to:'refugees', rel:'context' },
+  { from:'ukraine-main', to:'energy', rel:'context' }
 ],
     mapMarkers:[{x:410,y:118,label:'Kyiv',size:12},{x:420,y:124,label:'Kharkiv',size:9},{x:415,y:132,label:'Zaporizhzhia',size:8},{x:455,y:108,label:'Moscow',size:11},{x:392,y:140,label:'Odesa',size:8}],
     tlEvents:[{x:30,label:'Invasion',hi:true},{x:175,label:'Mariupol',hi:false},{x:260,label:'Kherson liberated',hi:true},{x:440,label:'Counteroffensive',hi:true},{x:660,label:'Ceasefire talks',hi:true}],
@@ -797,29 +812,28 @@ climate: {
       finance:'climate finance green investment', biodiversity:'biodiversity species loss',
       oceans:'ocean temperature coral reef'
     },
-    nodes:[
-  {id:'emissions',    label:'Emissions',         x:.50,y:.35,r:26,tier:'core',   group:'core'},
-  {id:'policy',       label:'Policy',            x:.28,y:.52,r:17,tier:'core',   group:'governance'},
-  {id:'xweather',     label:'Extreme weather',   x:.72,y:.50,r:17,tier:'impact', group:'impacts'},
-  {id:'energy',       label:'Energy transition', x:.22,y:.28,r:15,tier:'soln',   group:'solutions'},
-  {id:'cop',          label:'COP summits',       x:.72,y:.28,r:14,tier:'inst',   group:'governance'},
-  {id:'tech',         label:'Clean tech',        x:.36,y:.72,r:14,tier:'soln',   group:'solutions'},
-  {id:'finance',      label:'Climate finance',   x:.64,y:.72,r:13,tier:'policy', group:'governance'},
-  {id:'biodiversity', label:'Biodiversity',      x:.82,y:.60,r:12,tier:'impact', group:'impacts'},
-  {id:'oceans',       label:'Oceans',            x:.82,y:.38,r:12,tier:'impact', group:'impacts'},
-    ],
-edges:[
-  {from:'emissions', to:'xweather',     rel:'impact'},
-  {from:'emissions', to:'policy',       rel:'core'},
-  {from:'emissions', to:'oceans',       rel:'impact'},
-  {from:'policy',    to:'cop',          rel:'institutional'},
-  {from:'policy',    to:'energy',       rel:'solution'},
-  {from:'energy',    to:'tech',         rel:'solution'},
-  {from:'cop',       to:'finance',      rel:'institutional'},
-  {from:'xweather',  to:'biodiversity', rel:'impact'},
-  {from:'oceans',    to:'biodiversity', rel:'impact'},
-  {from:'tech',      to:'finance',      rel:'solution'},
-  {from:'emissions', to:'cop',          rel:'institutional'},
+nodes: [
+  { id:'climate-main', label:'Climate', tier:'main' },
+  { id:'emissions', label:'Emissions', tier:'core' },
+  { id:'policy', label:'Policy', tier:'core' },
+  { id:'extreme-weather', label:'Extreme weather', tier:'context' },
+  { id:'energy-transition', label:'Energy transition', tier:'core' },
+  { id:'cop-summits', label:'COP summits', tier:'core' },
+  { id:'clean-tech', label:'Clean tech', tier:'context' },
+  { id:'climate-finance', label:'Climate finance', tier:'context' },
+  { id:'biodiversity', label:'Biodiversity', tier:'context' },
+  { id:'oceans', label:'Oceans', tier:'context' }
+],
+edges: [
+  { from:'climate-main', to:'emissions', rel:'strong' },
+  { from:'climate-main', to:'policy', rel:'strong' },
+  { from:'climate-main', to:'extreme-weather', rel:'context' },
+  { from:'climate-main', to:'energy-transition', rel:'strong' },
+  { from:'climate-main', to:'cop-summits', rel:'strong' },
+  { from:'climate-main', to:'clean-tech', rel:'context' },
+  { from:'climate-main', to:'climate-finance', rel:'context' },
+  { from:'climate-main', to:'biodiversity', rel:'context' },
+  { from:'climate-main', to:'oceans', rel:'context' }
 ],
     mapMarkers:[{x:72,y:178,label:'California fires',size:10},{x:175,y:310,label:'Amazon',size:10},{x:400,y:285,label:'Sahel drought',size:9},{x:595,y:285,label:'Bangladesh floods',size:10},{x:665,y:348,label:'Great Barrier Reef',size:9}],
     tlEvents:[{x:55,label:'COP27',hi:false},{x:220,label:'IRA enacted',hi:true},{x:405,label:'COP28',hi:true},{x:500,label:'1.5°C breached',hi:true},{x:840,label:'COP29',hi:false}],
@@ -838,6 +852,9 @@ let currentTopic=null, selectedNode=null, currentView='graph';
 let nodes=[], edgeList=[], animId=null;
 let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
 let cache={};
+let zoomScale = 1;
+const MIN_ZOOM = 0.7;
+const MAX_ZOOM = 2.2;
 
 /* ══════════════════════
    NAVIGATION
@@ -884,7 +901,7 @@ function renderSidebarDefault(topic) {
   const s=document.getElementById('sb-scroll');
   s.innerHTML='<p class="sb-empty">Click any node to load live headlines and context for that perspective.</p>';
   const row=document.createElement('div'); row.className='chip-row';
-  topic.nodes.slice(0,6).forEach(n=>{
+  topic.nodes.filter(n => n.tier !== 'main').slice(0,6).forEach(n=>{
     const c=document.createElement('div'); c.className='chip'; c.textContent=n.label;
     c.onclick=()=>selectNode(n.id); row.appendChild(c);
   });
@@ -906,15 +923,18 @@ function updateScrubShape(key, color) {
    GRAPH ENGINE
 ══════════════════════ */
 function initGraph(key) {
+  zoomScale = 1;
+  panOffset = { x: 0, y: 0 };
   const canvas=document.getElementById('gc');
   const wrap=document.getElementById('canvas-wrap');
   const W=wrap.clientWidth, H=wrap.clientHeight;
   canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  const now=performance.now();
+  const now = performance.now();
+  const isMobile = window.innerWidth <= 700;
   const centerX = W / 2;
-const centerY = H / 2;
-const outerRadius = Math.min(W, H) * 0.32;
+  const centerY = H / 2;
+  const outerRadius = Math.min(W, H) * (isMobile ? 0.24 : 0.32);
 
 nodes = TOPICS[key].nodes.map((n, i, arr) => {
   if (i === 0) {
@@ -953,7 +973,10 @@ function loop(key) {
   const now=performance.now();
   const W=canvas.width/dpr, H=canvas.height/dpr;
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.save(); ctx.scale(dpr,dpr); ctx.translate(panOffset.x,panOffset.y);
+  ctx.save();
+  ctx.scale(dpr, dpr);
+  ctx.translate(panOffset.x, panOffset.y);
+  ctx.scale(zoomScale, zoomScale);
 
   // Subtle grid
   ctx.strokeStyle='rgba(0,0,0,0.04)'; ctx.lineWidth=1;
@@ -992,7 +1015,8 @@ function loop(key) {
   nodes.forEach(n=>{
     if(n.alpha<=0) return;
     const sel=selectedNode===n.id;
-    const r=n.r*n.scale;
+    const baseR = n.tier === 'main' ? 54 : 20;
+    const r = baseR * n.scale;
     const {color,light,shape}=theme;
     ctx.save(); ctx.globalAlpha=n.alpha;
 
@@ -1019,7 +1043,7 @@ function loop(key) {
       ctx.stroke();
 
     // Icon inside node (for core nodes only)
-    if(n.tier==='core' && n.scale>0.7) {
+    if(n.tier !== 'main' && n.tier==='core' && n.scale>0.7) {
       ctx.save();
       ctx.fillStyle='rgba(255,255,255,0.7)';
       ctx.strokeStyle='rgba(255,255,255,0.7)';
@@ -1031,12 +1055,36 @@ function loop(key) {
     }
 
     // Label
-    ctx.font=`${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
-    ctx.textAlign='center';
-    ctx.fillStyle = palette.label;
-    ctx.globalAlpha=n.alpha;
-    const labelY = shape==='triangle' ? n.py+r*1.05+14 : n.py+r+13;
-    ctx.fillText(n.label, n.px, labelY);
+    if (n.tier === 'main') {
+      // TEXT INNE I CIRKELN
+      ctx.fillStyle = '#FDFCFA';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "700 14px 'Syne', sans-serif";
+      ctx.globalAlpha = n.alpha;
+
+      // enkel lösning: dela upp texten i två rader
+      const words = n.label.split(' ');
+
+      if (words.length > 1) {
+        ctx.fillText(words[0], n.px, n.py - 8);
+        ctx.fillText(words.slice(1).join(' '), n.px, n.py + 8);
+      } else {
+        ctx.fillText(n.label, n.px, n.py);
+      }
+
+    } else {
+      // VANLIGA NODER (som du hade innan)
+      ctx.font = `${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = palette.label;
+      ctx.globalAlpha = n.alpha;
+
+      const labelY = shape==='triangle' ? n.py+r*1.05+14 : n.py+r+13;
+      ctx.fillText(n.label, n.px, labelY);
+    }
+
     ctx.restore();
   });
 
@@ -1048,20 +1096,36 @@ function loop(key) {
    CANVAS EVENTS
 ══════════════════════ */
 function lp(e){
-  const r=document.getElementById('gc').getBoundingClientRect();
-  return{x:e.clientX-r.left-panOffset.x,y:e.clientY-r.top-panOffset.y};
+    const r = document.getElementById('gc').getBoundingClientRect();
+    return {
+      x: (e.clientX - r.left - panOffset.x) / zoomScale,
+      y: (e.clientY - r.top - panOffset.y) / zoomScale
+    };
 }
 
 function hitTest(pos) {
-  const theme=THEMES[currentTopic];
-  for(const n of nodes){
-    const dx=pos.x-n.px,dy=pos.y-n.py;
-    let hit=false;
-    if(theme.shape==='circle') hit=Math.sqrt(dx*dx+dy*dy)<n.r+10;
-    else if(theme.shape==='square') hit=Math.abs(dx)<n.r+8&&Math.abs(dy)<n.r+8;
-    else hit=Math.sqrt(dx*dx+dy*dy)<n.r+10;
-    if(hit) return n;
+  const theme = THEMES[currentTopic];
+
+  for (const n of nodes) {
+    const dx = pos.x - n.px;
+    const dy = pos.y - n.py;
+
+    const baseR = n.tier === 'main' ? 54 : 20;
+    const r = baseR * n.scale;
+
+    let hit = false;
+
+    if (theme.shape === 'circle') {
+      hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
+    } else if (theme.shape === 'square') {
+      hit = Math.abs(dx) < r + 8 && Math.abs(dy) < r + 8;
+    } else {
+      hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
+    }
+
+    if (hit) return n;
   }
+
   return null;
 }
 
@@ -1081,11 +1145,29 @@ document.getElementById('gc').addEventListener('mousedown',e=>{
   if(!hitTest(lp(e))){isPanning=true;panStart.x=e.clientX-panOffset.x;panStart.y=e.clientY-panOffset.y;document.getElementById('gc').style.cursor='grabbing';}
 });
 document.addEventListener('mouseup',()=>{isPanning=false;});
+document.getElementById('gc').addEventListener('wheel', e => {
+  e.preventDefault();
+
+  const rect = document.getElementById('gc').getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  const worldX = (mouseX - panOffset.x) / zoomScale;
+  const worldY = (mouseY - panOffset.y) / zoomScale;
+
+  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+  const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomScale * zoomFactor));
+
+  panOffset.x = mouseX - worldX * newZoom;
+  panOffset.y = mouseY - worldY * newZoom;
+  zoomScale = newZoom;
+}, { passive: false });
 
 /* ══════════════════════
    SELECT NODE
 ══════════════════════ */
 async function selectNode(id) {
+  const isMobile = window.innerWidth <= 700;
   selectedNode=id;
   const topic=TOPICS[currentTopic], theme=THEMES[currentTopic];
   const n=topic.nodes.find(x=>x.id===id); if(!n) return;
@@ -1143,6 +1225,16 @@ async function selectNode(id) {
       live.appendChild(el);
     });
   }
+    if (isMobile) {
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerContent = document.getElementById('drawer-content');
+    drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
+    drawer.classList.add('open');
+  }
+ 
+}
+ function closeDrawer() {
+  document.getElementById('mobile-drawer').classList.remove('open');
 }
 
 /* ══════════════════════
@@ -1262,6 +1354,8 @@ window.addEventListener('resize',()=>{
   if(currentTopic&&document.getElementById('explore').classList.contains('active'))initGraph(currentTopic);
 });
 
+
+</script>
 <!-- Mobile bottom drawer -->
 <div class="mobile-drawer" id="mobile-drawer">
   <div class="drawer-handle"></div>
@@ -1270,6 +1364,5 @@ window.addEventListener('resize',()=>{
   </div>
   <div id="drawer-content"></div>
 </div>
-</script>
 </body> 
 </html>
