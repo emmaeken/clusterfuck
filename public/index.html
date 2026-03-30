@@ -94,106 +94,330 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 ═══════════════════════════════ */
 #landing {
   background: var(--bg);
-  align-items: center; justify-content: center;
-  overflow-y: auto; padding: 32px 24px;
   position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding: 18px 24px 24px;
+}
+.bg-geo {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.045;
 }
 
-/* Background geometric decoration */
-.bg-geo {
-  position: absolute; pointer-events: none; opacity: 0.04;
+.bg-geo svg {
+  width: 100%;
+  height: 100%;
 }
-.bg-geo svg { width: 100%; height: 100%; }
 
 .land-inner {
-  position: relative; z-index: 2;
-  width: 100%; max-width: 900px;
-  display: flex; flex-direction: column; align-items: center; gap: 40px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1180px;
+  min-height: calc(100vh - 42px);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
 }
 
-.land-header { text-align: center; }
+.land-header {
+  text-align: center;
+  width: 100%;
+  padding-top: 8px;
+}
+
 .land-wordmark {
-  font-family: var(--serif); font-size: clamp(32px,8vw,80px);
-  font-weight: 800; letter-spacing: -2px; line-height: 0.95;
+  font-family: var(--serif);
+  font-size: clamp(42px, 7.2vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
   color: var(--ink);
-}
-.land-wordmark em { font-style: normal; opacity: 0.3; }
-.land-sub {
-  font-size: 14px; color: var(--ink2); margin-top: 12px;
-  font-weight: 400; letter-spacing: 0.01em;
-}
-
-/* Legend row */
-.legend-row {
-  display:flex; gap: 24px; flex-wrap: wrap;
-  padding: 12px 20px; background: var(--white);
-  border: 1px solid var(--border); border-radius: var(--rl);
-}
-.legend-row span { font-size: 11px; color: var(--ink3); font-family: var(--serif); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 4px; }
-.leg-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink2); font-weight: 500; }
-.leg-shape { width: 14px; height: 14px; flex-shrink: 0; }
-.leg-shape.circ { border-radius: 50%; background: var(--blue); }
-.leg-shape.sq   { border-radius: 2px; background: var(--red); }
-.leg-shape.tri  { background: var(--green); clip-path: polygon(50% 0%,0% 100%,100% 100%); }
-
-/* Topic cards */
-.topic-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; width: 100%; }
-.tc {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: var(--rl); padding: 28px 24px 22px;
-  cursor: pointer; position: relative; overflow: hidden;
-  transition: transform 0.22s cubic-bezier(.22,.68,0,1.2), border-color 0.18s, box-shadow 0.2s;
-}
-.tc:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
-.tc:active { transform: scale(0.98); }
-
-.tc-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.tc-icon-area {
-  width: 56px; height: 56px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 16px; position: relative;
-}
-.tc-shape-bg {
-  position: absolute; inset: 0;
-  opacity: 0.12;
-}
-.tc-shape-bg.circ { border-radius: 50%; }
-.tc-shape-bg.sq   { border-radius: 6px; }
-.tc-shape-bg.tri  { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
-.tc-icon { width: 26px; height: 26px; position: relative; z-index: 1; }
-.tc-name { font-family: var(--serif); font-size: 22px; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
-.tc-desc { font-size: 12px; color: var(--ink2); line-height: 1.6; }
-.tc-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
-.tc-nodes { font-size: 11px; color: var(--ink3); font-family: var(--serif); font-weight: 600; }
-.tc-arrow { font-size: 16px; opacity: 0.3; transition: opacity 0.15s, transform 0.15s; }
-.tc:hover .tc-arrow { opacity: 0.8; transform: translateX(4px); }
-
-.tc.politics .tc-top-bar { background: var(--blue); }
-.tc.politics .tc-name    { color: var(--blue); }
-.tc.politics .tc-shape-bg { background: var(--blue); }
-.tc.conflict .tc-top-bar { background: var(--red); }
-.tc.conflict .tc-name    { color: var(--red); }
-.tc.conflict .tc-shape-bg { background: var(--red); }
-.tc.climate  .tc-top-bar { background: var(--green); }
-.tc.climate  .tc-name    { color: var(--green); }
-.tc.climate  .tc-shape-bg { background: var(--green); }
-
-/* How-it-works strip */
-.how-strip {
-  display: flex; gap: 0; width: 100%;
-  background: var(--white); border: 1px solid var(--border); border-radius: var(--rl);
+  white-space: nowrap;
+  max-width: 100%;
   overflow: hidden;
 }
-.how-item { flex: 1; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
-.how-item:not(:last-child) { border-right: 1px solid var(--border); }
-.how-num { font-family: var(--serif); font-size: 22px; font-weight: 800; opacity: 0.15; line-height: 1; }
-.how-text { font-size: 12px; color: var(--ink2); line-height: 1.4; }
-.how-text strong { display: block; color: var(--ink); font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+
+.land-wordmark em {
+  font-style: normal;
+  opacity: 0.24;
+}
+
+.land-sub {
+  font-size: 15px;
+  color: var(--ink2);
+  margin-top: 12px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.topic-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  align-self: center;
+  margin: 0 auto;
+}
+
+.tc {
+  background: linear-gradient(180deg, rgba(253,252,250,0.98) 0%, rgba(253,252,250,0.92) 100%);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 26px 26px 74px;
+  min-height: 320px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(.22,.68,0,1.2), box-shadow 0.22s ease, border-color 0.18s ease;
+  box-shadow: 0 8px 24px rgba(26,24,20,0.04);
+}
+
+.tc::before {
+  content: "";
+  position: absolute;
+  inset: auto -40px -70px auto;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  opacity: 0.08;
+  filter: blur(2px);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.tc::after {
+  content: "";
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 58px;
+  height: 1px;
+  background: var(--border);
+}
+
+.tc:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 48px rgba(26,24,20,0.1);
+}
+
+.tc:hover::before {
+  transform: scale(1.08);
+  opacity: 0.12;
+}
+
+.tc-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.tc-name {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.05;
+  max-width: 9ch;
+}
+
+.tc-desc {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.65;
+  max-width: 34ch;
+}
+
+.tc-meta {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tc-mini {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.tc-arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  background: rgba(253,252,250,0.9);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.tc:hover .tc-arrow {
+  transform: translateX(4px);
+  background: var(--white);
+}
+
+.tc.politics::before { background: var(--blue); }
+.tc.conflict::before { background: var(--red); }
+.tc.climate::before  { background: var(--green); }
+
+.tc.politics .tc-top-bar { background: var(--blue); }
+.tc.conflict .tc-top-bar { background: var(--red); }
+.tc.climate .tc-top-bar  { background: var(--green); }
+
+.tc.politics .tc-name { color: var(--ink); }
+.tc.conflict .tc-name { color: var(--ink); }
+.tc.climate .tc-name  { color: var(--ink); }
+.tc-orb {
+  position: absolute;
+  right: -18px;
+  top: 34px;
+  width: 120px;
+  height: 120px;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.tc.politics .tc-orb {
+  background: radial-gradient(circle at center, var(--blue) 0%, transparent 68%);
+  border-radius: 50%;
+}
+
+.tc.conflict .tc-orb {
+  background: linear-gradient(135deg, var(--red), transparent 72%);
+  border-radius: 18px;
+  transform: rotate(12deg);
+}
+
+.tc.climate .tc-orb {
+  background: linear-gradient(180deg, var(--green), transparent 72%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.how-strip {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  background: rgba(253,252,250,0.72);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.how-item {
+  flex: 1;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.how-item:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.how-num {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 800;
+  opacity: 0.15;
+  line-height: 1;
+}
+
+.how-text {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.45;
+}
+
+.how-text strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
 
 @media (max-width: 700px) {
-  .how-strip { flex-direction: column; }
-  .how-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+  #landing {
+    padding: 10px 16px 20px;
+    overflow-y: auto;
+  }
+
+  .land-inner {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .land-header {
+    padding-top: 2px;
+  }
+
+  .land-wordmark {
+    font-size: clamp(28px, 11vw, 52px);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+    white-space: normal;
+    overflow: visible;
+    word-break: break-word;
+  }
+
+  .land-sub {
+    font-size: 13px;
+    max-width: 28ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .land-main {
+    display: block;
+  }
+
+  .topic-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .how-strip {
+    flex-direction: column;
+    margin-top: 6px;
+  }
+
+  .how-item:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
 }
+  .how-strip {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    background: rgba(253,252,250,0.72);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    align-self: end;
+    margin-top: 20px;
+  }
 
 /* ═══════════════════════════════
    EXPLORE
@@ -440,38 +664,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
       <div class="land-sub">Explore news as connected f*cking knowledge — not a scroll</div>
     </div>
 
-    <!-- LEGEND -->
-    <div class="legend-row">
-      <span>Visual system</span>
-      <div class="leg-item"><div class="leg-shape circ"></div>Circle = Politics</div>
-      <div class="leg-item"><div class="leg-shape sq"></div>Square = Conflict</div>
-      <div class="leg-item"><div class="leg-shape tri"></div>Triangle = Climate</div>
-      <div style="width:1px;height:16px;background:var(--border);margin:0 4px"></div>
-      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="var(--blue)"/></svg>Blue = Politics</div>
-      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" rx="1" fill="var(--red)"/></svg>Red = Conflict</div>
-      <div class="leg-item"><svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 1,11 11,11" fill="var(--green)"/></svg>Green = Climate</div>
-    </div>
-
-    <!-- TOPIC CARDS -->
+      <!-- TOPIC CARDS -->
     <div class="topic-row">
 
       <!-- POLITICS -->
       <div class="tc politics" onclick="openTopic('politics')">
         <div class="tc-top-bar"></div>
-        <div class="tc-icon-area">
-          <div class="tc-shape-bg circ"></div>
-          <!-- Government building icon -->
-          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
-            <rect x="2" y="22" width="22" height="2" rx="1" fill="var(--blue)"/>
-            <rect x="4" y="10" width="18" height="12" fill="none" stroke="var(--blue)" stroke-width="1.5"/>
-            <path d="M13 4L22 10H4L13 4Z" fill="var(--blue)" opacity="0.4"/>
-            <path d="M13 4L22 10H4L13 4Z" stroke="var(--blue)" stroke-width="1.5" stroke-linejoin="round"/>
-            <rect x="10" y="14" width="6" height="8" rx="0.5" fill="var(--blue)" opacity="0.5"/>
-            <rect x="6" y="13" width="3" height="4" rx="0.5" fill="var(--blue)" opacity="0.4"/>
-            <rect x="17" y="13" width="3" height="4" rx="0.5" fill="var(--blue)" opacity="0.4"/>
-            <line x1="13" y1="1" x2="13" y2="4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
+        <div class="tc-orb" aria-hidden="true"></div>
         <div class="badge politics" style="margin-bottom:10px">
           <div class="badge-shape" style="border-radius:50%;background:var(--blue)"></div>
           Politics · Circle
@@ -479,7 +678,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
         <div class="tc-name">US Politics</div>
         <div class="tc-desc">Elections, Congress, Supreme Court, and the forces shaping American governance</div>
         <div class="tc-meta">
-          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-mini">Live graph · map · timeline</div>
           <div class="tc-arrow">→</div>
         </div>
       </div>
@@ -487,15 +686,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
       <!-- CONFLICT -->
       <div class="tc conflict" onclick="openTopic('ukraine')">
         <div class="tc-top-bar"></div>
-        <div class="tc-icon-area">
-          <div class="tc-shape-bg sq"></div>
-          <!-- Explosion/warning icon -->
-          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
-            <polygon points="13,2 16,9 23,9 17.5,14 20,21 13,17 6,21 8.5,14 3,9 10,9" fill="var(--red)" opacity="0.3"/>
-            <polygon points="13,2 16,9 23,9 17.5,14 20,21 13,17 6,21 8.5,14 3,9 10,9" stroke="var(--red)" stroke-width="1.5" stroke-linejoin="round"/>
-            <circle cx="13" cy="13" r="2" fill="var(--red)"/>
-          </svg>
-        </div>
+        <div class="tc-orb" aria-hidden="true"></div>
         <div class="badge conflict" style="margin-bottom:10px">
           <div class="badge-shape sq" style="background:var(--red)"></div>
           Conflict · Square
@@ -503,7 +694,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
         <div class="tc-name">Ukraine Conflict</div>
         <div class="tc-desc">Frontlines, diplomacy, aid flows, and the geopolitical fault lines shifting Europe</div>
         <div class="tc-meta">
-          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-mini">Live graph · map · timeline</div>
           <div class="tc-arrow">→</div>
         </div>
       </div>
@@ -511,18 +702,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
       <!-- CLIMATE -->
       <div class="tc climate" onclick="openTopic('climate')">
         <div class="tc-top-bar"></div>
-        <div class="tc-icon-area">
-          <div class="tc-shape-bg tri"></div>
-          <!-- Globe/wave icon -->
-          <svg class="tc-icon" viewBox="0 0 26 26" fill="none">
-            <circle cx="13" cy="11" r="8" stroke="var(--green)" stroke-width="1.5"/>
-            <path d="M5 11 Q9 8 13 11 Q17 14 21 11" stroke="var(--green)" stroke-width="1.2" fill="none"/>
-            <path d="M7 7 Q10 5 13 7 Q16 5 19 7" stroke="var(--green)" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M13 3 L13 19" stroke="var(--green)" stroke-width="0.8" opacity="0.4"/>
-            <!-- Wave below -->
-            <path d="M3 21 Q6 19 9 21 Q12 23 15 21 Q18 19 21 21 Q22 21 23 21" stroke="var(--green)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          </svg>
-        </div>
+        <div class="tc-orb" aria-hidden="true"></div>
         <div class="badge climate" style="margin-bottom:10px">
           <div class="badge-shape tr" style="background:var(--green)"></div>
           Climate · Triangle
@@ -530,7 +710,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
         <div class="tc-name">Climate</div>
         <div class="tc-desc">Emissions, extreme weather, the energy transition, and the policy ambition gap</div>
         <div class="tc-meta">
-          <div class="tc-nodes">9 nodes · Live headlines</div>
+          <div class="tc-mini">Live graph · map · timeline</div>
           <div class="tc-arrow">→</div>
         </div>
       </div>
