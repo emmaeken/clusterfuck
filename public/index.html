@@ -114,19 +114,23 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1180px;
+  max-width: 1280px;
   min-height: calc(100vh - 42px);
   margin: 0 auto;
 
   display: grid;
   grid-template-rows: auto 1fr auto;
   align-items: start;
+  justify-items: center; /* gör att innehållet centreras bättre */
 }
 
 .land-header {
   text-align: center;
   width: 100%;
+  max-width: 1100px;
   padding-top: 8px;
+  margin: 0 auto;
+  margin-bottom: 10%;
 }
 
 .land-wordmark {
@@ -136,9 +140,12 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   letter-spacing: -0.06em;
   line-height: 0.9;
   color: var(--ink);
-  white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
+  text-align: center;
+}
+
+.land-wordmark .word-lock,
+.land-wordmark .word-tail {
+  display: inline-block;
 }
 
 .land-wordmark em {
@@ -156,10 +163,10 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
 .topic-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(280px, 360px));
+  justify-content: center; /* centrerar korten på desktop */
   gap: 20px;
   width: 100%;
-  align-self: center;
   margin: 0 auto;
 }
 
@@ -356,7 +363,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
 @media (max-width: 700px) {
   #landing {
-    padding: 10px 16px 20px;
+    padding: 20px 16px 20px 16px;
     overflow-y: auto;
   }
 
@@ -367,18 +374,37 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     gap: 18px;
   }
 
-  .land-header {
-    padding-top: 2px;
+   .land-header {
+    padding-top: 32px; /* ← flyttar ner rubriken */
+
+    margin: 0 auto;
+    text-align: center;
   }
 
-  .land-wordmark {
-    font-size: clamp(28px, 11vw, 52px);
-    line-height: 0.94;
-    letter-spacing: -0.05em;
-    white-space: normal;
-    overflow: visible;
-    word-break: break-word;
+
+    .land-wordmark {
+    margin: 0 auto;
+    text-align: center;
   }
+    .land-wordmark .word-lock,
+  .land-wordmark .word-tail {
+    display: block;
+  }
+
+  .land-wordmark .word-lock {
+    white-space: nowrap; /* håller ClusterFuck ihop */
+  }
+
+  .land-wordmark .word-tail {
+    white-space: nowrap;
+    margin-top: -4px;
+  }
+
+  .topic-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
 
   .land-sub {
     font-size: 13px;
@@ -529,6 +555,75 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
 .chip { font-size: 11px; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border); color: var(--ink2); cursor: pointer; background: var(--bg); transition: background 0.12s; font-weight: 500; }
 .chip:hover { background: var(--bg2); }
+.sb-main-summary {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.7;
+  margin-top: 10px;
+}
+
+.sb-more-btn {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 11px;
+  font-family: var(--serif);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sb-section {
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sb-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.sb-section-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.sb-timeline-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sb-tl-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  color: var(--ink);
+}
+
+.sb-tl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+.sb-sources {
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 1.7;
+}
 
 /* NEWS CARD in sidebar */
 .news-card { border: 1.5px solid var(--border); border-radius: var(--rl); overflow: hidden; margin-bottom: 12px; }
@@ -660,7 +755,9 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
     <!-- HEADER -->
     <div class="land-header">
-      <div class="land-wordmark">Cluster<em>Fuck</em>Of<em>News</em></div>
+      <div class="land-wordmark">
+        <span class="word-lock">Cluster<em>Fuck</em></span><span class="word-tail">Of<em>News</em></span>
+      </div>
       <div class="land-sub">Explore news as connected f*cking knowledge — not a scroll</div>
     </div>
 
@@ -816,19 +913,78 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 /* ══════════════════════
    VISUAL SYSTEM
 ══════════════════════ */
+/* ══════════════════════
+   CATEGORY COLOR SYSTEM
+══════════════════════ */
+const CATEGORIES = {
+  people:       { label:'People',        color:'#8B5CF6', bg:'rgba(139,92,246,0.1)'  },
+  international:{ label:'International', color:'#38BDF8', bg:'rgba(56,189,248,0.1)'  },
+  climate:      { label:'Climate',       color:'#22C55E', bg:'rgba(34,197,94,0.1)'   },
+  politics:     { label:'Politics',      color:'#1A6FDB', bg:'rgba(26,111,219,0.1)'  },
+  welfare:      { label:'Welfare',       color:'#EAB308', bg:'rgba(234,179,8,0.1)'   },
+  domestic:     { label:'Domestic',      color:'#EC4899', bg:'rgba(236,72,153,0.1)'  },
+  conflict:     { label:'Conflict',      color:'#E8332A', bg:'rgba(232,51,42,0.1)'   },
+  economy:      { label:'Economy',       color:'#6B7280', bg:'rgba(107,114,128,0.1)' },
+};
+
+const CATEGORY_KEYWORDS = {
+  people:       ['person','people','leader','president','minister','senator','candidate','official','celebrity','activist','who','biography'],
+  international:['international','global','foreign','nato','united nations','treaty','alliance','diplomatic','embassy','bilateral','geopolitic'],
+  climate:      ['climate','emission','carbon','fossil','renewable','solar','wind','flood','drought','wildfire','ocean','reef','biodiversity','cop','temperature','hurricane','storm'],
+  conflict:     ['war','conflict','battle','frontline','military','weapon','missile','attack','invasion','troops','ceasefire','bomb','soldier','fighting','casualties','siege','offensive'],
+  welfare:      ['welfare','health','hospital','social','poverty','housing','homeless','education','school','pension','benefit','inequality','disability','mental health','care'],
+  economy:      ['economy','economic','inflation','gdp','market','trade','stock','bank','finance','debt','budget','tax','recession','unemployment','jobs','growth','investment'],
+  domestic:     ['domestic','local','national','internal','state','county','city','municipal','regional','community'],
+  politics:     ['election','vote','congress','parliament','senate','policy','legislation','bill','democrat','republican','party','government','white house','cabinet','supreme court','law'],
+};
+
+function categorize(text) {
+  if (!text) return 'politics';
+  const lower = text.toLowerCase();
+  let best = 'politics', bestScore = 0;
+  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    const score = keywords.filter(k => lower.includes(k)).length;
+    if (score > bestScore) { bestScore = score; best = cat; }
+  }
+  return best;
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+
+function blendColors(hex1, hex2, t=0.5) {
+  const [r1,g1,b1] = hexToRgb(hex1);
+  const [r2,g2,b2] = hexToRgb(hex2);
+  const r = Math.round(r1+(r2-r1)*t);
+  const g = Math.round(g1+(g2-g1)*t);
+  const b = Math.round(b1+(b2-b1)*t);
+  return `rgb(${r},${g},${b})`;
+}
+
+function getCat(node) {
+  return node.category || categorize(node.label);
+}
+function getCatColor(cat) { return (CATEGORIES[cat]||CATEGORIES.politics).color; }
+function getCatBg(cat)    { return (CATEGORIES[cat]||CATEGORIES.politics).bg; }
+function getCatLabel(cat) { return (CATEGORIES[cat]||CATEGORIES.politics).label; }
+
 const THEMES = {
   politics: { color:'#1A6FDB', light:'#5B9EF5', bg:'rgba(26,111,219,0.08)', shape:'circle', label:'Politics', type:'politics' },
   ukraine:  { color:'#E8332A', light:'#FF6B64', bg:'rgba(232,51,42,0.08)', shape:'square', label:'Conflict', type:'conflict' },
   climate:  { color:'#1A9E5C', light:'#4DC98A', bg:'rgba(26,158,92,0.08)', shape:'triangle', label:'Climate', type:'climate' },
 }; 
 const RELATION_STYLES = {
-  core:          { alpha: 0.42, width: 2.4, dash: [] },
-  institutional: { alpha: 0.28, width: 1.8, dash: [] },
-  context:       { alpha: 0.18, width: 1.2, dash: [5, 5] },
-  impact:        { alpha: 0.24, width: 1.5, dash: [2, 4] },
-  actor:         { alpha: 0.22, width: 1.4, dash: [1, 4] },
-  solution:      { alpha: 0.26, width: 1.6, dash: [] },
-  territory:     { alpha: 0.22, width: 1.3, dash: [3, 4] }
+  core:          { alpha: 0.55, width: 2.0, dash: [] },
+  institutional: { alpha: 0.45, width: 1.8, dash: [] },
+  context:       { alpha: 0.40, width: 1.5, dash: [] },
+  impact:        { alpha: 0.40, width: 1.5, dash: [] },
+  actor:         { alpha: 0.40, width: 1.5, dash: [] },
+  solution:      { alpha: 0.45, width: 1.6, dash: [] },
+  territory:     { alpha: 0.40, width: 1.5, dash: [] }
 };
 const NODE_COLOR_STYLES = {
   politics: {
@@ -931,6 +1087,7 @@ politics: {
       name:'US Politics',
       key:'politics',
       summary:'An overview of elections, institutions, parties, media and policy in the current US political landscape.',
+        mainQuery: "US politics latest major developments",
     queries:{
       elections:'US elections 2024 2025', congress:'US Congress legislation',
       supremecourt:'Supreme Court ruling', history:'American democracy history',
@@ -959,11 +1116,14 @@ edges: [
   { from:'politics-main', to:'foreign-policy', rel:'context' }
 ],
 tlEvents: [
-  {x:60,label:"Midterms '22",hi:true},
-  {x:230,label:'Speaker crisis',hi:false},
-  {x:315,label:'Indictments',hi:true},
-  {x:660,label:'Election',hi:true},
-  {x:860,label:'Inauguration',hi:true}
+  {
+    id: 'iran-strike',
+    label: 'Iran strike',
+    x: 860,
+    hi: true,
+    summaryQuery: 'US Iran strike latest',
+    articleQuery: 'US Iran strike latest news'
+  }
 ],
 mapMarkers: [
   { x: 232, y: 244, label:'California', size:9, query:'California US politics governor policy' },
@@ -979,6 +1139,7 @@ ukraine: {
       name:'Ukraine Conflict',
       key:'ukraine',
       summary:'A clustered overview of the war through frontlines, diplomacy, aid, sanctions and other connected parts of the conflict.',
+        mainQuery: "Ukrain war latest major developments",
     queries:{
       frontlines:'Ukraine Russia frontline Donetsk', diplomacy:'Ukraine peace talks ceasefire',
       aid:'Ukraine western military aid', nato:'NATO Ukraine alliance',
@@ -1030,6 +1191,7 @@ climate: {
       name:'Climate',
       key:'climate',
       summary:'An overview of emissions, policy, extreme weather, energy transition and other linked parts of the climate crisis.',
+        mainQuery: "climate change latest major developments",
     queries:{
       emissions:'carbon emissions greenhouse gas', policy:'climate policy COP agreement',
       xweather:'extreme weather flooding heatwave', energy:'renewable energy solar wind',
@@ -1109,10 +1271,15 @@ function openTopic(key) {
     document.getElementById('canvas-hint').style.display='';
     // Update timeline scrubber shape
     updateScrubShape(key, theme.color);
-    renderSidebarDefault(topic);
-    renderTimeline(topic, theme);
+  renderTimeline(topic, theme);
     renderMap(topic, theme);
     requestAnimationFrame(()=>initGraph(key));
+
+    const mainNode = topic.nodes.find(n => n.tier === 'main');
+    if (mainNode) {
+      selectedNode = mainNode.id;
+      renderMainTopicOverview(key);
+    }
   }
 
 function goBack() {
@@ -1223,6 +1390,7 @@ function loop(key) {
   });
 
   // Edges
+// Edges — blended gradient between source and target category colors
   edgeList.forEach(edge => {
     const na = nm[edge.from];
     const nb = nm[edge.to];
@@ -1231,11 +1399,19 @@ function loop(key) {
     const style = RELATION_STYLES[edge.rel] || RELATION_STYLES.context;
     const al = Math.min(na.alpha, nb.alpha) * style.alpha;
 
+    const colorA = na.tier === 'main' ? theme.color : getCatColor(getCat(na));
+    const colorB = nb.tier === 'main' ? theme.color : getCatColor(getCat(nb));
+
+    // Draw as a linear gradient from source to target color
+    const grad = ctx.createLinearGradient(na.px, na.py, nb.px, nb.py);
+    grad.addColorStop(0, colorA);
+    grad.addColorStop(1, colorB);
+
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(na.px, na.py);
     ctx.lineTo(nb.px, nb.py);
-    ctx.strokeStyle = theme.color;
+    ctx.strokeStyle = grad;
     ctx.globalAlpha = al;
     ctx.lineWidth = style.width;
     ctx.setLineDash(style.dash);
@@ -1243,82 +1419,78 @@ function loop(key) {
     ctx.restore();
   });
 
-  // Nodes
+// Nodes
   nodes.forEach(n=>{
     if(n.alpha<=0) return;
     const sel=selectedNode===n.id;
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
-    const {color,light,shape}=theme;
-    ctx.save(); ctx.globalAlpha=n.alpha;
+    const shape = 'circle';
+
+    // Determine category color for this node
+    const nodeCat = getCat(n);
+    const nodeFill  = n.tier === 'main' ? theme.color : getCatColor(nodeCat);
+    const nodeLabel = n.tier === 'main' ? '#FDFCFA' : '#FDFCFA';
+
+    ctx.save();
 
     // Selection glow
     if(sel){
       ctx.save();
-      ctx.globalAlpha=n.alpha*0.18;
-      drawShape(ctx,shape,n.px,n.py,r+14);
-      ctx.fillStyle=color; ctx.fill();
+      ctx.globalAlpha = n.alpha * 0.18;
+      drawShape(ctx, shape, n.px, n.py, r+14);
+      ctx.fillStyle = nodeFill;
+      ctx.fill();
       ctx.restore();
     }
 
     // Node fill
-  const palette =
-    (NODE_COLOR_STYLES[key] && NODE_COLOR_STYLES[key][n.tier]) ||
-    { fill: color, stroke: color, label: '#5A574F' };
+    ctx.globalAlpha = n.tier === 'main' ? n.alpha : n.alpha * (n.tier === 'core' ? 0.9 : 0.72);
+    ctx.fillStyle   = nodeFill;
+    ctx.strokeStyle = sel ? '#333' : nodeFill;
+    ctx.lineWidth   = sel ? 2.5 : 1.2;
+    drawShape(ctx, shape, n.px, n.py, r);
+    ctx.fill();
+    ctx.stroke();
 
-      ctx.fillStyle = palette.fill;
-      ctx.strokeStyle = sel ? theme.color : palette.stroke;
-      ctx.lineWidth = sel ? 2.5 : 1.2;
-
-      drawShape(ctx, shape, n.px, n.py, r);
-      ctx.fill();
-      ctx.stroke();
-
-    // Icon inside node (for core nodes only)
-    if(n.tier !== 'main' && n.tier==='core' && n.scale>0.7) {
+    // Icon inside core nodes
+    if(n.tier === 'core' && n.scale > 0.7){
       ctx.save();
-      ctx.fillStyle='rgba(255,255,255,0.7)';
-      ctx.strokeStyle='rgba(255,255,255,0.7)';
-      ctx.lineWidth=1.2;
-      ctx.globalAlpha=n.alpha*0.8;
-      const iconFn=ICONS[key];
+      ctx.fillStyle   = 'rgba(255,255,255,0.7)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth   = 1.2;
+      ctx.globalAlpha = n.alpha * 0.8;
+      const iconFn = ICONS[currentTopic];
       if(iconFn) iconFn(ctx, n.px, n.py, r*0.55);
       ctx.restore();
     }
 
     // Label
-    if (n.tier === 'main') {
-      // TEXT INNE I CIRKELN
-      ctx.fillStyle = '#FDFCFA';
-      ctx.textAlign = 'center';
+    ctx.globalAlpha = n.alpha;
+    ctx.fillStyle   = nodeLabel;
+    ctx.textAlign   = 'center';
+
+    if(n.tier === 'main'){
       ctx.textBaseline = 'middle';
       ctx.font = "700 14px 'Syne', sans-serif";
-      ctx.globalAlpha = n.alpha;
-
-      // enkel lösning: dela upp texten i två rader
       const words = n.label.split(' ');
-
-      if (words.length > 1) {
+      if(words.length > 1){
         ctx.fillText(words[0], n.px, n.py - 8);
         ctx.fillText(words.slice(1).join(' '), n.px, n.py + 8);
       } else {
         ctx.fillText(n.label, n.px, n.py);
       }
-
     } else {
-      // VANLIGA NODER (som du hade innan)
-      ctx.font = `${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
-      ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = palette.label;
-      ctx.globalAlpha = n.alpha;
-
+      ctx.font = `${n.tier==='core'?600:500} 11px 'Syne',sans-serif`;
+      ctx.fillStyle = '#1A1814';
       const labelY = shape==='triangle' ? n.py+r*1.05+14 : n.py+r+13;
       ctx.fillText(n.label, n.px, labelY);
     }
 
     ctx.restore();
   });
+    
 
   ctx.restore();
   animId=requestAnimationFrame(()=>loop(key));
@@ -1360,6 +1532,15 @@ function hitTest(pos) {
 
   return null;
 }
+function renderSidebarTimeline(topicKey, events) {
+  const wrap = document.getElementById('sb-timeline-inline');
+  wrap.innerHTML = events.map(ev => `
+    <button class="sb-tl-item" onclick="selectTimelineEvent('${topicKey}', '${ev.id}')">
+      <span class="sb-tl-dot"></span>
+      <span>${ev.label}</span>
+    </button>
+  `).join('');
+}
 
 document.getElementById('gc').addEventListener('click',async e=>{
   const n=hitTest(lp(e));
@@ -1395,6 +1576,70 @@ document.getElementById('gc').addEventListener('wheel', e => {
   zoomScale = newZoom;
 }, { passive: false });
 
+/* ══════════════════════
+   ÖVERBLICKSPANEL NODE
+══════════════════════ */
+async function renderMainTopicOverview(topicKey) {
+  const topic = TOPICS[topicKey];
+  const mainQuery = topic.mainQuery || topic.label;
+
+  document.getElementById('sb-top').innerHTML = `
+    <div id="sb-badge">${badgeHTML(topicKey)}</div>
+    <div class="sb-topic-name">${topic.name}</div>
+    <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
+    <button class="sb-more-btn" id="sb-more-btn" style="display:none;">Read more</button>
+  `;
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section">
+      <div class="sb-section-title">Timeline</div>
+      <div id="sb-timeline-inline"></div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Latest articles</div>
+      <div id="sb-latest-articles"></div>
+    </div>
+  `;
+
+  const articles = await fetchNews(mainQuery, `${topicKey}-main`);
+
+  if (!articles || articles.error || articles.length === 0) {
+    document.getElementById('sb-main-summary').textContent = 'Could not load summary.';
+    return;
+  }
+
+  const summary = await fetchSummary(topicKey, articles, 'short');
+
+  if (summary.error) {
+    document.getElementById('sb-main-summary').textContent = 'Could not load AI summary.';
+  } else {
+    document.getElementById('sb-main-summary').textContent = summary.shortSummary;
+    document.getElementById('sb-more-btn').style.display = 'inline-flex';
+  }
+
+  renderArticleList('sb-latest-articles', articles);
+
+  document.getElementById('sb-more-btn').onclick = async () => {
+    const longSummary = await fetchSummary(topicKey, articles, 'long');
+
+    if (longSummary.error) return;
+
+    document.getElementById('sb-main-summary').innerHTML = `
+      <p>${longSummary.longSummary}</p>
+      <div class="sb-sources">
+        <strong>Sources</strong><br>
+        ${longSummary.sources.map(src => `<a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>`).join('<br>')}
+      </div>
+    `;
+  };
+}
+async function selectTimelineEvent(topicKey, eventId) {
+  const topic = TOPICS[topicKey];
+  const event = topic.tlEvents.find(e => e.id === eventId);
+  if (!event) return;
+
+  await renderEventOverview(topicKey, event);
+}
 /* ══════════════════════
    SELECT NODE
 ══════════════════════ */
@@ -1449,10 +1694,17 @@ async function selectMapMarker(marker) {
     const ts = isNaN(d) ? '' : d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     const el = document.createElement('div');
     el.className = 'article-item';
+const artCat = categorize((art.title||'') + ' ' + (art.description||''));
+    const artColor = getCatColor(artCat);
+    const artBg = getCatBg(artCat);
+    const artLabel = getCatLabel(artCat);
     el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
-        ${badgeHTML(currentTopic)}
-        <div class="art-src">${art.source?.name || 'Unknown'}</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
+          <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
+          ${artLabel}
+        </span>
+        <div class="art-src" style="color:var(--ink3)">${art.source?.name || 'Unknown'}</div>
       </div>
       <div class="art-title">${art.title}</div>
       <div class="art-time">${ts}</div>
@@ -1509,10 +1761,18 @@ async function selectNode(id) {
       const d=new Date(art.publishedAt);
       const ts=isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
       const el=document.createElement('div'); el.className='article-item';
+// keyword check first, fall back to node category
+      const artCat = categorize((art.title||'') + ' ' + (art.description||'')) || getCat(n);
+      const artColor = getCatColor(artCat);
+      const artBg = getCatBg(artCat);
+      const artLabel = getCatLabel(artCat);
       el.innerHTML=`
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
-          ${badgeHTML(currentTopic)}
-          <div class="art-src">${art.source?.name||'Unknown'}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
+            <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
+            ${artLabel}
+          </span>
+          <div class="art-src" style="color:var(--ink3)">${art.source?.name||'Unknown'}</div>
         </div>
         <div class="art-title">${art.title}</div>
         <div class="art-time">${ts}</div>`;
@@ -1547,6 +1807,65 @@ async function fetchNews(query, nodeId) {
     cache[nodeId]=data.articles||[];
     return cache[nodeId];
   } catch(e){return{error:e.message};}
+}
+
+function renderArticleList(containerId, articles) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+
+  wrap.innerHTML = '';
+
+  articles.forEach(art => {
+    const artCat = categorize((art.title || '') + ' ' + (art.description || ''));
+    const artColor = getCatColor(artCat);
+    const artBg = getCatBg(artCat);
+    const artLabel = getCatLabel(artCat);
+
+    const d = new Date(art.publishedAt);
+    const ts = isNaN(d)
+      ? ''
+      : d.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+
+    const el = document.createElement('div');
+    el.className = 'article-item';
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
+          <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
+          ${artLabel}
+        </span>
+        <div class="art-src">${art.source?.name || 'Unknown'}</div>
+      </div>
+      <div class="art-title">${art.title}</div>
+      <div class="art-time">${ts}</div>
+    `;
+
+    el.onclick = () => window.open(art.url, '_blank');
+    wrap.appendChild(el);
+  });
+}
+
+async function fetchSummary(topicKey, articles, mode = 'short') {
+  try {
+    const res = await fetch('/api/summary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicKey,
+        mode,
+        articles
+      })
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 /* ══════════════════════
