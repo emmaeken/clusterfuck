@@ -543,12 +543,27 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink3); background: var(--white); border: 1px solid var(--border); padding: 3px 8px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* SIDEBAR */
-.sidebar { grid-column:2; grid-row:1/3; background: var(--white); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.sidebar {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  background: var(--white);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
 .sb-top {   padding: 16px 16px 14px;   border-bottom: 1px solid var(--border);   flex-shrink: 0; }
 .sb-title {   font-family: var(--serif);   font-size: 18px;   font-weight: 700;   color: var(--ink);  line-height: 1.2;   margin-top: 14px;}
 .sb-topic-name {   font-family: var(--serif);   font-size: 24px;   font-weight: 700;   color: var(--ink);   line-height: 1.1;   margin-top: 10px; }
 .sb-topic-summary {   font-size: 12px; color: var(--ink2);   line-height: 1.6;   margin-top: 10px;   max-width: 34ch; }
-.sb-scroll { flex: 1; overflow-y: auto; padding: 14px; }
+.sb-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px 24px;
+  min-height: 0;
+  scroll-behavior: smooth;
+}
 .sb-scroll::-webkit-scrollbar { width: 3px; }
 .sb-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
 .sb-empty { font-size: 13px; color: var(--ink3); line-height: 1.7; }
@@ -556,10 +571,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .chip { font-size: 11px; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border); color: var(--ink2); cursor: pointer; background: var(--bg); transition: background 0.12s; font-weight: 500; }
 .chip:hover { background: var(--bg2); }
 .sb-main-summary {
-  font-size: 12px;
-  color: var(--ink2);
-  line-height: 1.7;
-  margin-top: 10px;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.9;
+  margin-top: 12px;
+  max-width: 42ch;
+  padding-left: 12px;
+  padding-right: 6px;
 }
 
 .sb-more-btn {
@@ -618,11 +636,40 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   background: var(--ink);
   flex-shrink: 0;
 }
-
 .sb-sources {
-  margin-top: 14px;
-  font-size: 11px;
-  line-height: 1.7;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink2);
+}
+
+.sb-sources strong {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sb-sources a {
+  display: block;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: var(--white);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.sb-sources a:hover {
+  background: var(--bg);
+  transform: translateY(-1px);
 }
 
 /* NEWS CARD in sidebar */
@@ -1249,13 +1296,17 @@ let cache={};
 let zoomScale = 1;
 const MIN_ZOOM = 0.7;
 const MAX_ZOOM = 2.2;
+const USE_FAKE_AI_SUMMARY = true;
 
 /* ══════════════════════
    NAVIGATION
 ══════════════════════ */
-function openTopic(key) { 
-    currentTopic=key; selectedNode=null; currentView='graph';
-    panOffset={x:0,y:0}; cache={};
+function openTopic(key) {
+    currentTopic = key;
+    selectedNode = null;
+    currentView = 'graph';
+    panOffset = { x: 0, y: 0 };
+    cache = {};
     const topic=TOPICS[key]; const theme=THEMES[key];
     document.getElementById('landing').classList.remove('active');
     document.getElementById('explore').classList.add('active');
@@ -1637,21 +1688,54 @@ async function renderMainTopicOverview(topicKey) {
 
   renderArticleList('sb-latest-articles', articles);
 
-  document.getElementById('sb-more-btn').onclick = async () => {
-    const longSummary = await fetchSummary(topicKey, articles, 'long');
+document.getElementById('sb-more-btn').onclick = async () => {
+  const longSummary = await fetchSummary(topicKey, articles, 'long');
 
-    if (longSummary.error) return;
+  if (longSummary.error) return;
 
-    document.getElementById('sb-main-summary').innerHTML = `
-      <p>${longSummary.longSummary}</p>
-      <div class="sb-sources">
-        <strong>Sources</strong><br>
-        ${longSummary.sources.map(src => `<a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>`).join('<br>')}
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+        <div class="sb-section-title" style="margin-bottom:0;">Full overview</div>
+        <button class="sb-more-btn" id="sb-less-btn">Back</button>
       </div>
-    `;
+
+      <div class="sb-main-summary">
+        <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
+        <div class="sb-sources">
+          <strong>Sources</strong>
+          ${longSummary.sources.map(src => `
+            <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Timeline</div>
+      <div id="sb-timeline-inline"></div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Latest articles</div>
+      <div id="sb-latest-articles"></div>
+    </div>
+  `;
+
+  const sidebarEvents = (topic.tlEvents || []).slice(0, 3);
+  renderSidebarTimeline(topicKey, sidebarEvents);
+  renderArticleList('sb-latest-articles', articles);
+
+  const sbScroll = document.getElementById('sb-scroll');
+  if (sbScroll) sbScroll.scrollTop = 0;
+
+  document.getElementById('sb-less-btn').onclick = () => {
+    renderMainTopicOverview(topicKey);
   };
+};
 }
-  async function selectTimelineEvent(topicKey, eventId) {
+
+async function selectTimelineEvent(topicKey, eventId) {
   const topic = TOPICS[topicKey];
   const event = topic.tlEvents.find(e => e.id === eventId);
   if (!event) return;
@@ -1900,8 +1984,108 @@ function renderArticleList(containerId, articles) {
     wrap.appendChild(el);
   });
 }
+function cleanText(text = '') {
+  return text
+    .replace(/\s+/g, ' ')
+    .replace(/\[[^\]]*\]/g, '')
+    .trim();
+}
+
+function sentenceCase(text = '') {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function cleanText(text = '') {
+  return text
+    .replace(/\s+/g, ' ')
+    .replace(/\[[^\]]*\]/g, '')
+    .trim();
+}
+
+function uniqueSourceNames(articles = []) {
+  return [...new Set(
+    articles.map(a => a.source?.name).filter(Boolean)
+  )];
+}
+
+function getTopicIntro(topicKey) {
+  const intros = {
+    politics: 'US politics is moving through a period shaped by elections, institutions, party strategy, and legal or congressional decisions.',
+    ukraine: 'The war in Ukraine continues to evolve through battlefield updates, diplomacy, military aid, and reactions from Russia and its allies.',
+    climate: 'Climate coverage is currently driven by extreme weather, emissions pressure, energy transition debates, and international policy responses.'
+  };
+
+  return intros[topicKey] || 'This topic is developing across several connected recent stories.';
+}
+
+function buildFakeShortSummary(topicKey, articles) {
+  const intro = getTopicIntro(topicKey);
+  const picked = articles.slice(0, 3);
+
+  const details = picked
+    .map(a => cleanText(a.description || a.title))
+    .filter(Boolean)
+    .slice(0, 3);
+
+  const sources = uniqueSourceNames(picked);
+
+  const detailText = details.length
+    ? details.map(t => t.replace(/\.+$/, '') + '.').join(' ')
+    : 'Recent coverage suggests the story is still moving quickly across several angles.';
+
+  const sourceText = sources.length
+    ? `This prototype summary is based on recent reporting from ${sources.join(', ')}.`
+    : 'This prototype summary is based on recent reporting across multiple sources.';
+
+  return {
+    shortSummary: `${intro} ${detailText} ${sourceText}`
+  };
+}
+
+function buildFakeLongSummary(topicKey, articles) {
+  const intro = getTopicIntro(topicKey);
+  const picked = articles.slice(0, 5);
+
+  const details = picked
+    .map(a => cleanText(a.description || a.title))
+    .filter(Boolean);
+
+  const firstBlock = details.slice(0, 2).join(' ');
+  const secondBlock = details.slice(2, 5).join(' ');
+  const sources = uniqueSourceNames(picked);
+
+  const longSummary = `
+${intro} ${firstBlock || 'Recent reporting points to multiple overlapping developments and continued movement in the story.'}
+
+Taken together, these updates suggest the topic is not defined by one single event, but by a mix of reactions, policy implications, and wider consequences. ${secondBlock || 'The linked coverage below offers a broader picture of where the story may go next.'}
+
+${sources.length ? `Across the latest articles, the reporting draws from sources such as ${sources.join(', ')}, giving a more layered picture of the situation.` : 'Across the latest articles, the reporting comes from several different sources, which helps create a broader overview.'}
+  `.trim();
+
+  return {
+    longSummary,
+    sources: picked.map(a => ({
+      title: a.title,
+      url: a.url
+    }))
+  };
+}
+
+function buildFakeSummary(topicKey, articles, mode = 'short') {
+  if (mode === 'long') {
+    return buildFakeLongSummary(topicKey, articles);
+  }
+
+  return buildFakeShortSummary(topicKey, articles);
+}
 
 async function fetchSummary(topicKey, articles, mode = 'short') {
+  if (USE_FAKE_AI_SUMMARY) {
+    console.log('Using fake AI summary');
+    return buildFakeSummary(topicKey, articles, mode);
+  }
+
   try {
     const res = await fetch('/api/summary', {
       method: 'POST',
