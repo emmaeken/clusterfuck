@@ -1625,7 +1625,8 @@ async function renderMainTopicOverview(topicKey) {
   const summary = await fetchSummary(topicKey, articles, 'short');
 
   if (summary.error) {
-    document.getElementById('sb-main-summary').textContent = 'Could not load AI summary.';
+    document.getElementById('sb-main-summary').textContent =
+  `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
   } else {
     document.getElementById('sb-main-summary').textContent = summary.shortSummary;
     document.getElementById('sb-more-btn').style.display = 'inline-flex';
@@ -1905,15 +1906,17 @@ async function fetchSummary(topicKey, articles, mode = 'short') {
     const res = await fetch('/api/summary', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topicKey,
-        mode,
-        articles
-      })
+      body: JSON.stringify({ topicKey, mode, articles })
     });
 
     const data = await res.json();
-    console.log('SUMMARY RESPONSE:', data);
+    console.log('SUMMARY STATUS:', res.status);
+    console.log('SUMMARY DATA:', data);
+
+    if (!res.ok) {
+      return { error: data.error || 'Summary request failed', details: data.details };
+    }
+
     return data;
   } catch (e) {
     console.error('fetchSummary failed:', e);
