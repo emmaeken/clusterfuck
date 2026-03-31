@@ -1911,8 +1911,9 @@ async function fetchSummary(topicKey, articles, mode = 'short') {
         articles
       })
     });
-    console.log('SUMMARY RESPONSE:', data);
+
     const data = await res.json();
+    console.log('SUMMARY RESPONSE:', data);
     return data;
   } catch (e) {
     console.error('fetchSummary failed:', e);
