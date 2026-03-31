@@ -868,7 +868,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="sb-top">
+      <div class="sb-top" id="sb-top">
         <div id="sb-badge"></div>
         <div class="sb-topic-name" id="sb-topic-name">A fucking overview</div>
         <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
@@ -1542,10 +1542,23 @@ function renderSidebarTimeline(topicKey, events) {
   `).join('');
 }
 
-document.getElementById('gc').addEventListener('click',async e=>{
-  const n=hitTest(lp(e));
-  if(n){await selectNode(n.id);}
-  else{selectedNode=null;if(currentTopic)renderSidebarDefault(TOPICS[currentTopic]);}
+document.getElementById('gc').addEventListener('click', async e => {
+  const n = hitTest(lp(e));
+
+  if (n) {
+    await selectNode(n.id);
+    return;
+  }
+
+  if (!currentTopic) return;
+
+  const topic = TOPICS[currentTopic];
+  const mainNode = topic.nodes.find(node => node.tier === 'main');
+
+  if (mainNode) {
+    selectedNode = mainNode.id;
+    await renderMainTopicOverview(currentTopic);
+  }
 });
 document.getElementById('gc').addEventListener('mousemove',e=>{
   if(isPanning){panOffset.x=e.clientX-panStart.x;panOffset.y=e.clientY-panStart.y;return;}
@@ -1586,6 +1599,7 @@ async function renderMainTopicOverview(topicKey) {
   document.getElementById('sb-top').innerHTML = `
     <div id="sb-badge">${badgeHTML(topicKey)}</div>
     <div class="sb-topic-name">${topic.name}</div>
+    <div class="sb-title">Overview</div>
     <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
     <button class="sb-more-btn" id="sb-more-btn" style="display:none;">Read more</button>
   `;
@@ -1617,6 +1631,9 @@ async function renderMainTopicOverview(topicKey) {
     document.getElementById('sb-more-btn').style.display = 'inline-flex';
   }
 
+    const sidebarEvents = (topic.tlEvents || []).slice(0, 3);
+  renderSidebarTimeline(topicKey, sidebarEvents);
+
   renderArticleList('sb-latest-articles', articles);
 
   document.getElementById('sb-more-btn').onclick = async () => {
@@ -1633,12 +1650,43 @@ async function renderMainTopicOverview(topicKey) {
     `;
   };
 }
-async function selectTimelineEvent(topicKey, eventId) {
+  async function selectTimelineEvent(topicKey, eventId) {
   const topic = TOPICS[topicKey];
   const event = topic.tlEvents.find(e => e.id === eventId);
   if (!event) return;
 
-  await renderEventOverview(topicKey, event);
+  document.getElementById('sb-top').innerHTML = `
+    <div id="sb-badge">${badgeHTML(topicKey)}</div>
+    <div class="sb-topic-name">${event.label}</div>
+    <div class="sb-main-summary" id="sb-main-summary">Loading event summary...</div>
+    <button class="sb-more-btn" id="sb-back-btn">Back to topic</button>
+  `;
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section">
+      <div class="sb-section-title">Latest articles</div>
+      <div id="sb-latest-articles"></div>
+    </div>
+  `;
+
+  const query = event.articleQuery || event.summaryQuery || event.label;
+  const articles = await fetchNews(query, `${topicKey}-${eventId}`);
+
+  if (!articles || articles.error || articles.length === 0) {
+    document.getElementById('sb-main-summary').textContent = 'Could not load event summary.';
+    return;
+  }
+
+  const summary = await fetchSummary(topicKey, articles, 'short');
+
+  document.getElementById('sb-main-summary').textContent =
+    summary.shortSummary || 'No summary available.';
+
+  renderArticleList('sb-latest-articles', articles);
+
+  document.getElementById('sb-back-btn').onclick = () => {
+    renderMainTopicOverview(topicKey);
+  };
 }
 /* ══════════════════════
    SELECT NODE
@@ -1718,6 +1766,9 @@ async function selectNode(id) {
   selectedNode=id;
   const topic=TOPICS[currentTopic], theme=THEMES[currentTopic];
   const n=topic.nodes.find(x=>x.id===id); if(!n) return;
+    if (n.tier === 'main') {
+    return renderMainTopicOverview(currentTopic);
+  }
   const s=document.getElementById('sb-scroll');
   document.getElementById('sb-title').textContent=n.label;
   const st=topic.staticData&&topic.staticData[id];
@@ -1860,10 +1911,11 @@ async function fetchSummary(topicKey, articles, mode = 'short') {
         articles
       })
     });
-
+    console.log('SUMMARY RESPONSE:', data);
     const data = await res.json();
     return data;
   } catch (e) {
+    console.error('fetchSummary failed:', e);
     return { error: e.message };
   }
 }
