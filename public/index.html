@@ -53,6 +53,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 #explore {
+  height: 100vh;
   min-height: 100vh;
 }
 
@@ -472,12 +473,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
 /* GRID */
   .main-grid { 
-    flex: 1; 
+    flex: 1;
+    height: calc(100vh - 48px);
     display: grid; 
     grid-template-columns: 67% 33%; 
     grid-template-rows: 1fr 90px; 
     min-height: 0; 
-  }
+}
   @media (max-width: 700px) {
     .main-grid { grid-template-columns: 1fr; grid-template-rows: 1fr auto auto; }
     .sidebar { grid-column: 1; grid-row: 3; border-left: none; border-top: 1px solid var(--border); max-height: 240px; }
@@ -532,13 +534,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     padding: 0;
   }
 
-  #map-svg {
-    width: 160%;
-    height: auto;
-    margin-left: -30%;
-    aspect-ratio: 800 / 480;
-  }
+#map-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: auto;
+}
 
+#map-svg * {
+  pointer-events: auto;
+}
 }
 .canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink3); background: var(--white); border: 1px solid var(--border); padding: 3px 8px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 
@@ -552,13 +557,25 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
+  height: 100%;
 }
-.sb-top {   padding: 16px 16px 14px;   border-bottom: 1px solid var(--border);   flex-shrink: 0; }
+.sb-top {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--white);
+}
+#sb-overview-section .sb-main-summary {
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
+}
 .sb-title {   font-family: var(--serif);   font-size: 18px;   font-weight: 700;   color: var(--ink);  line-height: 1.2;   margin-top: 14px;}
 .sb-topic-name {   font-family: var(--serif);   font-size: 24px;   font-weight: 700;   color: var(--ink);   line-height: 1.1;   margin-top: 10px; }
 .sb-topic-summary {   font-size: 12px; color: var(--ink2);   line-height: 1.6;   margin-top: 10px;   max-width: 34ch; }
 .sb-scroll {
   flex: 1;
+  height: 0;
   overflow-y: auto;
   padding: 18px 16px 24px;
   min-height: 0;
@@ -1186,7 +1203,7 @@ ukraine: {
       name:'Ukraine Conflict',
       key:'ukraine',
       summary:'A clustered overview of the war through frontlines, diplomacy, aid, sanctions and other connected parts of the conflict.',
-        mainQuery: "Ukrain war latest major developments",
+        mainQuery: "Ukraine war latest major developments",
     queries:{
       frontlines:'Ukraine Russia frontline Donetsk', diplomacy:'Ukraine peace talks ceasefire',
       aid:'Ukraine western military aid', nato:'NATO Ukraine alliance',
@@ -1218,11 +1235,11 @@ edges: [
   { from:'ukraine-main', to:'energy', rel:'context' }
 ],
 tlEvents: [
-  {x:30,label:'Invasion',hi:true},
-  {x:175,label:'Mariupol',hi:false},
-  {x:260,label:'Kherson liberated',hi:true},
-  {x:440,label:'Counteroffensive',hi:true},
-  {x:660,label:'Ceasefire talks',hi:true}
+  { id:'invasion', label:'Invasion', x:30, hi:true, summaryQuery:'Ukraine invasion latest', articleQuery:'Ukraine invasion latest news' },
+  { id:'mariupol', label:'Mariupol', x:175, hi:false, summaryQuery:'Mariupol Ukraine latest', articleQuery:'Mariupol Ukraine latest news' },
+  { id:'kherson', label:'Kherson liberated', x:260, hi:true, summaryQuery:'Kherson Ukraine latest', articleQuery:'Kherson Ukraine latest news' },
+  { id:'counteroffensive', label:'Counteroffensive', x:440, hi:true, summaryQuery:'Ukraine counteroffensive latest', articleQuery:'Ukraine counteroffensive latest news' },
+  { id:'ceasefire-talks', label:'Ceasefire talks', x:660, hi:true, summaryQuery:'Ukraine ceasefire talks latest', articleQuery:'Ukraine ceasefire talks latest news' }
 ],
 mapMarkers: [
   { x: 430, y: 160, label:'Kyiv', size:12, query:'Kyiv Ukraine war' },
@@ -1650,8 +1667,6 @@ function lp(e){
 }
 
 function hitTest(pos) {
-  const theme = THEMES[currentTopic];
-
   for (const n of nodes) {
     const dx = pos.x - n.px;
     const dy = pos.y - n.py;
@@ -1659,15 +1674,7 @@ function hitTest(pos) {
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
 
-    let hit = false;
-
-    if (theme.shape === 'circle') {
-      hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
-    } else if (theme.shape === 'square') {
-      hit = Math.abs(dx) < r + 8 && Math.abs(dy) < r + 8;
-    } else {
-      hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
-    }
+    const hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
 
     if (hit) return n;
   }
@@ -1734,14 +1741,69 @@ document.getElementById('gc').addEventListener('wheel', e => {
 /* ══════════════════════
    ÖVERBLICKSPANEL NODE
 ══════════════════════ */
+function renderShortOverview(topicKey, shortSummary, articles, requestId) {
+  const overviewSection = document.getElementById('sb-overview-section');
+  if (!overviewSection) return;
+
+  overviewSection.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Overview</div>
+      <button class="sb-more-btn" id="sb-more-btn">Read more</button>
+    </div>
+    <div class="sb-main-summary" id="sb-main-summary">${shortSummary}</div>
+  `;
+
+  document.getElementById('sb-more-btn').onclick = async () => {
+    const longSummary = await fetchSummary(topicKey, articles, 'long');
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+    if (longSummary.error) return;
+
+    renderLongOverview(topicKey, longSummary, articles, requestId);
+    const sbScroll = document.getElementById('sb-scroll');
+    if (sbScroll) sbScroll.scrollTop = 0;
+  };
+}
+
+function renderLongOverview(topicKey, longSummary, articles, requestId) {
+  const overviewSection = document.getElementById('sb-overview-section');
+  if (!overviewSection) return;
+
+  overviewSection.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
+      <button class="sb-more-btn" id="sb-less-btn">Back</button>
+    </div>
+
+    <div class="sb-main-summary">
+      <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
+      <div class="sb-sources">
+        <strong>Sources</strong>
+        ${longSummary.sources.map(src => `
+          <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('sb-less-btn').onclick = async () => {
+    const shortSummary = await fetchSummary(topicKey, articles, 'short');
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+    if (shortSummary.error) return;
+
+    renderShortOverview(topicKey, shortSummary.shortSummary, articles, requestId);
+    const sbScroll = document.getElementById('sb-scroll');
+    if (sbScroll) sbScroll.scrollTop = 0;
+  };
+}
+
 async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest) {
   const topic = TOPICS[topicKey];
   const mainQuery = topic.mainQuery || topic.label;
 
   document.getElementById('sb-top').innerHTML = `
     <div id="sb-badge">${badgeHTML(topicKey)}</div>
-    <div class="sb-topic-name">${topic.name}</div>
-    <div class="sb-title">Overview</div>
+    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
+    <div class="sb-title" id="sb-title">Overview</div>
     <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
     <button class="sb-more-btn" id="sb-more-btn" style="display:none;">Read more</button>
   `;
@@ -1760,21 +1822,27 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
   const articles = await fetchNews(mainQuery, `${topicKey}-main`);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-  if (!articles || articles.error || articles.length === 0) {
-    document.getElementById('sb-main-summary').textContent = 'Could not load summary.';
-    return;
-  }
+if (!articles || articles.error) {
+  document.getElementById('sb-main-summary').textContent =
+    `Could not load summary: ${articles?.error || 'Unknown fetch error'}`;
+  return;
+}
+
+if (articles.length === 0) {
+  document.getElementById('sb-main-summary').textContent =
+    `No articles found for query: ${mainQuery}`;
+  return;
+}
 
   const summary = await fetchSummary(topicKey, articles, 'short');
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-  if (summary.error) {
-    document.getElementById('sb-main-summary').textContent =
-  `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
-  } else {
-    document.getElementById('sb-main-summary').textContent = summary.shortSummary;
-    document.getElementById('sb-more-btn').style.display = 'inline-flex';
-  }
+if (summary.error) {
+  document.getElementById('sb-main-summary').textContent =
+    `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
+} else {
+  renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
+}
 
     const sidebarEvents = (topic.tlEvents || []).slice(0, 3);
   renderSidebarTimeline(topicKey, sidebarEvents);
@@ -1784,47 +1852,73 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
 document.getElementById('sb-more-btn').onclick = async () => {
   const longSummary = await fetchSummary(topicKey, articles, 'long');
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
   if (longSummary.error) return;
 
-  document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-        <div class="sb-section-title" style="margin-bottom:0;">Full overview</div>
-        <button class="sb-more-btn" id="sb-less-btn">Back</button>
-      </div>
+  const overviewSection = document.getElementById('sb-overview-section');
+  if (!overviewSection) return;
 
-      <div class="sb-main-summary">
-        <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
-        <div class="sb-sources">
-          <strong>Sources</strong>
-          ${longSummary.sources.map(src => `
-            <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
-          `).join('')}
-        </div>
-      </div>
+  overviewSection.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
+      <button class="sb-more-btn" id="sb-less-btn">Back</button>
     </div>
 
-    <div class="sb-section">
-      <div class="sb-section-title">Timeline</div>
-      <div id="sb-timeline-inline"></div>
-    </div>
-
-    <div class="sb-section">
-      <div class="sb-section-title">Latest articles</div>
-      <div id="sb-latest-articles"></div>
+    <div class="sb-main-summary">
+      <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
+      <div class="sb-sources">
+        <strong>Sources</strong>
+        ${longSummary.sources.map(src => `
+          <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
+        `).join('')}
+      </div>
     </div>
   `;
-
-  const sidebarEvents = (topic.tlEvents || []).slice(0, 3);
-  renderSidebarTimeline(topicKey, sidebarEvents);
-  renderArticleList('sb-latest-articles', articles);
 
   const sbScroll = document.getElementById('sb-scroll');
   if (sbScroll) sbScroll.scrollTop = 0;
 
-  document.getElementById('sb-less-btn').onclick = () => {
-    renderMainTopicOverview(topicKey, activeTopicRequest);
+  document.getElementById('sb-less-btn').onclick = async () => {
+    const shortSummary = await fetchSummary(topicKey, articles, 'short');
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+
+    const overviewSection = document.getElementById('sb-overview-section');
+    if (!overviewSection) return;
+
+    overviewSection.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+        <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Overview</div>
+        <button class="sb-more-btn" id="sb-more-btn">Read more</button>
+      </div>
+      <div class="sb-main-summary" id="sb-main-summary">${shortSummary.shortSummary}</div>
+    `;
+
+    document.getElementById('sb-more-btn').onclick = async () => {
+      const longSummary = await fetchSummary(topicKey, articles, 'long');
+      if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+      if (longSummary.error) return;
+
+      const overviewSection = document.getElementById('sb-overview-section');
+      if (!overviewSection) return;
+
+      overviewSection.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
+          <button class="sb-more-btn" id="sb-less-btn">Back</button>
+        </div>
+
+        <div class="sb-main-summary">
+          <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
+          <div class="sb-sources">
+            <strong>Sources</strong>
+            ${longSummary.sources.map(src => `
+              <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('sb-less-btn').onclick = arguments.callee.caller;
+    };
   };
 };
 }
@@ -1834,8 +1928,9 @@ document.getElementById('sb-more-btn').onclick = async () => {
 ══════════════════════ */
 async function selectMapMarker(marker) {
   const theme = THEMES[currentTopic];
-  const s = document.getElementById('sb-scroll');
-  document.getElementById('sb-title').textContent = marker.label;
+    const s = document.getElementById('sb-scroll');
+    const sbTitle = document.getElementById('sb-title');
+    if (sbTitle) sbTitle.textContent = marker.label;
 
   s.innerHTML = `
     <div class="news-card" style="border-left:3px solid ${theme.color}">
@@ -1906,13 +2001,22 @@ async function selectNode(id) {
   const isMobile = window.innerWidth <= 700;
   const requestId = ++activeTopicRequest;
   selectedNode = id;
-  const topic = TOPICS[currentTopic], theme = THEMES[currentTopic];
-  const n=topic.nodes.find(x=>x.id===id); if(!n) return;
-    if (n.tier === 'main') {
+
+  const topic = TOPICS[currentTopic];
+  const theme = THEMES[currentTopic];
+  if (!topic || !theme) return;
+
+  const n = topic.nodes.find(x => x.id === id);
+  if (!n) return;
+
+  if (n.tier === 'main') {
     return renderMainTopicOverview(currentTopic, activeTopicRequest);
   }
-  const s=document.getElementById('sb-scroll');
-  document.getElementById('sb-title').textContent=n.label;
+
+  const s = document.getElementById('sb-scroll');
+  const sbTitle = document.getElementById('sb-title');
+  if (sbTitle) sbTitle.textContent = n.label;
+
   const st=topic.staticData&&topic.staticData[id];
 
   // Build nc-head border color
@@ -2602,61 +2706,71 @@ function renderMap(topic, theme) {
   g.setAttribute('id', 'map-markers');
   targetLayer.appendChild(g);
 
-  topic.mapMarkers.forEach(m => {
-    const px = m.x;
-    const py = m.y;
-    const sz = m.size;
+topic.mapMarkers.forEach(m => {
+  const px = m.x;
+  const py = m.y;
+  const sz = m.size;
 
-    const pulse = document.createElementNS(ns, 'circle');
-    pulse.setAttribute('cx', px);
-    pulse.setAttribute('cy', py);
-    pulse.setAttribute('r', sz + 6);
-    pulse.setAttribute('fill', color);
-    pulse.setAttribute('opacity', '0.12');
-    g.appendChild(pulse);
+  const pulse = document.createElementNS(ns, 'circle');
+  pulse.setAttribute('cx', px);
+  pulse.setAttribute('cy', py);
+  pulse.setAttribute('r', sz + 6);
+  pulse.setAttribute('fill', color);
+  pulse.setAttribute('opacity', '0.12');
+  g.appendChild(pulse);
 
-    let marker;
+  let marker;
 
-    if (shape === 'circle') {
-      marker = document.createElementNS(ns, 'circle');
-      marker.setAttribute('cx', px);
-      marker.setAttribute('cy', py);
-      marker.setAttribute('r', sz);
-    } else if (shape === 'square') {
-      marker = document.createElementNS(ns, 'rect');
-      marker.setAttribute('x', px - sz);
-      marker.setAttribute('y', py - sz);
-      marker.setAttribute('width', sz * 2);
-      marker.setAttribute('height', sz * 2);
-      marker.setAttribute('rx', '2');
-    } else {
-      marker = document.createElementNS(ns, 'polygon');
-      marker.setAttribute('points', `${px},${py-sz*1.1} ${px-sz},${py+sz*.8} ${px+sz},${py+sz*.8}`);
-    }
+  if (shape === 'circle') {
+    marker = document.createElementNS(ns, 'circle');
+    marker.setAttribute('cx', px);
+    marker.setAttribute('cy', py);
+    marker.setAttribute('r', sz);
+  } else if (shape === 'square') {
+    marker = document.createElementNS(ns, 'rect');
+    marker.setAttribute('x', px - sz);
+    marker.setAttribute('y', py - sz);
+    marker.setAttribute('width', sz * 2);
+    marker.setAttribute('height', sz * 2);
+    marker.setAttribute('rx', '2');
+  } else {
+    marker = document.createElementNS(ns, 'polygon');
+    marker.setAttribute('points', `${px},${py-sz*1.1} ${px-sz},${py+sz*.8} ${px+sz},${py+sz*.8}`);
+  }
 
-    marker.setAttribute('fill', color);
-    marker.setAttribute('opacity', '0.85');
-    marker.setAttribute('stroke', 'white');
-    marker.setAttribute('stroke-width', '1.5');
-    g.appendChild(marker);
+  marker.setAttribute('fill', color);
+  marker.setAttribute('opacity', '0.85');
+  marker.setAttribute('stroke', 'white');
+  marker.setAttribute('stroke-width', '1.5');
+  marker.style.cursor = 'pointer';
+  marker.style.pointerEvents = 'all';
+  g.appendChild(marker);
 
-marker.setAttribute('data-marker-index', topic.mapMarkers.indexOf(m).toString());
-marker.style.cursor = 'pointer';
-marker.style.pointerEvents = 'all';
+  const isMobile = window.innerWidth <= 700;
 
-    const isMobile = window.innerWidth <= 700;
+  const lbl = document.createElementNS(ns, 'text');
+  lbl.setAttribute('x', px + sz + (isMobile ? 4 : 6));
+  lbl.setAttribute('y', py + 3.5);
+  lbl.setAttribute('font-size', isMobile ? '8' : '9');
+  lbl.setAttribute('font-family', "'Syne',sans-serif");
+  lbl.setAttribute('font-weight', '600');
+  lbl.setAttribute('fill', 'rgba(26,24,20,0.65)');
+  lbl.textContent = m.label;
+  lbl.style.cursor = 'pointer';
+  lbl.style.pointerEvents = 'all';
+  g.appendChild(lbl);
 
-    const lbl = document.createElementNS(ns, 'text');
-    lbl.setAttribute('x', px + sz + (isMobile ? 4 : 6));
-    lbl.setAttribute('y', py + 3.5);
-    lbl.setAttribute('font-size', isMobile ? '8' : '9');
-    lbl.setAttribute('font-family', "'Syne',sans-serif");
-    lbl.setAttribute('font-weight', '600');
-    lbl.setAttribute('fill', 'rgba(26,24,20,0.65)');
-    lbl.textContent = m.label;
-    g.appendChild(lbl);
+  marker.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    await selectMapMarker(m);
   });
-    setupMapClicks(topic);
+
+  lbl.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    await selectMapMarker(m);
+  });
+});
+setupMapClicks(topic);
 }
 function setupMapClicks(topic) {
   const svg = document.getElementById('map-svg');
