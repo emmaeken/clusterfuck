@@ -1293,6 +1293,7 @@ let currentTopic=null, selectedNode=null, currentView='graph';
 let nodes=[], edgeList=[], animId=null;
 let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
 let cache={};
+let activeTopicRequest = 0;
 let zoomScale = 1;
 const MIN_ZOOM = 0.7;
 const MAX_ZOOM = 2.2;
@@ -1302,41 +1303,126 @@ const USE_FAKE_AI_SUMMARY = true;
    NAVIGATION
 ══════════════════════ */
 function openTopic(key) {
-    currentTopic = key;
-    selectedNode = null;
-    currentView = 'graph';
-    panOffset = { x: 0, y: 0 };
-    cache = {};
-    const topic=TOPICS[key]; const theme=THEMES[key];
-    document.getElementById('landing').classList.remove('active');
-    document.getElementById('explore').classList.add('active');
-    document.getElementById('tb-title').textContent=topic.label;
-    document.getElementById('tb-badge').innerHTML=badgeHTML(key);
-    document.getElementById('sb-badge').innerHTML=badgeHTML(key);
-    document.getElementById('sb-topic-name').textContent=topic.name;
-    document.getElementById('sb-topic-summary').textContent=topic.summary;
-    document.getElementById('sb-title').textContent='Graph overview';
-    document.getElementById('vbtn-graph').classList.add('active');
-    document.getElementById('vbtn-map').classList.remove('active');
-    document.getElementById('map-wrap').classList.remove('on');
-    document.getElementById('canvas-hint').style.display='';
-    // Update timeline scrubber shape
-    updateScrubShape(key, theme.color);
-  renderTimeline(topic, theme);
-    renderMap(topic, theme);
-    requestAnimationFrame(()=>initGraph(key));
+  // Stop any running animation loop immediately
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
 
-    const mainNode = topic.nodes.find(n => n.tier === 'main');
-    if (mainNode) {
-      selectedNode = mainNode.id;
-      renderMainTopicOverview(key);
-    }
+  currentTopic = key;
+  selectedNode = null;
+  currentView = 'graph';
+  panOffset = { x: 0, y: 0 };
+  zoomScale = 1;
+  cache = {};
+  nodes = [];
+  edgeList = [];
+
+  activeTopicRequest += 1;
+  const requestId = activeTopicRequest;
+
+  const topic = TOPICS[key];
+  const theme = THEMES[key];
+
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('explore').classList.add('active');
+  document.getElementById('tb-title').textContent = topic.label;
+  document.getElementById('tb-badge').innerHTML = badgeHTML(key);
+  document.getElementById('sb-badge').innerHTML = badgeHTML(key);
+  document.getElementById('sb-topic-name').textContent = topic.name;
+  document.getElementById('sb-topic-summary').textContent = topic.summary;
+  document.getElementById('sb-title').textContent = 'Graph overview';
+  document.getElementById('vbtn-graph').classList.add('active');
+  document.getElementById('vbtn-map').classList.remove('active');
+  document.getElementById('map-wrap').classList.remove('on');
+  document.getElementById('canvas-hint').style.display = '';
+
+updateScrubShape(key, theme.color);
+
+// clear old visuals first
+const canvas = document.getElementById('gc');
+if (canvas) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+const mapSvg = document.getElementById('map-svg');
+if (mapSvg) {
+  mapSvg.innerHTML = '';
+}
+
+// wait one frame so the explore screen is fully visible before drawing
+requestAnimationFrame(() => {
+  if (key !== currentTopic) return;
+
+  renderTimeline(topic, theme);
+  renderMap(topic, theme);
+  initGraph(key);
+
+  const mainNode = topic.nodes.find(n => n.tier === 'main');
+  if (mainNode) {
+    selectedNode = mainNode.id;
+    renderMainTopicOverview(key, requestId);
   }
+});
+}
 
 function goBack() {
+  // stop old animation
+  if (animId) {
+    cancelAnimationFrame(animId);
+    animId = null;
+  }
+
+  // invalidate all old async responses
+  activeTopicRequest += 1;
+
+  // reset state completely
+  currentTopic = null;
+  selectedNode = null;
+  currentView = 'graph';
+  nodes = [];
+  edgeList = [];
+  cache = {};
+  panOffset = { x: 0, y: 0 };
+  zoomScale = 1;
+  isPanning = false;
+
+  // reset UI
   document.getElementById('explore').classList.remove('active');
   document.getElementById('landing').classList.add('active');
-  if(animId){cancelAnimationFrame(animId);animId=null;}
+
+  document.getElementById('vbtn-graph').classList.add('active');
+  document.getElementById('vbtn-map').classList.remove('active');
+  document.getElementById('map-wrap').classList.remove('on');
+  document.getElementById('canvas-hint').style.display = '';
+
+  // clear canvas
+  const canvas = document.getElementById('gc');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // clear map completely
+  const mapSvg = document.getElementById('map-svg');
+  if (mapSvg) {
+    mapSvg.innerHTML = '';
+  }
+
+  // reset sidebar
+  document.getElementById('sb-top').innerHTML = `
+    <div id="sb-badge"></div>
+    <div class="sb-topic-name" id="sb-topic-name">A fucking overview</div>
+    <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
+    <div class="sb-title" id="sb-title">Overview</div>
+  `;
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <p class="sb-empty">Click any node in the graph to load live headlines and context.</p>
+    <div class="chip-row" id="chip-row"></div>
+  `;
+
+  // reset topbar text
+  document.getElementById('tb-title').textContent = '';
+  document.getElementById('tb-badge').innerHTML = '';
 }
 
 function switchView(v) {
@@ -1417,9 +1503,14 @@ nodes = TOPICS[key].nodes.map((n, i, arr) => {
 }
 
 function loop(key) {
-  const canvas=document.getElementById('gc'); if(!canvas) return;
-  const ctx=canvas.getContext('2d'), dpr=devicePixelRatio;
-  const topic=TOPICS[key], theme=THEMES[key];
+  const canvas = document.getElementById('gc');
+  if (!canvas) return;
+  if (!key || key !== currentTopic) return;
+
+  const ctx = canvas.getContext('2d');
+  const dpr = devicePixelRatio;
+  const topic = TOPICS[key];
+  const theme = THEMES[key];
   const now=performance.now();
   const W=canvas.width/dpr, H=canvas.height/dpr;
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -1544,7 +1635,7 @@ function loop(key) {
     
 
   ctx.restore();
-  animId=requestAnimationFrame(()=>loop(key));
+  animId=requestAnimationFrame(()=>loop(currentTopic));
 }
 
 /* ══════════════════════
@@ -1643,7 +1734,7 @@ document.getElementById('gc').addEventListener('wheel', e => {
 /* ══════════════════════
    ÖVERBLICKSPANEL NODE
 ══════════════════════ */
-async function renderMainTopicOverview(topicKey) {
+async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest) {
   const topic = TOPICS[topicKey];
   const mainQuery = topic.mainQuery || topic.label;
 
@@ -1667,6 +1758,7 @@ async function renderMainTopicOverview(topicKey) {
   `;
 
   const articles = await fetchNews(mainQuery, `${topicKey}-main`);
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
   if (!articles || articles.error || articles.length === 0) {
     document.getElementById('sb-main-summary').textContent = 'Could not load summary.';
@@ -1674,6 +1766,7 @@ async function renderMainTopicOverview(topicKey) {
   }
 
   const summary = await fetchSummary(topicKey, articles, 'short');
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
   if (summary.error) {
     document.getElementById('sb-main-summary').textContent =
@@ -1690,6 +1783,7 @@ async function renderMainTopicOverview(topicKey) {
 
 document.getElementById('sb-more-btn').onclick = async () => {
   const longSummary = await fetchSummary(topicKey, articles, 'long');
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
   if (longSummary.error) return;
 
@@ -1730,49 +1824,11 @@ document.getElementById('sb-more-btn').onclick = async () => {
   if (sbScroll) sbScroll.scrollTop = 0;
 
   document.getElementById('sb-less-btn').onclick = () => {
-    renderMainTopicOverview(topicKey);
+    renderMainTopicOverview(topicKey, activeTopicRequest);
   };
 };
 }
 
-async function selectTimelineEvent(topicKey, eventId) {
-  const topic = TOPICS[topicKey];
-  const event = topic.tlEvents.find(e => e.id === eventId);
-  if (!event) return;
-
-  document.getElementById('sb-top').innerHTML = `
-    <div id="sb-badge">${badgeHTML(topicKey)}</div>
-    <div class="sb-topic-name">${event.label}</div>
-    <div class="sb-main-summary" id="sb-main-summary">Loading event summary...</div>
-    <button class="sb-more-btn" id="sb-back-btn">Back to topic</button>
-  `;
-
-  document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section">
-      <div class="sb-section-title">Latest articles</div>
-      <div id="sb-latest-articles"></div>
-    </div>
-  `;
-
-  const query = event.articleQuery || event.summaryQuery || event.label;
-  const articles = await fetchNews(query, `${topicKey}-${eventId}`);
-
-  if (!articles || articles.error || articles.length === 0) {
-    document.getElementById('sb-main-summary').textContent = 'Could not load event summary.';
-    return;
-  }
-
-  const summary = await fetchSummary(topicKey, articles, 'short');
-
-  document.getElementById('sb-main-summary').textContent =
-    summary.shortSummary || 'No summary available.';
-
-  renderArticleList('sb-latest-articles', articles);
-
-  document.getElementById('sb-back-btn').onclick = () => {
-    renderMainTopicOverview(topicKey);
-  };
-}
 /* ══════════════════════
    SELECT NODE
 ══════════════════════ */
@@ -1848,11 +1904,12 @@ const artCat = categorize((art.title||'') + ' ' + (art.description||''));
 }
 async function selectNode(id) {
   const isMobile = window.innerWidth <= 700;
-  selectedNode=id;
-  const topic=TOPICS[currentTopic], theme=THEMES[currentTopic];
+  const requestId = ++activeTopicRequest;
+  selectedNode = id;
+  const topic = TOPICS[currentTopic], theme = THEMES[currentTopic];
   const n=topic.nodes.find(x=>x.id===id); if(!n) return;
     if (n.tier === 'main') {
-    return renderMainTopicOverview(currentTopic);
+    return renderMainTopicOverview(currentTopic, activeTopicRequest);
   }
   const s=document.getElementById('sb-scroll');
   document.getElementById('sb-title').textContent=n.label;
@@ -1885,6 +1942,7 @@ async function selectNode(id) {
 
   const q=topic.queries[id]||n.label;
   const result=await fetchNews(q,id);
+    if (requestId !== activeTopicRequest || topic.key !== currentTopic) return;
   const sp=document.getElementById(`asp-${id}`);
   if(sp) sp.remove();
 
@@ -2524,14 +2582,14 @@ function renderMap(topic, theme) {
   const ns = 'http://www.w3.org/2000/svg';
   const { color, shape } = theme;
 
-  svg.innerHTML = MAP_BACKGROUNDS[currentTopic];
+ svg.innerHTML = MAP_BACKGROUNDS[topic.key];
 
   const targetLayer =
-    currentTopic === 'politics'
+    topic.key === 'politics'
       ? document.getElementById('usa-map')
-      : currentTopic === 'ukraine'
+      : topic.key === 'ukraine'
       ? document.getElementById('ukraine-map')
-      : currentTopic === 'climate'
+      : topic.key === 'climate'
       ? document.getElementById('world-map')
       : svg;
 
