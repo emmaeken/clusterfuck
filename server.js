@@ -6,6 +6,8 @@ const OpenAI = require('openai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const GUARDIAN_API_KEY = process.env.GUARDIAN_API_KEY || 'test';
+const PRIMARY_PROVIDER_MIN_ARTICLES = 5;
 
 app.use(express.json());
 
@@ -18,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 function cleanArticleText(text = '') {
   return String(text)
+    .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .replace(/\[[^\]]*\]/g, '')
     .trim();
@@ -45,8 +48,295 @@ function extractJsonArray(text = '') {
 
 function uniqueSourceNames(articles = []) {
   return [...new Set(
-    articles.map(article => cleanArticleText(article.source?.name || '')).filter(Boolean)
+    articles.map(article => getArticleSourceName(article)).filter(Boolean)
   )];
+}
+
+function getArticleSourceName(article = {}) {
+  const sourceName = cleanArticleText(article.source?.name || '');
+  if (sourceName) return sourceName;
+
+  try {
+    return new URL(article.url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
+function collectSourceLinks(articles = [], limit = 6) {
+  const links = [];
+  const seenSources = new Set();
+
+  for (const article of articles) {
+    const url = cleanArticleText(article.url || '');
+    const sourceName = getArticleSourceName(article);
+    const sourceKey = sourceName.toLowerCase();
+
+    if (!url || !sourceName || seenSources.has(sourceKey)) continue;
+
+    seenSources.add(sourceKey);
+    links.push({
+      sourceName,
+      title: cleanArticleText(article.title || sourceName),
+      url
+    });
+
+    if (links.length >= limit) break;
+  }
+
+  return links;
+}
+
+const QUERY_STOPWORDS = new Set([
+  'about', 'after', 'before', 'from', 'into', 'over', 'under', 'with',
+  'this', 'that', 'these', 'those', 'have', 'will', 'what', 'when',
+  'where', 'which', 'their', 'there', 'than', 'them', 'they', 'your',
+  'topic', 'latest', 'news', 'update', 'updates', 'overview'
+]);
+
+function extractQueryTerms(query = '') {
+  return cleanArticleText(query)
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(term => term.length > 2 && !QUERY_STOPWORDS.has(term));
+}
+
+function scoreArticleRelevance(article = {}, queryTerms = []) {
+  if (!queryTerms.length) return 0;
+
+  const title = cleanArticleText(article.title || '').toLowerCase();
+  const description = cleanArticleText(article.description || '').toLowerCase();
+  const sourceName = getArticleSourceName(article).toLowerCase();
+
+  return queryTerms.reduce((score, term) => {
+    let nextScore = score;
+    if (title.includes(term)) nextScore += 5;
+    if (description.includes(term)) nextScore += 2;
+    if (sourceName.includes(term)) nextScore += 1;
+    return nextScore;
+  }, 0);
+}
+
+function getPublishedAtValue(article = {}) {
+  const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
+  return publishedAt && !isNaN(publishedAt) ? publishedAt.getTime() : 0;
+}
+
+function prioritizeArticles(articles = [], query = '', limit = 5) {
+  const queryTerms = extractQueryTerms(query);
+  const seenUrls = new Set();
+  const seenTitles = new Set();
+
+  const deduped = articles
+    .filter(article => {
+      const title = cleanArticleText(article.title || '');
+      const url = cleanArticleText(article.url || '');
+
+      if (!title || title === '[Removed]' || !url) return false;
+
+      const titleKey = title.toLowerCase();
+      if (seenUrls.has(url) || seenTitles.has(titleKey)) return false;
+
+      seenUrls.add(url);
+      seenTitles.add(titleKey);
+      return true;
+    })
+    .map(article => ({
+      ...article,
+      _publishedAtValue: getPublishedAtValue(article),
+      _relevanceScore: scoreArticleRelevance(article, queryTerms),
+      _sourceKey: getArticleSourceName(article).toLowerCase()
+    }))
+    .sort((a, b) => {
+      if (b._relevanceScore !== a._relevanceScore) {
+        return b._relevanceScore - a._relevanceScore;
+      }
+
+      return b._publishedAtValue - a._publishedAtValue;
+    });
+
+  const selected = [];
+  const overflow = [];
+  const seenSources = new Set();
+
+  deduped.forEach(article => {
+    if (selected.length < limit && article._sourceKey && !seenSources.has(article._sourceKey)) {
+      seenSources.add(article._sourceKey);
+      selected.push(article);
+      return;
+    }
+
+    overflow.push(article);
+  });
+
+  for (const article of overflow) {
+    if (selected.length >= limit) break;
+    selected.push(article);
+  }
+
+  return selected.slice(0, limit).map(article => {
+    const { _publishedAtValue, _relevanceScore, _sourceKey, ...cleanArticle } = article;
+    return cleanArticle;
+  });
+}
+
+function getTopicSearchProfile(topicKey = '') {
+  const profiles = {
+    politics: {
+      newsApiQuery: '"US politics" AND (White House OR Congress OR "Supreme Court" OR election OR campaign OR senate)',
+      guardianQuery: '"US politics" OR White House OR Congress OR "Supreme Court" OR election OR campaign OR senate',
+      guardianSection: 'us-news'
+    },
+    ukraine: {
+      newsApiQuery: '(Ukraine OR Ukrainian) AND (Russia OR Kremlin OR battlefield OR frontline OR aid OR ceasefire)',
+      guardianQuery: 'Ukraine OR Ukrainian OR Russia OR Kremlin OR battlefield OR frontline OR aid OR ceasefire',
+      guardianSection: 'world'
+    },
+    climate: {
+      newsApiQuery: '("climate change" OR "global warming") AND (emissions OR renewable OR "extreme weather" OR COP OR policy)',
+      guardianQuery: '"climate change" OR "global warming" OR emissions OR renewable OR "extreme weather" OR COP OR policy',
+      guardianSection: 'environment'
+    }
+  };
+
+  return profiles[topicKey] || null;
+}
+
+function getEffectiveQuery(rawQuery = '', topicKey = '', kind = '', provider = 'newsapi') {
+  const cleanedQuery = cleanArticleText(rawQuery);
+  const profile = getTopicSearchProfile(topicKey);
+  const wantsStructuredTopicQuery = ['main', 'month'].includes(kind);
+
+  if (!profile || !wantsStructuredTopicQuery) return cleanedQuery;
+
+  return provider === 'guardian'
+    ? profile.guardianQuery
+    : profile.newsApiQuery;
+}
+
+async function readJsonResponse(response, providerName = 'API') {
+  const text = await response.text();
+
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`${providerName} returned invalid JSON`);
+  }
+}
+
+function normalizeNewsApiArticle(article = {}) {
+  return {
+    title: cleanArticleText(article.title || ''),
+    description: cleanArticleText(article.description || ''),
+    url: cleanArticleText(article.url || ''),
+    image: cleanArticleText(article.urlToImage || article.image || ''),
+    source: {
+      name: cleanArticleText(article.source?.name || '') || 'Unknown source'
+    },
+    publishedAt: cleanArticleText(article.publishedAt || '')
+  };
+}
+
+function normalizeGuardianArticle(item = {}) {
+  const sectionName = cleanArticleText(item.sectionName || '');
+
+  return {
+    title: cleanArticleText(item.webTitle || ''),
+    description: cleanArticleText(item.fields?.trailText || ''),
+    url: cleanArticleText(item.webUrl || ''),
+    image: cleanArticleText(item.fields?.thumbnail || ''),
+    source: {
+      name: sectionName ? `The Guardian | ${sectionName}` : 'The Guardian'
+    },
+    publishedAt: cleanArticleText(item.webPublicationDate || '')
+  };
+}
+
+function buildFallbackReason(code = '', detail = '') {
+  const safeCode = cleanArticleText(code).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'unknown';
+  const safeDetail = cleanArticleText(detail).replace(/\s+/g, ' ').slice(0, 160);
+  return safeDetail ? `${safeCode}:${safeDetail}` : safeCode;
+}
+
+async function fetchNewsApiArticles({
+  query = '',
+  topicKey = '',
+  from = '',
+  to = '',
+  limit = 8,
+  fetchPageSize = 12,
+  sortBy = 'publishedAt',
+  kind = ''
+}) {
+  const apiKey = process.env.NEWS_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('NEWS_API_KEY not set');
+  }
+
+  const effectiveQuery = getEffectiveQuery(query, topicKey, kind, 'newsapi');
+  const url = new URL('https://newsapi.org/v2/everything');
+  url.searchParams.set('q', effectiveQuery || query);
+  url.searchParams.set('language', 'en');
+  url.searchParams.set('searchIn', 'title,description');
+  url.searchParams.set('sortBy', sortBy);
+  url.searchParams.set('pageSize', String(fetchPageSize));
+  url.searchParams.set('apiKey', apiKey);
+
+  if (from) url.searchParams.set('from', from);
+  if (to) url.searchParams.set('to', to);
+
+  const response = await fetch(url.toString());
+  const data = await readJsonResponse(response, 'NewsAPI');
+
+  if (!response.ok || data.status === 'error') {
+    const message = cleanArticleText(
+      data.message || `NewsAPI request failed with status ${response.status}`
+    );
+    const error = new Error(message);
+    error.status = response.status;
+    throw error;
+  }
+
+  const normalizedArticles = (data.articles || []).map(normalizeNewsApiArticle);
+  return prioritizeArticles(normalizedArticles, effectiveQuery || query, limit);
+}
+
+async function fetchGuardianArticles({
+  query = '',
+  topicKey = '',
+  from = '',
+  to = '',
+  limit = 8,
+  fetchPageSize = 10,
+  sortBy = 'publishedAt',
+  kind = ''
+}) {
+  const providerQuery = getEffectiveQuery(query, topicKey, kind, 'guardian');
+  const profile = getTopicSearchProfile(topicKey);
+  const url = new URL('https://content.guardianapis.com/search');
+
+  url.searchParams.set('api-key', GUARDIAN_API_KEY);
+  url.searchParams.set('q', providerQuery || cleanArticleText(query));
+  url.searchParams.set('page-size', String(Math.min(Math.max(fetchPageSize, 1), 25)));
+  url.searchParams.set('order-by', sortBy === 'publishedAt' ? 'newest' : 'relevance');
+  url.searchParams.set('show-fields', 'trailText,thumbnail');
+
+  if (from) url.searchParams.set('from-date', from);
+  if (to) url.searchParams.set('to-date', to);
+  if (profile?.guardianSection) url.searchParams.set('section', profile.guardianSection);
+
+  const response = await fetch(url.toString());
+  const data = await readJsonResponse(response, 'The Guardian API');
+
+  if (!response.ok || data?.response?.status !== 'ok') {
+    const message = data?.response?.message || data?.message || 'Guardian archive request failed';
+    throw new Error(message);
+  }
+
+  const articles = (data.response?.results || []).map(normalizeGuardianArticle);
+
+  return prioritizeArticles(articles, providerQuery || query, limit);
 }
 
 function buildFallbackTopicSummary(mode = 'short', articles = []) {
@@ -55,6 +345,7 @@ function buildFallbackTopicSummary(mode = 'short', articles = []) {
     .map(article => cleanArticleText(article.description || article.title))
     .filter(Boolean);
   const sources = uniqueSourceNames(picked);
+  const sourceLinks = collectSourceLinks(picked);
 
   if (mode === 'long') {
     return {
@@ -65,10 +356,7 @@ function buildFallbackTopicSummary(mode = 'short', articles = []) {
           ? `This overview is based on recent reporting from ${sources.join(', ')}.`
           : 'This overview is based on recent reporting from multiple sources.'
       ].join('\n\n'),
-      sources: picked.map(article => ({
-        title: article.title,
-        url: article.url
-      }))
+      sources: sourceLinks
     };
   }
 
@@ -106,46 +394,80 @@ function buildFallbackTimelineEvents(topicKey, topicName, articles = []) {
   });
 }
 
-function getBroadTopicEvents(topicKey, topicName) {
-  const presets = {
-    politics: [
-      { id: 'federal-power', label: 'Federal power', dateLabel: 'Big picture', importance: 'high', backgroundQuery: 'US federal power White House Congress courts overview', latestQuery: 'US federal power White House Congress courts latest news', whyItMatters: 'This tracks the biggest fights over who can act, block, or reshape policy.' },
-      { id: 'elections-and-parties', label: 'Elections and parties', dateLabel: 'Campaigns', importance: 'high', backgroundQuery: 'US elections parties campaign strategy overview', latestQuery: 'US elections parties campaign strategy latest news', whyItMatters: 'This captures the broad contest for support, messaging, and electoral control.' },
-      { id: 'legal-accountability', label: 'Legal accountability', dateLabel: 'Courts', importance: 'medium', backgroundQuery: 'US legal cases investigations accountability politics overview', latestQuery: 'US investigations court rulings political accountability latest news', whyItMatters: 'This includes major legal and investigative storylines that can reshape the political field.' },
-      { id: 'foreign-flashpoints', label: 'Foreign flashpoints', dateLabel: 'World stage', importance: 'medium', backgroundQuery: 'US politics foreign policy crisis overview', latestQuery: 'US foreign policy crisis politics latest news', whyItMatters: 'This covers external crises that quickly become defining domestic political stories.' }
-    ],
-    ukraine: [
-      { id: 'battlefield-shifts', label: 'Battlefield shifts', dateLabel: 'Front line', importance: 'high', backgroundQuery: 'Ukraine war battlefield shifts overview', latestQuery: 'Ukraine war battlefield shifts latest news', whyItMatters: 'This follows the biggest changes in territory, momentum, and military pressure.' },
-      { id: 'aid-and-allies', label: 'Aid and allies', dateLabel: 'Support', importance: 'high', backgroundQuery: 'Ukraine western aid allies overview', latestQuery: 'Ukraine western aid allies latest news', whyItMatters: 'This tracks the outside support that shapes what Ukraine can sustain.' },
-      { id: 'diplomacy', label: 'Diplomacy', dateLabel: 'Negotiations', importance: 'medium', backgroundQuery: 'Ukraine diplomacy ceasefire talks overview', latestQuery: 'Ukraine diplomacy ceasefire talks latest news', whyItMatters: 'This covers negotiation efforts, public positions, and peace-process pressure.' },
-      { id: 'civilian-impact', label: 'Civilian impact', dateLabel: 'Homes', importance: 'medium', backgroundQuery: 'Ukraine war civilians infrastructure overview', latestQuery: 'Ukraine war civilians infrastructure latest news', whyItMatters: 'This keeps the human and infrastructure consequences visible in the wider story.' }
-    ],
-    climate: [
-      { id: 'climate-diplomacy', label: 'Climate diplomacy', dateLabel: 'Big picture', importance: 'high', backgroundQuery: 'global climate diplomacy cop policy overview', latestQuery: 'global climate diplomacy cop policy latest news', whyItMatters: 'This covers the international decisions and political bargaining around climate action.' },
-      { id: 'extreme-weather', label: 'Extreme weather', dateLabel: 'Impacts', importance: 'high', backgroundQuery: 'extreme weather climate impacts overview', latestQuery: 'extreme weather climate impacts latest news', whyItMatters: 'This tracks the biggest visible consequences, from heat and floods to fire and drought.' },
-      { id: 'energy-transition', label: 'Energy transition', dateLabel: 'Power', importance: 'medium', backgroundQuery: 'renewable energy transition climate overview', latestQuery: 'renewable energy transition climate latest news', whyItMatters: 'This follows the shift in how countries build power, industry, and transport.' },
-      { id: 'science-and-thresholds', label: 'Science and thresholds', dateLabel: 'Signals', importance: 'medium', backgroundQuery: 'climate science thresholds emissions overview', latestQuery: 'climate science thresholds emissions latest news', whyItMatters: 'This captures the benchmark moments that signal how fast the climate is changing.' }
-    ]
-  };
-
-  return (presets[topicKey] || [
-    { id: 'big-picture', label: `${topicName} big picture`, dateLabel: 'Overview', importance: 'high', backgroundQuery: `${topicName} overview`, latestQuery: `${topicName} latest news`, whyItMatters: `This follows the biggest forces shaping ${topicName}.` }
-  ]).map(event => ({ ...event }));
+function formatIsoDate(date) {
+  return date.toISOString().slice(0, 10);
 }
 
-function buildTimelineEventPayload(topicKey, topicName, articles = []) {
+function getBroadTopicEvents(topicKey, topicName, mainQuery = '') {
+  const baseline = new Date();
+  const startOfCurrentMonth = new Date(Date.UTC(
+    baseline.getUTCFullYear(),
+    baseline.getUTCMonth(),
+    1
+  ));
+  const cleanedQuery = cleanArticleText(mainQuery || topicName || topicKey);
+
+  return Array.from({ length: 12 }, (_, index) => {
+    const monthStart = new Date(Date.UTC(
+      startOfCurrentMonth.getUTCFullYear(),
+      startOfCurrentMonth.getUTCMonth() - (index + 1),
+      1
+    ));
+    const monthEnd = new Date(Date.UTC(
+      monthStart.getUTCFullYear(),
+      monthStart.getUTCMonth() + 1,
+      0
+    ));
+    const longLabel = monthStart.toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+    const shortLabel = monthStart.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC'
+    });
+
+    return {
+      id: `${topicKey}-month-${formatIsoDate(monthStart).slice(0, 7)}`,
+      label: longLabel,
+      dateLabel: shortLabel,
+      importance: index < 3 ? 'high' : 'medium',
+      eventType: 'month',
+      query: cleanedQuery,
+      fromDate: formatIsoDate(monthStart),
+      toDate: formatIsoDate(monthEnd),
+      backgroundQuery: cleanedQuery,
+      latestQuery: cleanedQuery,
+      whyItMatters: `Monthly overview of the biggest shifts in ${topicName} during ${longLabel}.`
+    };
+  });
+}
+
+function buildTimelineEventPayload(topicKey, topicName, mainQuery = '', articles = []) {
   return {
-    overviewEvents: getBroadTopicEvents(topicKey, topicName),
+    overviewEvents: getBroadTopicEvents(topicKey, topicName, mainQuery),
     detailEvents: buildFallbackTimelineEvents(topicKey, topicName, articles)
   };
 }
 
-function buildFallbackEventOverview(topicName, eventLabel, articles = []) {
+function buildFallbackEventOverview(topicName, eventLabel, articles = [], eventType = 'story') {
   const picked = articles.slice(0, 4);
   const details = picked
     .map(article => cleanArticleText(article.description || article.title))
     .filter(Boolean);
   const sources = uniqueSourceNames(picked);
+
+  if (eventType === 'month') {
+    const first = details[0] || `${topicName} in ${eventLabel} was shaped by several connected developments.`;
+    const second = details[1] || `The coverage from ${eventLabel} points to a month where the story kept moving across multiple fronts.`;
+    const third = sources.length
+      ? `The strongest reporting for ${eventLabel} came from outlets including ${sources.join(', ')}.`
+      : `The linked articles below capture the clearest reporting we found for ${eventLabel}.`;
+
+    return `${first} ${second} ${third}`.trim();
+  }
 
   const first = details[0] || `${eventLabel} is one of the main developments inside ${topicName}.`;
   const second = details[1] || 'Coverage suggests the story is still active and evolving.';
@@ -159,34 +481,135 @@ function buildFallbackEventOverview(topicName, eventLabel, articles = []) {
 app.get('/api/news', async (req, res) => {
   const { q } = req.query;
   const apiKey = process.env.NEWS_API_KEY;
-
-  if (!apiKey) {
-    return res.status(500).json({
-      error: 'NEWS_API_KEY not set'
-    });
-  }
+  const topicKey = cleanArticleText(req.query.topicKey || '');
+  const kind = cleanArticleText(req.query.kind || '');
+  const provider = cleanArticleText(req.query.provider || '');
+  const forceGuardian = provider === 'guardian' || kind === 'month';
 
   if (!q) {
     return res.status(400).json({ error: 'Missing query parameter ?q=' });
   }
 
   try {
-    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&language=en&sortBy=publishedAt&pageSize=6&apiKey=${apiKey}`;
-    const response = await fetch(url);
-    const data = await response.json();
+    const from = cleanArticleText(req.query.from || '');
+    const to = cleanArticleText(req.query.to || '');
+    const sortBy = ['publishedAt', 'relevancy', 'popularity'].includes(req.query.sortBy)
+      ? req.query.sortBy
+      : 'publishedAt';
+    const requestedPageSize = Number.parseInt(req.query.pageSize, 10);
+    const limit = Number.isFinite(requestedPageSize)
+      ? Math.min(Math.max(requestedPageSize, 1), 12)
+      : 5;
+    const fetchPageSize = Math.min(Math.max(limit * 3, 12), 36);
+    const fallbackThreshold = Math.min(PRIMARY_PROVIDER_MIN_ARTICLES, limit);
+    const safeQuery = cleanArticleText(q);
 
-    if (data.status === 'error') {
-      return res.status(400).json({ error: data.message });
+    if (forceGuardian) {
+      try {
+        const articles = await fetchGuardianArticles({
+          query: q,
+          topicKey,
+          from,
+          to,
+          limit,
+          fetchPageSize,
+          sortBy,
+          kind
+        });
+
+        console.info(`[api/news] The Guardian served "${safeQuery}" with ${articles.length} articles (forced provider).`);
+        return res.json({
+          articles,
+          provider: 'guardian',
+          fallbackReason: 'forced_guardian_provider'
+        });
+      } catch (guardianErr) {
+        console.warn(`[api/news] Forced Guardian request failed for "${safeQuery}". Trying NewsAPI instead.`, guardianErr.message);
+        if (!apiKey) {
+          return res.status(500).json({ error: guardianErr.message || 'Historical archive lookup failed' });
+        }
+      }
     }
 
-    const articles = (data.articles || [])
-      .filter(a => a.title && a.title !== '[Removed]' && a.url)
-      .slice(0, 5);
+    let newsApiArticles = [];
+    let fallbackReason = '';
 
-    res.json({ articles });
+    if (apiKey) {
+      try {
+        newsApiArticles = await fetchNewsApiArticles({
+          query: q,
+          topicKey,
+          from,
+          to,
+          limit,
+          fetchPageSize,
+          sortBy,
+          kind
+        });
+
+        if (newsApiArticles.length >= fallbackThreshold) {
+          console.info(`[api/news] NewsAPI served "${safeQuery}" with ${newsApiArticles.length} articles.`);
+          return res.json({
+            articles: newsApiArticles,
+            provider: 'newsapi'
+          });
+        }
+
+        fallbackReason = buildFallbackReason(
+          'newsapi_too_few_articles',
+          `NewsAPI returned ${newsApiArticles.length} articles, threshold is ${fallbackThreshold}`
+        );
+        console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
+      } catch (newsApiErr) {
+        fallbackReason = buildFallbackReason('newsapi_failed', newsApiErr.message);
+        console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
+      }
+    } else {
+      fallbackReason = buildFallbackReason('newsapi_key_missing');
+      console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
+    }
+
+    try {
+      const guardianArticles = await fetchGuardianArticles({
+        query: q,
+        topicKey,
+        from,
+        to,
+        limit,
+        fetchPageSize,
+        sortBy,
+        kind
+      });
+
+      console.info(`[api/news] The Guardian served "${safeQuery}" with ${guardianArticles.length} articles.`);
+      return res.json({
+        articles: guardianArticles,
+        provider: 'guardian',
+        fallbackReason
+      });
+    } catch (guardianErr) {
+      console.error(`[api/news] Guardian fallback failed for "${safeQuery}".`, guardianErr.message);
+
+      if (newsApiArticles.length > 0) {
+        return res.json({
+          articles: newsApiArticles,
+          provider: 'newsapi',
+          fallbackReason,
+          warning: `Guardian fallback failed: ${guardianErr.message}. Returned partial NewsAPI results instead.`
+        });
+      }
+
+      const combinedMessage = [fallbackReason, guardianErr.message]
+        .filter(Boolean)
+        .join(' | ');
+
+      return res.status(500).json({
+        error: combinedMessage || 'Both NewsAPI and The Guardian API failed'
+      });
+    }
   } catch (err) {
     console.error('Proxy fetch error:', err);
-    res.status(500).json({ error: 'Failed to reach NewsAPI: ' + err.message });
+    res.status(500).json({ error: 'Failed to fetch articles: ' + err.message });
   }
 });
 app.get('/api/hello', (req, res) => {
@@ -244,10 +667,7 @@ ${articleText}`;
     if (mode === 'long') {
       return res.json({
         longSummary: text,
-        sources: picked.map(a => ({
-          title: a.title,
-          url: a.url
-        }))
+        sources: collectSourceLinks(picked)
       });
     }
 
@@ -272,7 +692,7 @@ app.post('/api/timeline-events', async (req, res) => {
     }
 
     if (!USE_OPENAI_FEATURES || !client) {
-      return res.json(buildTimelineEventPayload(topicKey, topicName || topicKey, articles));
+      return res.json(buildTimelineEventPayload(topicKey, topicName || topicKey, mainQuery, articles));
     }
 
     const picked = articles.slice(0, 8);
@@ -318,7 +738,7 @@ ${articleText}`;
     const parsed = extractJsonArray(text);
 
     if (!parsed || parsed.length === 0) {
-      return res.json(buildTimelineEventPayload(topicKey, topicName || topicKey, articles));
+      return res.json(buildTimelineEventPayload(topicKey, topicName || topicKey, mainQuery, articles));
     }
 
     const events = parsed
@@ -343,7 +763,7 @@ ${articleText}`;
       .filter(event => event.label && event.backgroundQuery && event.latestQuery);
 
     return res.json({
-      overviewEvents: getBroadTopicEvents(topicKey, topicName || topicKey),
+      overviewEvents: getBroadTopicEvents(topicKey, topicName || topicKey, mainQuery),
       detailEvents: events.length
         ? events
         : buildFallbackTimelineEvents(topicKey, topicName || topicKey, articles)
@@ -358,7 +778,7 @@ ${articleText}`;
 
 app.post('/api/event-overview', async (req, res) => {
   try {
-    const { topicName = '', eventLabel = '', articles = [] } = req.body;
+    const { topicName = '', eventLabel = '', eventType = 'story', articles = [] } = req.body;
 
     if (!Array.isArray(articles) || articles.length === 0) {
       return res.status(400).json({ error: 'No articles provided' });
@@ -368,7 +788,7 @@ app.post('/api/event-overview', async (req, res) => {
 
     if (!USE_OPENAI_FEATURES || !client) {
       return res.json({
-        overview: buildFallbackEventOverview(topicName, eventLabel, picked)
+        overview: buildFallbackEventOverview(topicName, eventLabel, picked, eventType)
       });
     }
 
@@ -384,6 +804,7 @@ URL: ${cleanArticleText(a.url || '')}
 
 Topic: ${topicName}
 Happening: ${eventLabel}
+Type: ${eventType}
 
 Using only the articles below, explain what this happening is, why it matters, and what phase it seems to be in.
 Write one tight paragraph in 3 to 5 sentences.

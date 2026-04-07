@@ -472,18 +472,17 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .vbtn.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 
 /* GRID */
-  .main-grid { 
+.main-grid { 
     flex: 1;
     height: calc(100vh - 48px);
     display: grid; 
     grid-template-columns: 67% 33%; 
-    grid-template-rows: 1fr 90px; 
+    grid-template-rows: 1fr; 
     min-height: 0; 
 }
   @media (max-width: 700px) {
-    .main-grid { grid-template-columns: 1fr; grid-template-rows: 1fr auto auto; }
-    .sidebar { grid-column: 1; grid-row: 3; border-left: none; border-top: 1px solid var(--border); max-height: 240px; }
-    .tl-area { grid-row: 2; }
+    .main-grid { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+    .sidebar { grid-column: 1; grid-row: 2; border-left: none; border-top: 1px solid var(--border); max-height: 240px; }
   }
   /* CANVAS */
   /* CANVAS */
@@ -519,6 +518,371 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   display: flex;
 }
 
+.timeline-wrap {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(26,111,219,0.08), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(232,51,42,0.06), transparent 32%),
+    linear-gradient(180deg, #f8f6f1 0%, #f1eee6 100%);
+  z-index: 2;
+}
+
+.timeline-wrap.on {
+  display: block;
+}
+
+.timeline-stage {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  padding: 28px 30px 24px;
+}
+
+.timeline-stage-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.timeline-kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-headline {
+  margin-top: 7px;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 50px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.timeline-sub {
+  max-width: 54ch;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.timeline-scale {
+  display: inline-flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border);
+  padding: 4px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.timeline-scale-btn {
+  border: none;
+  background: transparent;
+  color: var(--ink3);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-family: var(--serif);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timeline-scale-btn.active {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(26,24,20,0.08);
+}
+
+.timeline-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0 14px;
+}
+
+.timeline-meta-note {
+  font-size: 11px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+.timeline-current {
+  font-size: 12px;
+  color: var(--ink2);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-rail-shell {
+  position: relative;
+  min-height: 0;
+  border: 1px solid rgba(26,24,20,0.08);
+  border-radius: 28px;
+  background: rgba(253,252,250,0.86);
+  box-shadow: 0 14px 44px rgba(26,24,20,0.06);
+  overflow: auto;
+}
+
+.timeline-rail-shell::before {
+  content: "";
+  position: absolute;
+  left: 38px;
+  right: 38px;
+  top: 118px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(26,24,20,0.08), rgba(26,24,20,0.22), rgba(26,24,20,0.08));
+}
+
+.timeline-empty {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  padding: 30px;
+  font-size: 13px;
+  color: var(--ink3);
+}
+
+.timeline-markers {
+  position: relative;
+  height: 150px;
+  padding: 0 38px;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 44px;
+  transform: translateX(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.timeline-marker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 26px;
+  width: 1px;
+  height: 54px;
+  transform: translateX(-50%);
+  background: rgba(26,24,20,0.12);
+}
+
+.timeline-marker-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin: 0 auto;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 6px rgba(253,252,250,0.95);
+}
+
+.timeline-marker-date {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.timeline-marker-label {
+  display: block;
+  margin-top: 70px;
+  max-width: 16ch;
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink2);
+}
+
+.timeline-marker.active .timeline-marker-dot {
+  transform: scale(1.16);
+  border-color: rgba(26,24,20,0.9);
+}
+
+.timeline-marker.active .timeline-marker-label {
+  color: var(--ink);
+}
+
+.timeline-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  padding: 0 24px 24px;
+}
+
+.timeline-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--white);
+  padding: 14px 14px 16px;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(26,24,20,0.07);
+}
+
+.timeline-card.active {
+  border-color: var(--border2);
+  box-shadow: 0 12px 30px rgba(26,24,20,0.08);
+}
+
+.timeline-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.timeline-card-date {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-card-badge {
+  font-size: 10px;
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-family: var(--serif);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.timeline-card-label {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+.timeline-card-copy {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink2);
+}
+
+.timeline-card-action {
+  margin-top: 12px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-rail-shell.month-view::before {
+  display: none;
+}
+
+.timeline-month-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 22px;
+}
+
+.timeline-month-card {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.92);
+  padding: 18px 18px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.timeline-month-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(26,24,20,0.07);
+}
+
+.timeline-month-card.active {
+  border-color: rgba(26,24,20,0.16);
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.98));
+  box-shadow: 0 14px 34px rgba(26,24,20,0.08);
+}
+
+.timeline-month-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.timeline-month-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-month-badge {
+  font-size: 10px;
+  border-radius: 999px;
+  padding: 4px 7px;
+  font-family: var(--serif);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.timeline-month-title {
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.02;
+  color: var(--ink);
+}
+
+.timeline-month-copy {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink2);
+}
+
+.timeline-month-action {
+  margin-top: 14px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
 #map-svg {
   width: 100%;
   height: 100%;
@@ -550,7 +914,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 /* SIDEBAR */
 .sidebar {
   grid-column: 2;
-  grid-row: 1 / 3;
+  grid-row: 1;
   background: var(--white);
   border-left: 1px solid var(--border);
   display: flex;
@@ -595,6 +959,17 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   max-width: 42ch;
   padding-left: 12px;
   padding-right: 6px;
+}
+
+.sb-main-summary-long p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.sb-main-summary-long p:last-child {
+  margin-bottom: 0;
 }
 
 .sb-more-btn {
@@ -810,20 +1185,15 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .article-item { padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.12s; }
 .article-item:last-child { border-bottom: none; }
 .article-item:hover { opacity: 0.65; }
-.art-src { font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; font-family: var(--serif); font-weight: 600; }
-.art-title { font-size: 12px; color: var(--ink); line-height: 1.4; font-weight: 400; }
+.art-src { font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; font-family: var(--serif); font-weight: 600; text-decoration: none; }
+.art-title { font-size: 12px; color: var(--ink); line-height: 1.4; font-weight: 400; text-decoration: none; display: block; }
+.art-src:hover,
+.art-title:hover { text-decoration: underline; }
 .art-time { font-size: 10px; color: var(--ink3); margin-top: 3px; }
 .art-loading { font-size: 12px; color: var(--ink3); padding: 8px 0; font-style: italic; display: flex; gap: 7px; align-items: center; }
 .mini-spin { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border2); animation: spin 0.75s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .err-box { background: #FFF5F5; border: 1px solid rgba(232,51,42,0.2); border-radius: var(--r); padding: 10px 12px; font-size: 12px; color: #A02020; line-height: 1.6; margin-top: 8px; }
-
-/* TIMELINE */
-.tl-area { grid-column:1; grid-row:2; background: var(--white); border-top: 1px solid var(--border); padding: 10px 16px; }
-.tl-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.tl-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); font-family: var(--serif); font-weight: 700; }
-.tl-date { font-size: 12px; color: var(--ink2); font-family: var(--serif); font-weight: 600; }
-#tl-svg { width: 100%; height: 44px; cursor: ew-resize; display: block; }
 
 /* TOOLTIP */
 #tt { position: fixed; background: var(--ink); color: var(--white); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-family: var(--serif); font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.1s; white-space: nowrap; z-index: 100; letter-spacing: 0.02em; }
@@ -890,6 +1260,649 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   .sidebar { display: none; }
   /* Graph takes full height on mobile */
   .canvas-wrap { min-height: 58vh; }
+  .timeline-stage {
+    padding: 18px 16px 16px;
+  }
+  .timeline-stage-top,
+  .timeline-meta-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .timeline-markers {
+    height: 128px;
+    padding: 0 16px;
+  }
+  .timeline-rail-shell::before {
+    left: 18px;
+    right: 18px;
+    top: 100px;
+  }
+  .timeline-marker-label {
+    max-width: 10ch;
+    font-size: 11px;
+  }
+  .timeline-card-grid {
+    grid-template-columns: 1fr;
+    padding: 0 14px 14px;
+  }
+  .timeline-month-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  .timeline-month-title {
+    font-size: 20px;
+  }
+}
+
+/* Editorial timeline and sidebar redesign */
+.timeline-stage {
+  padding: 30px 32px 26px;
+}
+
+.timeline-headline {
+  max-width: 12ch;
+}
+
+.timeline-sub {
+  max-width: 48ch;
+}
+
+.timeline-meta-bar {
+  align-items: flex-start;
+  padding: 0 0 16px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(26,24,20,0.08);
+}
+
+.timeline-meta-note {
+  max-width: 58ch;
+}
+
+.timeline-current {
+  padding: 10px 14px;
+  border: 1px solid rgba(26,24,20,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.7);
+}
+
+.timeline-rail-shell {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: auto;
+  padding: 8px 0 32px;
+}
+
+.timeline-rail-shell::before,
+.timeline-rail-shell.month-view::before {
+  display: none;
+}
+
+.timeline-flow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100%;
+  padding: 12px 0 18px;
+}
+
+.timeline-flow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(26,24,20,0.06), rgba(26,24,20,0.2), rgba(26,24,20,0.06));
+  pointer-events: none;
+}
+
+.timeline-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
+  align-items: center;
+}
+
+.timeline-entry-card {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 14px 16px 15px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  border: 1px solid rgba(26,24,20,0.1);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,246,241,0.9));
+  box-shadow: 0 10px 24px rgba(26,24,20,0.06);
+  cursor: pointer;
+  appearance: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.timeline-entry-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(26,24,20,0.08);
+}
+
+.timeline-entry-card::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  width: 18px;
+  height: 1px;
+  background: rgba(26,24,20,0.12);
+  pointer-events: none;
+}
+
+.timeline-entry.left .timeline-entry-card {
+  grid-column: 1;
+  justify-self: end;
+  margin-right: 12px;
+}
+
+.timeline-entry.left .timeline-entry-card::before {
+  right: -18px;
+}
+
+.timeline-entry.right .timeline-entry-card {
+  grid-column: 3;
+  justify-self: start;
+  margin-left: 12px;
+}
+
+.timeline-entry.right .timeline-entry-card::before {
+  left: -18px;
+}
+
+.timeline-entry-spine {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 118px;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+
+.timeline-entry-date {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.timeline-entry-node {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(26,24,20,0.75);
+  background: var(--ink);
+  box-shadow: 0 0 0 6px rgba(248,246,241,0.96);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.timeline-entry-spine:hover .timeline-entry-date {
+  color: var(--ink2);
+}
+
+.timeline-entry-spine:hover .timeline-entry-node {
+  transform: scale(1.08);
+}
+
+.timeline-entry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.timeline-entry-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.timeline-entry-state {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink2);
+  background: rgba(26,24,20,0.05);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.timeline-entry-title {
+  font-family: var(--serif);
+  font-size: clamp(18px, 1.7vw, 24px);
+  font-weight: 700;
+  line-height: 1.08;
+  color: var(--ink);
+}
+
+.timeline-entry-copy {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+
+.timeline-entry.context .timeline-entry-card {
+  width: min(100%, 320px);
+  background: rgba(255,255,255,0.78);
+  box-shadow: 0 8px 20px rgba(26,24,20,0.05);
+}
+
+.timeline-entry.context .timeline-entry-title {
+  font-size: 20px;
+}
+
+.timeline-entry.focus .timeline-entry-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,240,232,0.98));
+}
+
+.timeline-entry.active .timeline-entry-card {
+  border-color: rgba(26,24,20,0.18);
+  box-shadow: 0 14px 34px rgba(26,24,20,0.1);
+}
+
+.timeline-entry.active .timeline-entry-node {
+  transform: scale(1.12);
+}
+
+.sb-section-copy {
+  margin: 5px 0 14px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--ink3);
+  max-width: 46ch;
+}
+
+.sb-overview-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sb-overview-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sb-overview-grid,
+.story-grid,
+.story-coverage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.85fr);
+  gap: 18px;
+}
+
+.sb-overview-main {
+  min-width: 0;
+}
+
+.sb-overview-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sb-overview-main .sb-main-summary {
+  margin-top: 0;
+  padding: 0px 0px 0px 10px;
+}
+
+.sb-overview-main p,
+.story-intro p {
+  margin: 0 0 14px 10px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+.sb-overview-main p:last-child,
+.story-intro p:last-child {
+  margin-bottom: 0;
+}
+
+.sb-overview-aside,
+.story-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sb-highlight-box,
+.story-highlight,
+.story-side-note {
+  margin: 20px 10px;
+  padding: 15px;
+  border: 1px solid rgba(26,24,20,0.08);
+  border-radius: 16px;
+  background: rgba(248,246,241,0.86);
+}
+
+.sb-highlight-label,
+.story-highlight-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.sb-highlight-text,
+.story-highlight-text {
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.sb-source-strip {
+  padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-source-list-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.sb-source-list-inline span {
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink2);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.story-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.story-head {
+  padding: 16px 18px 18px;
+  border: 1px solid rgba(26,24,20,0.08);
+  border-left: 3px solid var(--ink);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.92));
+}
+
+.story-kicker {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.story-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.story-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.story-pill {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.story-deck {
+  margin-top: 10px;
+  max-width: 54ch;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--ink2);
+}
+
+.story-side-note {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.story-column {
+  min-width: 0;
+}
+
+.story-column-secondary {
+  padding-top: 6px;
+}
+
+.story-coverage-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.story-coverage-stacked .story-column-secondary {
+  padding-top: 0;
+}
+
+.story-section-note {
+  margin: -2px 0 10px;
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--ink3);
+}
+
+.editorial-article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.editorial-article {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.editorial-article:hover .editorial-article-title {
+  text-decoration: underline;
+}
+
+.editorial-article-feature {
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.editorial-article-list .editorial-article {
+  padding: 10px 0 0 14px;
+  border-left: 1px solid var(--border);
+}
+
+.editorial-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.editorial-article-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+.editorial-article-tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.editorial-article-source,
+.editorial-article-time {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.editorial-article-title {
+  margin-top: 7px;
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.editorial-article-list .editorial-article-title {
+  font-size: 15px;
+}
+
+.editorial-article-copy {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink2);
+}
+
+.story-source-footnote .sb-subsection-title {
+  margin-top: 0;
+}
+
+.story-source-links {
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  .timeline-stage {
+    padding: 20px 16px 18px;
+  }
+
+  .timeline-meta-bar,
+  .sb-overview-top,
+  .story-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .timeline-flow::before {
+    left: 18px;
+    transform: none;
+  }
+
+  .timeline-entry {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .timeline-entry.left .timeline-entry-card,
+  .timeline-entry.right .timeline-entry-card {
+    grid-column: 2;
+    justify-self: stretch;
+    width: 100%;
+    margin: 0 0 0 6px;
+  }
+
+  .timeline-entry.left .timeline-entry-card::before,
+  .timeline-entry.right .timeline-entry-card::before {
+    left: -20px;
+    right: auto;
+    width: 14px;
+  }
+
+  .timeline-entry-spine {
+    grid-column: 1;
+    min-height: 0;
+    padding-top: 14px;
+  }
+
+  .timeline-entry-date {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+
+  .timeline-entry-title {
+    font-size: 19px;
+  }
+
+  .sb-overview-grid,
+  .story-grid,
+  .story-coverage {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial-article-title {
+    font-size: 17px;
+  }
+
+  .editorial-article-list .editorial-article-title {
+    font-size: 14px;
+  }
 }
 </style>
 </head>
@@ -1017,6 +2030,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     <div class="tb-title" id="tb-title"></div>
     <div class="view-sw">
       <button class="vbtn active" id="vbtn-graph" onclick="switchView('graph')">Graph</button>
+      <button class="vbtn" id="vbtn-timeline" onclick="switchView('timeline')">Timeline</button>
       <button class="vbtn" id="vbtn-map" onclick="switchView('map')">Map</button>
     </div>
   </div>
@@ -1030,6 +2044,9 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
       <div class="map-wrap" id="map-wrap">
         <svg id="map-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet">        </svg>
       </div>
+      <div class="timeline-wrap" id="timeline-wrap">
+        <div class="timeline-stage" id="timeline-stage"></div>
+      </div>
       <div class="canvas-hint" id="canvas-hint">Click node · Drag pan</div>
     </div>
 
@@ -1037,41 +2054,14 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     <div class="sidebar">
       <div class="sb-top" id="sb-top">
         <div id="sb-badge"></div>
-        <div class="sb-topic-name" id="sb-topic-name">A fucking overview</div>
+        <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
         <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
         <div class="sb-title" id="sb-title">Overview</div>
       </div>
       <div class="sb-scroll" id="sb-scroll">
-        <p class="sb-empty">Click any node in the graph to load live headlines and context.</p>
+        <p class="sb-empty">Click any node in the graph to load recent coverage and context.</p>
         <div class="chip-row" id="chip-row"></div>
       </div>
-    </div>
-
-    <!-- TIMELINE -->
-    <div class="tl-area">
-      <div class="tl-meta">
-        <div class="tl-lbl">Timeline</div>
-        <div class="tl-date" id="tl-date">Drag to navigate</div>
-      </div>
-      <svg id="tl-svg" viewBox="0 0 1000 44" preserveAspectRatio="none">
-        <line x1="0" y1="28" x2="1000" y2="28" stroke="var(--border2)" stroke-width="1"/>
-        <line x1="0" y1="28" x2="600" y2="28" stroke-width="2" id="tl-prog" stroke-linecap="round"/>
-        <g id="tl-evts"></g>
-        <g id="tl-scrub-g">
-          <!-- scrubber shape changes per topic -->
-          <circle cx="600" cy="28" r="7" id="tl-scrub-circ" display="block"/>
-          <rect x="593" y="21" width="14" height="14" rx="2" id="tl-scrub-rect" display="none"/>
-          <polygon points="600,21 593,35 607,35" id="tl-scrub-tri" display="none"/>
-        </g>
-        <line x1="0"   y1="24" x2="0"   y2="32" stroke="var(--border2)" stroke-width="1"/>
-        <line x1="333" y1="25" x2="333" y2="31" stroke="var(--border2)" stroke-width="0.5"/>
-        <line x1="666" y1="25" x2="666" y2="31" stroke="var(--border2)" stroke-width="0.5"/>
-        <line x1="1000" y1="24" x2="1000" y2="32" stroke="var(--border2)" stroke-width="1"/>
-        <text x="4"   y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2022</text>
-        <text x="337" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2023</text>
-        <text x="670" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600">2024</text>
-        <text x="996" y="42" font-size="8" fill="var(--ink3)" font-family="'Syne',sans-serif" font-weight="600" text-anchor="end">2025</text>
-      </svg>
     </div>
   </div>
 </div>
@@ -1254,7 +2244,7 @@ politics: {
       name:'US Politics',
       key:'politics',
       summary:'An overview of elections, institutions, parties, media and policy in the current US political landscape.',
-        mainQuery: "US politics latest major developments",
+        mainQuery: "\"US politics\" AND (White House OR Congress OR \"Supreme Court\" OR election OR campaign OR senate)",
     queries:{
       elections:'US elections 2024 2025', congress:'US Congress legislation',
       supremecourt:'Supreme Court ruling', history:'American democracy history',
@@ -1306,7 +2296,7 @@ ukraine: {
       name:'Ukraine Conflict',
       key:'ukraine',
       summary:'A clustered overview of the war through frontlines, diplomacy, aid, sanctions and other connected parts of the conflict.',
-        mainQuery: "Ukraine war latest major developments",
+        mainQuery: "(Ukraine OR Ukrainian) AND (Russia OR Kremlin OR battlefield OR frontline OR aid OR ceasefire)",
     queries:{
       frontlines:'Ukraine Russia frontline Donetsk', diplomacy:'Ukraine peace talks ceasefire',
       aid:'Ukraine western military aid', nato:'NATO Ukraine alliance',
@@ -1358,7 +2348,7 @@ climate: {
       name:'Climate',
       key:'climate',
       summary:'An overview of emissions, policy, extreme weather, energy transition and other linked parts of the climate crisis.',
-        mainQuery: "climate change latest major developments",
+        mainQuery: "(\"climate change\" OR \"global warming\") AND (emissions OR renewable OR \"extreme weather\" OR COP OR policy)",
     queries:{
       emissions:'carbon emissions greenhouse gas', policy:'climate policy COP agreement',
       xweather:'extreme weather flooding heatwave', energy:'renewable energy solar wind',
@@ -1413,11 +2403,15 @@ let currentTopic=null, selectedNode=null, currentView='graph';
 let nodes=[], edgeList=[], animId=null;
 let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
 let cache={};
+let cacheMeta={};
 let timelineEventCache = {};
 let activeTopicRequest = 0;
+let activeTimelineDetailRequest = 0;
 let activeTimelineEventId = null;
 let timelineScrubPct = 0.5;
+let timelineViewLevel = 'overview';
 let zoomScale = 1;
+const ARTICLE_SECTION_LABEL = 'Recent coverage';
 const MIN_ZOOM = 0.7;
 const MAX_ZOOM = 2.2;
 const USE_FAKE_AI_SUMMARY = true;
@@ -1434,9 +2428,12 @@ function openTopic(key) {
   currentView = 'graph';
   panOffset = { x: 0, y: 0 };
   zoomScale = 1;
+  timelineViewLevel = 'overview';
   cache = {};
+  cacheMeta = {};
   timelineEventCache = {};
   activeTimelineEventId = null;
+  activeTimelineDetailRequest += 1;
   nodes = [];
   edgeList = [];
 
@@ -1455,8 +2452,10 @@ function openTopic(key) {
   document.getElementById('sb-topic-summary').textContent = topic.summary;
   document.getElementById('sb-title').textContent = 'Graph overview';
   document.getElementById('vbtn-graph').classList.add('active');
+  document.getElementById('vbtn-timeline').classList.remove('active');
   document.getElementById('vbtn-map').classList.remove('active');
   document.getElementById('map-wrap').classList.remove('on');
+  document.getElementById('timeline-wrap').classList.remove('on');
   document.getElementById('canvas-hint').style.display = '';
 
 updateScrubShape(key, theme.color);
@@ -1498,6 +2497,7 @@ function goBack() {
 
   // invalidate all old async responses
   activeTopicRequest += 1;
+  activeTimelineDetailRequest += 1;
 
   // reset state completely
   currentTopic = null;
@@ -1506,9 +2506,11 @@ function goBack() {
   nodes = [];
   edgeList = [];
   cache = {};
+  cacheMeta = {};
   timelineEventCache = {};
   panOffset = { x: 0, y: 0 };
   zoomScale = 1;
+  timelineViewLevel = 'overview';
   activeTimelineEventId = null;
   isPanning = false;
 
@@ -1517,8 +2519,10 @@ function goBack() {
   document.getElementById('landing').classList.add('active');
 
   document.getElementById('vbtn-graph').classList.add('active');
+  document.getElementById('vbtn-timeline').classList.remove('active');
   document.getElementById('vbtn-map').classList.remove('active');
   document.getElementById('map-wrap').classList.remove('on');
+  document.getElementById('timeline-wrap').classList.remove('on');
   document.getElementById('canvas-hint').style.display = '';
 
   // clear canvas
@@ -1537,13 +2541,13 @@ function goBack() {
   // reset sidebar
   document.getElementById('sb-top').innerHTML = `
     <div id="sb-badge"></div>
-    <div class="sb-topic-name" id="sb-topic-name">A fucking overview</div>
+    <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
     <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
     <div class="sb-title" id="sb-title">Overview</div>
   `;
 
   document.getElementById('sb-scroll').innerHTML = `
-    <p class="sb-empty">Click any node in the graph to load live headlines and context.</p>
+    <p class="sb-empty">Click any node in the graph to load recent coverage and context.</p>
     <div class="chip-row" id="chip-row"></div>
   `;
 
@@ -1552,17 +2556,36 @@ function goBack() {
   document.getElementById('tb-badge').innerHTML = '';
 }
 
-function switchView(v) {
+async function switchView(v) {
   currentView = v;
   document.getElementById('vbtn-graph').classList.toggle('active', v === 'graph');
+  document.getElementById('vbtn-timeline').classList.toggle('active', v === 'timeline');
   document.getElementById('vbtn-map').classList.toggle('active', v === 'map');
   document.getElementById('map-wrap').classList.toggle('on', v === 'map');
-  document.getElementById('canvas-hint').style.display = v === 'map' ? 'none' : '';
+  document.getElementById('timeline-wrap').classList.toggle('on', v === 'timeline');
+  document.getElementById('canvas-hint').style.display = v === 'graph' ? '' : 'none';
+
+  if (v === 'graph' && currentTopic) {
+    const topic = TOPICS[currentTopic];
+    const mainNode = topic?.nodes?.find(node => node.tier === 'main');
+    if (selectedNode && mainNode && selectedNode !== mainNode.id) {
+      await selectNode(selectedNode);
+    } else {
+      await renderMainTopicOverview(currentTopic);
+    }
+    return;
+  }
+
+  if (v === 'timeline' && currentTopic) {
+    timelineViewLevel = 'overview';
+    await ensureTimelineSidebarReady(currentTopic);
+    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+  }
 }
 
 function renderSidebarDefault(topic) {
   const s=document.getElementById('sb-scroll');
-  s.innerHTML='<p class="sb-empty">Click any node to load live headlines and context for that perspective.</p>';
+  s.innerHTML='<p class="sb-empty">Click any node to load recent coverage and context for that perspective.</p>';
   const row=document.createElement('div'); row.className='chip-row';
   topic.nodes.filter(n => n.tier !== 'main').slice(0,6).forEach(n=>{
     const c=document.createElement('div'); c.className='chip'; c.textContent=n.label;
@@ -1575,11 +2598,13 @@ function updateScrubShape(key, color) {
   const circ=document.getElementById('tl-scrub-circ');
   const rect=document.getElementById('tl-scrub-rect');
   const tri=document.getElementById('tl-scrub-tri');
+  const prog=document.getElementById('tl-prog');
+  if (!circ || !rect || !tri || !prog) return;
   [circ,rect,tri].forEach(el=>{el.setAttribute('display','none');el.setAttribute('fill',color);});
   if (key==='politics') circ.setAttribute('display','block');
   else if (key==='ukraine') rect.setAttribute('display','block');
   else tri.setAttribute('display','block');
-  document.getElementById('tl-prog').setAttribute('stroke',color);
+  prog.setAttribute('stroke',color);
 }
 
 /* ══════════════════════
@@ -1830,9 +2855,12 @@ function setTimelineActiveEvent(topicKey, eventId) {
 }
 
 async function fetchTimelineEvents(topicKey, articles) {
-  if (timelineEventCache[topicKey]?.overviewEvents || timelineEventCache[topicKey]?.detailEvents) {
-    return timelineEventCache[topicKey];
-  }
+  const cachedTimeline = timelineEventCache[topicKey];
+  const hasCachedTimelineEvents =
+    (cachedTimeline?.overviewEvents?.length || 0) > 0 ||
+    (cachedTimeline?.detailEvents?.length || 0) > 0;
+
+  if (hasCachedTimelineEvents) return cachedTimeline;
 
   const topic = TOPICS[topicKey];
 
@@ -1866,6 +2894,7 @@ async function fetchTimelineEvents(topicKey, articles) {
       id: event.id || `${topicKey}-event-${index + 1}`,
       dateLabel: event.dateLabel || 'Now',
       importance: event.importance === 'high' ? 'high' : 'medium',
+      eventType: event.eventType || 'story',
       active: false
     }));
 
@@ -1881,42 +2910,35 @@ async function fetchTimelineEvents(topicKey, articles) {
 }
 
 function getTimelineZoomLevel() {
-  return zoomScale >= 1.18 ? 'detail' : 'overview';
+  return timelineViewLevel;
 }
 
 function getCurrentTimelineEvents(topicKey) {
   const data = timelineEventCache[topicKey];
   if (!data) return [];
-  return getTimelineZoomLevel() === 'detail'
-    ? (data.detailEvents?.length ? data.detailEvents : data.overviewEvents || [])
-    : (data.overviewEvents || []);
+  return data.overviewEvents || [];
 }
 
 function getTimelineLevelLabel() {
-  return getTimelineZoomLevel() === 'detail'
-    ? 'Closer view'
-    : 'Big picture';
+  return 'Big picture by month';
 }
 
-function syncTimelineToZoom() {
-  if (!currentTopic || !timelineEventCache[currentTopic]) return;
-
-  const currentEvents = getCurrentTimelineEvents(currentTopic);
-  if (!currentEvents.length) {
-    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
-    return;
-  }
-
-  const stillVisible = currentEvents.some(ev => ev.id === activeTimelineEventId);
-  if (!stillVisible) {
-    selectTimelineEvent(currentTopic, currentEvents[0].id);
-    return;
-  }
+function setTimelineViewLevel(level) {
+  timelineViewLevel = 'overview';
+  if (!currentTopic) return;
 
   renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
 }
 
-async function fetchEventOverview(topicKey, eventLabel, articles) {
+function renderTimelineAxis() {
+  return;
+}
+
+function syncTimelineToZoom() {
+  return;
+}
+
+async function fetchEventOverview(topicKey, eventLabel, articles, options = {}) {
   try {
     const res = await fetch('/api/event-overview', {
       method: 'POST',
@@ -1924,6 +2946,7 @@ async function fetchEventOverview(topicKey, eventLabel, articles) {
       body: JSON.stringify({
         topicName: TOPICS[topicKey]?.name || topicKey,
         eventLabel,
+        eventType: options.eventType || 'story',
         articles
       })
     });
@@ -1950,31 +2973,165 @@ async function fetchEventOverview(topicKey, eventLabel, articles) {
 function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles, latestArticles) {
   const wrap = document.getElementById('sb-event-details');
   if (!wrap) return;
+  const theme = THEMES[topicKey];
+  const background = sortArticlesByPublishedDate(dedupeArticlesByUrl(backgroundArticles));
+  const latest = sortArticlesByPublishedDate(dedupeArticlesByUrl(latestArticles).filter(article => {
+    const url = safeUrl(article.url);
+    return !background.some(item => safeUrl(item.url) === url && url);
+  }));
+  const summaryParts = (overview || '')
+    .split(/\n+/)
+    .map(part => cleanText(part))
+    .filter(Boolean);
+  const summaryText = cleanText(overview || '');
+  const summaryParagraphs = summaryParts.length ? summaryParts : [summaryText].filter(Boolean);
+  const takeaway = event.whyItMatters || splitSummarySentences(summaryText)[1] || splitSummarySentences(summaryText)[0] || 'Coverage around this development is still moving.';
+  const deck = event.whyItMatters || splitSummarySentences(summaryText)[0] || 'A key development inside this topic.';
+  const coverageSources = uniqueSourceNames([...background, ...latest]).length;
 
   wrap.innerHTML = `
-    <div class="news-card" style="border-left:3px solid ${THEMES[topicKey].color}">
-      <div class="nc-head" style="background:${THEMES[topicKey].bg}">
-        ${badgeHTML(topicKey)}
-        <div class="nc-headline">${event.label}</div>
+    <div class="story-panel">
+      <div class="story-head" style="border-left-color:${theme.color};">
+        <div class="story-kicker">Selected happening</div>
+        <div class="story-title-row">
+          <h3 class="story-title">${escapeHtml(event.label || 'Happening')}</h3>
+          <div class="story-pill" style="background:${theme.bg};color:${theme.color};">${event.importance === 'high' ? 'Major signal' : 'Context signal'}</div>
+        </div>
+        <div class="story-deck">${escapeHtml(deck)}</div>
       </div>
-      <div class="nc-body">
-        <div class="nc-summary">${overview}</div>
-        <div class="sb-mini-note">${event.whyItMatters || ''}</div>
+      <div class="story-grid">
+        <div class="story-intro">
+          ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+        </div>
+        <aside class="story-side">
+          <div class="story-highlight">
+            <div class="story-highlight-label">Why it matters</div>
+            <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
+          </div>
+          <div class="story-side-note">${escapeHtml(latest.length ? `Use Key coverage for grounding and Deeper reading for the most recent reporting in this view. ${coverageSources ? `${coverageSources} sources are represented in this view.` : ''}` : `This view prioritizes the strongest explanatory coverage for the selected development.${coverageSources ? ` ${coverageSources} sources are represented here.` : ''}`)}</div>
+        </aside>
+      </div>
+      <div class="story-coverage">
+        <div class="story-column">
+          <div class="sb-subsection-title">Key coverage</div>
+          <div class="story-section-note">Start with the strongest context and reporting tied directly to this development.</div>
+          <div id="story-key-coverage"></div>
+        </div>
+        ${latest.length ? `
+          <div class="story-column story-column-secondary">
+            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="story-section-note">Follow-on coverage and newer reporting around the same strand.</div>
+            <div id="story-deeper-reading"></div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="story-source-footnote">
+        <div class="sb-subsection-title">Source trail</div>
+        <div class="story-source-links" id="story-source-links"></div>
       </div>
     </div>
-    <div class="sb-subsection-title">What This Is About</div>
-    <div id="sb-event-background"></div>
-    <div class="sb-subsection-title">Latest On This Happening</div>
-    <div id="sb-event-latest"></div>
   `;
 
-  renderArticleList('sb-event-background', backgroundArticles || []);
-  renderArticleList('sb-event-latest', latestArticles || []);
+  renderEditorialCoverage('story-key-coverage', background.slice(0, 4), { limit: 4 });
+  if (latest.length) {
+    renderEditorialCoverage('story-deeper-reading', latest.slice(0, 4), { featured: false, limit: 4 });
+  }
+  renderSourceLinks(
+    'story-source-links',
+    getRelevantSourceLinks([...background, ...latest], 6),
+    `No source trail is available for ${event.label} yet.`
+  );
+}
+
+function setTimelineSectionTitle(title) {
+  const titleEl = document.querySelector('#sb-event-section .sb-section-title');
+  if (titleEl) titleEl.textContent = title;
+}
+
+function buildFakeMonthOverview(topicKey, monthLabel, articles = []) {
+  const topicName = TOPICS[topicKey]?.name || topicKey;
+  const picked = (articles || []).slice(0, 3);
+  const details = picked
+    .map(article => cleanText(article.description || article.title))
+    .filter(Boolean)
+    .slice(0, 2);
+
+  const detailText = details.length
+    ? details.map(text => text.replace(/\.+$/, '') + '.').join(' ')
+    : `Coverage in ${monthLabel} tracked the clearest shifts in ${topicName} across the reporting reviewed here.`;
+
+  return `In ${monthLabel}, coverage of ${topicName} centered on the clearest developments visible in the reporting we reviewed. ${detailText}`;
+}
+
+function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
+  const wrap = document.getElementById('sb-event-details');
+  if (!wrap) return;
+  const theme = THEMES[topicKey];
+  const topicName = TOPICS[topicKey]?.name || topicKey;
+  const monthly = sortArticlesByPublishedDate(dedupeArticlesByUrl(monthArticles));
+  const leadParagraphs = splitSummarySentences(overview || '');
+  const introText = cleanText(overview || '');
+  const summaryParagraphs = leadParagraphs.length ? leadParagraphs.slice(0, 3) : [introText].filter(Boolean);
+  const takeaway = `Monthly overview of the biggest shifts in ${topicName} during ${event.label || 'this month'}.`;
+  const noteText = `This month checkpoint uses locally generated framing, while the article selections below come from reported coverage about the topic.`;
+
+  wrap.innerHTML = `
+    <div class="story-panel">
+      <div class="story-head" style="border-left-color:${theme.color};">
+        <div class="story-kicker">Month checkpoint</div>
+        <div class="story-title-row">
+          <h3 class="story-title">${escapeHtml(event.label || 'This month')}</h3>
+          <div class="story-pill" style="background:${theme.bg};color:${theme.color};">${event.importance === 'high' ? 'Focus month' : 'Context month'}</div>
+        </div>
+        <div class="story-deck">${escapeHtml(event.whyItMatters || `A curated checkpoint in the longer arc of ${TOPICS[topicKey]?.name || topicKey}.`)}</div>
+      </div>
+      <div class="story-grid">
+        <div class="story-intro">
+          ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+        </div>
+        <aside class="story-side">
+          <div class="story-highlight">
+            <div class="story-highlight-label">What changed</div>
+            <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
+          </div>
+          <div class="story-side-note">${escapeHtml(noteText)}</div>
+        </aside>
+      </div>
+      <div class="story-coverage story-coverage-stacked">
+        <div class="story-column">
+          <div class="sb-subsection-title">Key coverage</div>
+          <div class="story-section-note">The strongest reporting to anchor this month in the broader story.</div>
+          <div id="story-key-coverage"></div>
+        </div>
+        ${monthly.length > 4 ? `
+          <div class="story-column story-column-secondary">
+            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="story-section-note">Additional reporting if you want more texture around this point in time.</div>
+            <div id="story-deeper-reading"></div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="story-source-footnote">
+        <div class="sb-subsection-title">Source trail</div>
+        <div class="story-source-links" id="story-source-links"></div>
+      </div>
+    </div>
+  `;
+
+  renderEditorialCoverage('story-key-coverage', monthly.slice(0, 4), { limit: 4 });
+  if (monthly.length > 4) {
+    renderEditorialCoverage('story-deeper-reading', monthly.slice(4, 8), { featured: false, limit: 4 });
+  }
+  renderSourceLinks(
+    'story-source-links',
+    getRelevantSourceLinks(monthly, 6),
+    `No relevant sources were found for ${event.label}.`
+  );
 }
 
 async function selectTimelineEvent(topicKey, eventId) {
   const isMobile = window.innerWidth <= 700;
-  const requestId = ++activeTopicRequest;
+  const requestId = ++activeTimelineDetailRequest;
   const events = [
     ...(timelineEventCache[topicKey]?.overviewEvents || []),
     ...(timelineEventCache[topicKey]?.detailEvents || [])
@@ -1990,11 +3147,67 @@ async function selectTimelineEvent(topicKey, eventId) {
     detailWrap.innerHTML = `<div class="art-loading"><span class="mini-spin" style="border-top-color:${THEMES[topicKey].color}"></span>Loading event overview...</div>`;
   }
 
-  const backgroundArticles = await fetchNews(event.backgroundQuery, `${event.id}-background`);
-  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+  if (event.eventType === 'month') {
+    const topic = TOPICS[topicKey];
+    setTimelineSectionTitle('Selected month');
+    const monthArticles = await fetchNews(
+      topic?.mainQuery || topic?.label || topicKey,
+      `${topicKey}-main`,
+      {
+        topicKey,
+        kind: 'main',
+        pageSize: 8,
+        sortBy: 'relevancy'
+      }
+    );
+    if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
 
-  const latestArticles = await fetchNews(event.latestQuery, `${event.id}-latest`);
-  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+    if (!monthArticles || monthArticles.error) {
+      if (detailWrap) {
+        detailWrap.innerHTML = `<div class="err-box"><strong>Could not load topic articles</strong>${escapeHtml(monthArticles?.error || 'Unknown error')}</div>`;
+      }
+      return;
+    }
+
+    const monthlyArticles = Array.isArray(monthArticles) ? monthArticles : [];
+    const overviewText = buildFakeMonthOverview(topicKey, event.label, monthlyArticles);
+    renderTimelineMonthPanel(topicKey, event, overviewText, monthlyArticles);
+
+    const sbScroll = document.getElementById('sb-scroll');
+    if (sbScroll) {
+      const eventSection = document.getElementById('sb-event-section');
+      if (eventSection) {
+        eventSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    }
+
+    if (isMobile) {
+      const drawer = document.getElementById('mobile-drawer');
+      const drawerContent = document.getElementById('drawer-content');
+      drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
+      drawer.classList.add('open');
+    }
+
+    return;
+  }
+
+  setTimelineSectionTitle('Selected happening');
+
+  const backgroundArticles = await fetchNews(event.backgroundQuery, `${event.id}-background`, {
+    topicKey,
+    kind: 'background',
+    pageSize: 6,
+    sortBy: 'relevancy'
+  });
+  if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
+
+  const latestArticles = await fetchNews(event.latestQuery, `${event.id}-latest`, {
+    topicKey,
+    kind: 'latest',
+    pageSize: 6,
+    sortBy: 'publishedAt'
+  });
+  if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
 
   if (!backgroundArticles || backgroundArticles.error) {
     if (detailWrap) {
@@ -2004,7 +3217,7 @@ async function selectTimelineEvent(topicKey, eventId) {
   }
 
   const overviewResponse = await fetchEventOverview(topicKey, event.label, backgroundArticles);
-  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+  if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
 
   const overviewText = overviewResponse.error
     ? `Coverage around ${event.label} is still evolving across several reports.`
@@ -2032,6 +3245,100 @@ async function selectTimelineEvent(topicKey, eventId) {
     drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
     drawer.classList.add('open');
   }
+}
+
+function renderMainTopicSidebarShell(topicKey, options = {}) {
+  const topic = TOPICS[topicKey];
+  if (!topic) return;
+
+  document.getElementById('sb-top').innerHTML = `
+    <div id="sb-badge">${badgeHTML(topicKey)}</div>
+    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
+  `;
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section" id="sb-overview-section">
+      <div class="sb-section-title">Briefing</div>
+      <div class="sb-section-copy">${escapeHtml(options.overviewCopy || 'Loading the main overview and strongest recent reporting.')}</div>
+      <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(options.summaryText || 'Loading summary...')}</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Current coverage</div>
+      <div class="sb-section-copy">A curated starting point from the strongest recent reporting across the topic.</div>
+      <div id="sb-latest-articles"></div>
+    </div>
+  `;
+}
+
+function renderTimelineSidebarShell(topicKey, options = {}) {
+  const topic = TOPICS[topicKey];
+  if (!topic) return;
+
+  document.getElementById('sb-top').innerHTML = `
+    <div id="sb-badge">${badgeHTML(topicKey)}</div>
+    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
+    <div class="sb-topic-summary" id="sb-topic-summary">The timeline is focused on the monthly arc of the story.</div>
+  `;
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div id="sb-event-details" class="sb-empty">${escapeHtml(options.eventText || 'Loading month overview...')}</div>
+  `;
+}
+
+async function ensureTimelineSidebarReady(topicKey) {
+  const topic = TOPICS[topicKey];
+  if (!topic) return false;
+
+  const requestId = ++activeTopicRequest;
+  renderTimelineSidebarShell(topicKey, {
+    eventText: 'Loading month overview...'
+  });
+
+  const hasOverviewEvents = (timelineEventCache[topicKey]?.overviewEvents?.length || 0) > 0;
+
+  if (!hasOverviewEvents) {
+    const articles = await fetchNews(topic.mainQuery || topic.label, `${topicKey}-main`, {
+      topicKey,
+      kind: 'main',
+      pageSize: 8,
+      sortBy: 'relevancy'
+    });
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return false;
+
+    if (!articles || articles.error) {
+      document.getElementById('sb-event-details').innerHTML =
+        `<div class="err-box"><strong>Could not load timeline</strong>${escapeHtml(articles?.error || 'Unknown fetch error')}</div>`;
+      return false;
+    }
+
+    if (!articles.length) {
+      document.getElementById('sb-event-details').textContent =
+        `No articles found for query: ${topic.mainQuery || topic.label}`;
+      return false;
+    }
+
+    const timelineEvents = await fetchTimelineEvents(topicKey, articles);
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return false;
+
+    if (!timelineEvents || timelineEvents.error) {
+      document.getElementById('sb-event-details').innerHTML =
+        `<div class="err-box"><strong>Could not load timeline</strong>${timelineEvents?.error || 'Unknown error'}</div>`;
+      return false;
+    }
+  }
+
+  const visibleEvents = getCurrentTimelineEvents(topicKey);
+  const nextEventId = visibleEvents.some(ev => ev.id === activeTimelineEventId)
+    ? activeTimelineEventId
+    : visibleEvents[0]?.id;
+
+  if (nextEventId) {
+    await selectTimelineEvent(topicKey, nextEventId);
+  } else {
+    document.getElementById('sb-event-details').textContent = 'No monthly checkpoints are available for this topic yet.';
+  }
+
+  return true;
 }
 
 document.getElementById('gc').addEventListener('click', async e => {
@@ -2088,13 +3395,38 @@ document.getElementById('gc').addEventListener('wheel', e => {
 function renderShortOverview(topicKey, shortSummary, articles, requestId) {
   const overviewSection = document.getElementById('sb-overview-section');
   if (!overviewSection) return;
+  const summaryText = cleanText(shortSummary || '');
+  const summarySentences = splitSummarySentences(summaryText);
+  const standout = summarySentences[1] || summarySentences[0] || getTopicIntro(topicKey);
+  const visibleSources = uniqueSourceNames(articles).slice(0, 4);
 
   overviewSection.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Overview</div>
-      <button class="sb-more-btn" id="sb-more-btn">Read more</button>
+    <div class="sb-overview-layout">
+      <div class="sb-overview-top">
+        <div>
+          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Briefing</div>
+          <div class="sb-section-copy">A fast editorial read on the main arc before you move into the timeline.</div>
+        </div>
+        <button class="sb-more-btn" id="sb-more-btn">Expand brief</button>
+      </div>
+      <div class="sb-overview-stack">
+        <div class="sb-overview-main">
+          <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(summaryText)}</div>
+          <div class="sb-highlight-box">
+            <div class="sb-highlight-label">What stands out</div>
+            <div class="sb-highlight-text">${escapeHtml(standout)}</div>
+          </div>
+          <div class="sb-source-strip">
+            <div class="sb-highlight-label">Sources in view</div>
+            <div class="sb-source-list-inline">
+              ${visibleSources.length
+                ? visibleSources.map(source => `<span>${escapeHtml(source)}</span>`).join('')
+                : '<span>Live coverage loading</span>'}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="sb-main-summary" id="sb-main-summary">${shortSummary}</div>
   `;
 
   document.getElementById('sb-more-btn').onclick = async () => {
@@ -2111,23 +3443,44 @@ function renderShortOverview(topicKey, shortSummary, articles, requestId) {
 function renderLongOverview(topicKey, longSummary, articles, requestId) {
   const overviewSection = document.getElementById('sb-overview-section');
   if (!overviewSection) return;
+  const paragraphs = (longSummary.longSummary || '')
+    .split(/\n+/)
+    .map(part => cleanText(part))
+    .filter(Boolean);
+  const summaryText = cleanText(longSummary.longSummary || '');
+  const overviewParagraphs = paragraphs.length ? paragraphs : [summaryText].filter(Boolean);
+  const standout = splitSummarySentences(summaryText)[1] || splitSummarySentences(summaryText)[0] || getTopicIntro(topicKey);
 
   overviewSection.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
-      <button class="sb-more-btn" id="sb-less-btn">Back</button>
-    </div>
-
-    <div class="sb-main-summary">
-      <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
-      <div class="sb-sources">
-        <strong>Sources</strong>
-        ${longSummary.sources.map(src => `
-          <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
-        `).join('')}
+    <div class="sb-overview-layout">
+      <div class="sb-overview-top">
+        <div>
+          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Deep brief</div>
+          <div class="sb-section-copy">A longer read with extra context and a quieter source trail.</div>
+        </div>
+        <button class="sb-more-btn" id="sb-less-btn">Back</button>
+      </div>
+      <div class="sb-overview-stack">
+        <div class="sb-overview-main">
+          <div class="sb-main-summary sb-main-summary-long">${overviewParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</div>
+          <div class="sb-highlight-box">
+            <div class="sb-highlight-label">Why it matters</div>
+            <div class="sb-highlight-text">${escapeHtml(standout)}</div>
+          </div>
+          <div class="sb-sources">
+            <strong>Coverage trail</strong>
+            <div id="sb-overview-sources-list"></div>
+          </div>
+        </div>
       </div>
     </div>
   `;
+
+  renderSourceLinks(
+    'sb-overview-sources-list',
+    longSummary.sources || [],
+    'No source links available for this overview yet.'
+  );
 
   document.getElementById('sb-less-btn').onclick = async () => {
     const shortSummary = await fetchSummary(topicKey, articles, 'short');
@@ -2145,30 +3498,19 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
   const mainQuery = topic.mainQuery || topic.label;
   timelineEventCache[topicKey] = { overviewEvents: [], detailEvents: [] };
   activeTimelineEventId = null;
+  activeTimelineDetailRequest += 1;
 
-  document.getElementById('sb-top').innerHTML = `
-    <div id="sb-badge">${badgeHTML(topicKey)}</div>
-    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
-  `;
+  renderMainTopicSidebarShell(topicKey, {
+    overviewCopy: 'Loading the main overview and strongest current signals.',
+    summaryText: 'Loading summary...'
+  });
 
-  document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section" id="sb-overview-section">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-        <div class="sb-section-title">Overview</div>
-      </div>
-      <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
-    </div>
-    <div class="sb-section" id="sb-event-section">
-      <div class="sb-section-title">Happening overview</div>
-      <div id="sb-event-details" class="sb-empty">Choose a point on the timeline to see why it matters and how the coverage is moving.</div>
-    </div>
-    <div class="sb-section">
-      <div class="sb-section-title">Latest articles</div>
-      <div id="sb-latest-articles"></div>
-    </div>
-  `;
-
-  const articles = await fetchNews(mainQuery, `${topicKey}-main`);
+  const articles = await fetchNews(mainQuery, `${topicKey}-main`, {
+    topicKey,
+    kind: 'main',
+    pageSize: 8,
+    sortBy: 'relevancy'
+  });
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
   if (!articles || articles.error) {
@@ -2193,26 +3535,16 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
   }
 
-  renderArticleList('sb-latest-articles', articles);
+  renderEditorialCoverage('sb-latest-articles', articles, { limit: 6 });
 
   const timelineEvents = await fetchTimelineEvents(topicKey, articles);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
   if (!timelineEvents || timelineEvents.error) {
-    document.getElementById('sb-event-details').innerHTML =
-      `<div class="err-box"><strong>Could not load happenings</strong>${timelineEvents?.error || 'Unknown error'}</div>`;
     return;
   }
 
   renderTimeline(topic, THEMES[topicKey]);
-
-  const initialEvents = getCurrentTimelineEvents(topicKey);
-  if (initialEvents.length > 0) {
-    await selectTimelineEvent(topicKey, initialEvents[0].id);
-  } else {
-    document.getElementById('sb-event-details').innerHTML =
-      `<div class="sb-empty">No major happenings were identified from the latest coverage yet.</div>`;
-  }
 }
 
 /* ══════════════════════
@@ -2241,7 +3573,7 @@ async function selectMapMarker(marker) {
   live.innerHTML = `
     <div class="live-lbl">
       <span class="ldot" style="background:${theme.color}"></span>
-      Live headlines
+      ${ARTICLE_SECTION_LABEL}
     </div>
     <div class="art-loading" id="map-articles-loading">
       <span class="mini-spin" style="border-top-color:${theme.color}"></span>
@@ -2250,7 +3582,12 @@ async function selectMapMarker(marker) {
   `;
   s.appendChild(live);
 
-  const result = await fetchNews(marker.query || marker.label, `map-${currentTopic}-${marker.label}`);
+  const result = await fetchNews(marker.query || marker.label, `map-${currentTopic}-${marker.label}`, {
+    topicKey: currentTopic,
+    kind: 'map',
+    pageSize: 6,
+    sortBy: 'relevancy'
+  });
 
   const loading = document.getElementById('map-articles-loading');
   if (loading) loading.remove();
@@ -2261,33 +3598,11 @@ async function selectMapMarker(marker) {
   }
 
   if (result.length === 0) {
-    live.innerHTML += `<div class="art-loading">No recent articles found.</div>`;
+    live.innerHTML += `<div class="art-loading">No recent coverage found.</div>`;
     return;
   }
 
-  result.forEach(art => {
-    const d = new Date(art.publishedAt);
-    const ts = isNaN(d) ? '' : d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    const el = document.createElement('div');
-    el.className = 'article-item';
-const artCat = categorize((art.title||'') + ' ' + (art.description||''));
-    const artColor = getCatColor(artCat);
-    const artBg = getCatBg(artCat);
-    const artLabel = getCatLabel(artCat);
-    el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
-          <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
-          ${artLabel}
-        </span>
-        <div class="art-src" style="color:var(--ink3)">${art.source?.name || 'Unknown'}</div>
-      </div>
-      <div class="art-title">${art.title}</div>
-      <div class="art-time">${ts}</div>
-    `;
-    el.onclick = () => window.open(art.url, '_blank');
-    live.appendChild(el);
-  });
+  appendArticleItems(live, result);
 }
 async function selectNode(id) {
   const isMobile = window.innerWidth <= 700;
@@ -2333,11 +3648,16 @@ async function selectNode(id) {
 
   // Live articles
   const live=document.createElement('div'); live.className='live-section';
-  live.innerHTML=`<div class="live-lbl"><span class="ldot" style="background:${theme.color}"></span>Live headlines</div><div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI…</div>`;
+  live.innerHTML=`<div class="live-lbl"><span class="ldot" style="background:${theme.color}"></span>${ARTICLE_SECTION_LABEL}</div><div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI…</div>`;
   s.appendChild(live);
 
   const q=topic.queries[id]||n.label;
-  const result=await fetchNews(q,id);
+  const result=await fetchNews(q,id,{
+    topicKey: currentTopic,
+    kind: 'node',
+    pageSize: 6,
+    sortBy: 'relevancy'
+  });
     if (requestId !== activeTopicRequest || topic.key !== currentTopic) return;
   const sp=document.getElementById(`asp-${id}`);
   if(sp) sp.remove();
@@ -2345,30 +3665,9 @@ async function selectNode(id) {
   if(!result||result.error){
     live.innerHTML+=`<div class="err-box"><strong>Could not load articles</strong>${result?.error||'Unknown error — is the server running?'}</div>`;
   } else if(result.length===0){
-    live.innerHTML+=`<div class="art-loading">No recent articles found.</div>`;
+    live.innerHTML+=`<div class="art-loading">No recent coverage found.</div>`;
   } else {
-    result.forEach(art=>{
-      const d=new Date(art.publishedAt);
-      const ts=isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      const el=document.createElement('div'); el.className='article-item';
-// keyword check first, fall back to node category
-      const artCat = categorize((art.title||'') + ' ' + (art.description||'')) || getCat(n);
-      const artColor = getCatColor(artCat);
-      const artBg = getCatBg(artCat);
-      const artLabel = getCatLabel(artCat);
-      el.innerHTML=`
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
-            <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
-            ${artLabel}
-          </span>
-          <div class="art-src" style="color:var(--ink3)">${art.source?.name||'Unknown'}</div>
-        </div>
-        <div class="art-title">${art.title}</div>
-        <div class="art-time">${ts}</div>`;
-      el.onclick=()=>window.open(art.url,'_blank');
-      live.appendChild(el);
-    });
+    appendArticleItems(live, result, getCat(n));
   }
     if (isMobile) {
     const drawer = document.getElementById('mobile-drawer');
@@ -2385,18 +3684,79 @@ async function selectNode(id) {
 /* ══════════════════════
    FETCH PROXY
 ══════════════════════ */
-async function fetchNews(query, nodeId) {
-  if(cache[nodeId]) return cache[nodeId];
+async function fetchNews(query, nodeId, options = {}) {
+  const requestKey = JSON.stringify({
+    nodeId,
+    query,
+    topicKey: options.topicKey || '',
+    kind: options.kind || '',
+    provider: options.provider || '',
+    from: options.from || '',
+    to: options.to || '',
+    pageSize: options.pageSize || '',
+    sortBy: options.sortBy || ''
+  });
+
+  if (cache[requestKey]) {
+    const meta = cacheMeta[requestKey] || {};
+    console.info(
+      `[news] ${nodeId} loaded ${meta.articleCount || cache[requestKey].length || 0} cached articles from ${meta.provider || 'cache'} for "${query}".`
+    );
+    return cache[requestKey];
+  }
+
   try {
-    const res = await fetch(`/api/news?q=${encodeURIComponent(query)}`);
+    const params = new URLSearchParams({ q: query });
+    if (options.topicKey) params.set('topicKey', options.topicKey);
+    if (options.kind) params.set('kind', options.kind);
+    if (options.provider) params.set('provider', options.provider);
+    if (options.from) params.set('from', options.from);
+    if (options.to) params.set('to', options.to);
+    if (options.pageSize) params.set('pageSize', String(options.pageSize));
+    if (options.sortBy) params.set('sortBy', options.sortBy);
+
+    const res = await fetch(`/api/news?${params.toString()}`);
 
     const text = await res.text();
-    console.log("RAW RESPONSE:", text); 
-  const data = JSON.parse(text);
-    if(data.error) return{error:data.error};
-    cache[nodeId]=data.articles||[];
-    return cache[nodeId];
-  } catch(e){return{error:e.message};}
+    const data = JSON.parse(text);
+
+    if (data.error) return { error: data.error };
+
+    cache[requestKey] = data.articles || [];
+    cacheMeta[requestKey] = {
+      provider: data.provider || 'unknown',
+      fallbackReason: data.fallbackReason || '',
+      warning: data.warning || '',
+      articleCount: Array.isArray(data.articles) ? data.articles.length : 0
+    };
+
+    const providerLabel = data.provider === 'guardian' ? 'The Guardian API' : 'NewsAPI';
+    const fallbackSuffix = data.fallbackReason
+      ? ` Fallback reason: ${data.fallbackReason}.`
+      : '';
+    const warningSuffix = data.warning
+      ? ` Warning: ${data.warning}`
+      : '';
+
+    console.info(
+      `[news] ${nodeId} loaded ${cacheMeta[requestKey].articleCount} articles from ${providerLabel} for "${query}".${fallbackSuffix}${warningSuffix}`
+    );
+
+    if (data.provider === 'guardian') {
+      const guardianMode = data.fallbackReason === 'forced_guardian_provider'
+        ? 'forced Guardian source'
+        : 'Guardian fallback source';
+      console.warn(`[news] ${nodeId} is using the ${guardianMode}.`);
+    }
+
+    if (data.warning) {
+      console.warn(`[news] ${nodeId} warning: ${data.warning}`);
+    }
+
+    return cache[requestKey];
+  } catch (e) {
+    return { error: e.message };
+  }
 }
 
 function renderArticleList(containerId, articles) {
@@ -2410,38 +3770,7 @@ function renderArticleList(containerId, articles) {
     return;
   }
 
-  articles.forEach(art => {
-    const artCat = categorize((art.title || '') + ' ' + (art.description || ''));
-    const artColor = getCatColor(artCat);
-    const artBg = getCatBg(artCat);
-    const artLabel = getCatLabel(artCat);
-
-    const d = new Date(art.publishedAt);
-    const ts = isNaN(d)
-      ? ''
-      : d.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        });
-
-    const el = document.createElement('div');
-    el.className = 'article-item';
-    el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
-          <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
-          ${artLabel}
-        </span>
-        <div class="art-src">${art.source?.name || 'Unknown'}</div>
-      </div>
-      <div class="art-title">${art.title}</div>
-      <div class="art-time">${ts}</div>
-    `;
-
-    el.onclick = () => window.open(art.url, '_blank');
-    wrap.appendChild(el);
-  });
+  appendArticleItems(wrap, articles);
 }
 function cleanText(text = '') {
   return text
@@ -2455,17 +3784,233 @@ function sentenceCase(text = '') {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function cleanText(text = '') {
-  return text
-    .replace(/\s+/g, ' ')
-    .replace(/\[[^\]]*\]/g, '')
-    .trim();
+function escapeHtml(text = '') {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeUrl(url = '') {
+  try {
+    const parsed = new URL(String(url));
+    return /^https?:$/i.test(parsed.protocol) ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
+
+function getArticleSourceName(article = {}) {
+  const sourceName = cleanText(article.source?.name || '');
+  if (sourceName) return sourceName;
+
+  try {
+    return new URL(article.url).hostname.replace(/^www\./, '');
+  } catch {
+    return 'Unknown source';
+  }
 }
 
 function uniqueSourceNames(articles = []) {
   return [...new Set(
-    articles.map(a => a.source?.name).filter(Boolean)
+    articles.map(article => getArticleSourceName(article)).filter(Boolean)
   )];
+}
+
+function getRelevantSourceLinks(articles = [], limit = 6) {
+  const seenUrls = new Set();
+  const links = [];
+
+  articles.forEach(article => {
+    const url = safeUrl(article.url);
+    const sourceName = getArticleSourceName(article);
+    if (!url || !sourceName || seenUrls.has(url)) return;
+
+    seenUrls.add(url);
+    links.push({
+      sourceName,
+      title: cleanText(article.title || sourceName),
+      url
+    });
+  });
+
+  return links.slice(0, limit);
+}
+
+function renderSourceLinks(containerId, items = [], emptyText = 'No relevant sources available yet.') {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+
+  const links = (items || [])
+    .map(item => ({
+      sourceName: cleanText(item.sourceName || item.label || item.title || 'Source'),
+      title: cleanText(item.title || item.sourceName || 'Source'),
+      url: safeUrl(item.url)
+    }))
+    .filter(item => item.url);
+
+  if (!links.length) {
+    wrap.innerHTML = `<div class="sb-empty">${escapeHtml(emptyText)}</div>`;
+    return;
+  }
+
+  wrap.innerHTML = links.map(link => `
+    <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+      <span style="display:block;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);font-family:var(--serif);font-weight:700;margin-bottom:4px;">${escapeHtml(link.sourceName)}</span>
+      <span style="display:block;color:var(--ink);line-height:1.55;">${escapeHtml(link.title)}</span>
+    </a>
+  `).join('');
+}
+
+function formatPublishedDate(article = {}) {
+  const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
+  return publishedAt && !isNaN(publishedAt)
+    ? publishedAt.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      })
+    : '';
+}
+
+function getPublishedAtValue(article = {}) {
+  const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
+  return publishedAt && !isNaN(publishedAt) ? publishedAt.getTime() : 0;
+}
+
+function sortArticlesByPublishedDate(articles = [], direction = 'desc') {
+  const multiplier = direction === 'asc' ? 1 : -1;
+  return [...(articles || [])].sort((a, b) => {
+    const dateDelta = getPublishedAtValue(a) - getPublishedAtValue(b);
+    if (dateDelta !== 0) return dateDelta * multiplier;
+
+    const titleA = cleanText(a?.title || a?.description || '');
+    const titleB = cleanText(b?.title || b?.description || '');
+    return titleA.localeCompare(titleB);
+  });
+}
+
+function splitSummarySentences(text = '') {
+  return cleanText(text)
+    .split(/(?<=[.!?])\s+/)
+    .map(part => part.trim())
+    .filter(Boolean);
+}
+
+function dedupeArticlesByUrl(articles = []) {
+  const seen = new Set();
+  return (articles || []).filter(article => {
+    const urlKey = safeUrl(article.url);
+    const titleKey = cleanText(article.title || article.description || '');
+    const key = urlKey || titleKey;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function getTimelineNodeStyle(theme = {}) {
+  if (theme.shape === 'square') {
+    return 'border-radius:6px;';
+  }
+  if (theme.shape === 'triangle') {
+    return 'clip-path:polygon(50% 8%, 10% 92%, 90% 92%);border-radius:0;';
+  }
+  return 'border-radius:999px;';
+}
+
+function buildEditorialArticleMarkup(article, variant = 'list', fallbackCategory = '') {
+  const artCat = categorize((article.title || '') + ' ' + (article.description || '')) || fallbackCategory;
+  const artColor = getCatColor(artCat);
+  const artBg = getCatBg(artCat);
+  const artLabel = getCatLabel(artCat);
+  const sourceName = getArticleSourceName(article);
+  const articleUrl = safeUrl(article.url);
+  const timestamp = formatPublishedDate(article);
+  const description = cleanText(article.description || '');
+  const tag = articleUrl ? 'a' : 'article';
+  const hrefAttrs = articleUrl ? ` href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer"` : '';
+
+  return `
+    <${tag} class="editorial-article editorial-article-${variant}"${hrefAttrs}>
+      <div class="editorial-article-meta">
+        <span class="editorial-article-tag" style="background:${artBg};color:${artColor};">${escapeHtml(artLabel)}</span>
+        <span class="editorial-article-source">${escapeHtml(sourceName)}</span>
+        ${timestamp ? `<span class="editorial-article-time">${escapeHtml(timestamp)}</span>` : ''}
+      </div>
+      <div class="editorial-article-title">${escapeHtml(article.title || 'Untitled article')}</div>
+      ${variant === 'feature' && description
+        ? `<div class="editorial-article-copy">${escapeHtml(description)}</div>`
+        : ''}
+    </${tag}>
+  `;
+}
+
+function renderEditorialCoverage(containerId, articles, options = {}) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+
+  const items = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, options.limit || 6);
+  if (!items.length) {
+    wrap.innerHTML = `<div class="art-loading">No articles found.</div>`;
+    return;
+  }
+
+  const shouldFeature = options.featured !== false;
+  const featuredArticle = shouldFeature ? items[0] : null;
+  const listItems = shouldFeature ? items.slice(1) : items;
+
+  wrap.innerHTML = `
+    ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature', options.fallbackCategory || '') : ''}
+    ${listItems.length
+      ? `<div class="editorial-article-list">${listItems.map(article => buildEditorialArticleMarkup(article, 'list', options.fallbackCategory || '')).join('')}</div>`
+      : ''}
+  `;
+}
+
+function createArticleItem(article, fallbackCategory = '') {
+  const artCat = categorize((article.title || '') + ' ' + (article.description || '')) || fallbackCategory;
+  const artColor = getCatColor(artCat);
+  const artBg = getCatBg(artCat);
+  const artLabel = getCatLabel(artCat);
+  const sourceName = getArticleSourceName(article);
+  const articleUrl = safeUrl(article.url);
+  const timestamp = formatPublishedDate(article);
+
+  const el = document.createElement('div');
+  el.className = 'article-item';
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+      <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
+        <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
+        ${escapeHtml(artLabel)}
+      </span>
+      ${articleUrl
+        ? `<a class="art-src" href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName)}</a>`
+        : `<div class="art-src">${escapeHtml(sourceName)}</div>`}
+    </div>
+    ${articleUrl
+      ? `<a class="art-title" href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(article.title || 'Untitled article')}</a>`
+      : `<div class="art-title">${escapeHtml(article.title || 'Untitled article')}</div>`}
+    <div class="art-time">${escapeHtml(timestamp)}</div>
+  `;
+
+  if (articleUrl) {
+    el.onclick = () => window.open(articleUrl, '_blank', 'noopener');
+    el.querySelectorAll('a').forEach(anchor => {
+      anchor.addEventListener('click', e => e.stopPropagation());
+    });
+  }
+
+  return el;
+}
+
+function appendArticleItems(container, articles, fallbackCategory = '') {
+  sortArticlesByPublishedDate(articles).forEach(article => {
+    container.appendChild(createArticleItem(article, fallbackCategory));
+  });
 }
 
 function getTopicIntro(topicKey) {
@@ -2513,6 +4058,7 @@ function buildFakeLongSummary(topicKey, articles) {
   const firstBlock = details.slice(0, 2).join(' ');
   const secondBlock = details.slice(2, 5).join(' ');
   const sources = uniqueSourceNames(picked);
+  const sourceLinks = getRelevantSourceLinks(picked);
 
   const longSummary = `
 ${intro} ${firstBlock || 'Recent reporting points to multiple overlapping developments and continued movement in the story.'}
@@ -2524,10 +4070,7 @@ ${sources.length ? `Across the latest articles, the reporting draws from sources
 
   return {
     longSummary,
-    sources: picked.map(a => ({
-      title: a.title,
-      url: a.url
-    }))
+    sources: sourceLinks
   };
 }
 
@@ -2570,10 +4113,11 @@ async function fetchSummary(topicKey, articles, mode = 'short') {
 /* ══════════════════════
    TIMELINE
 ══════════════════════ */
-function renderTimeline(topic, theme) {
+function renderTimelineLegacyAxis(topic, theme) {
   const g = document.getElementById('tl-evts');
   if (!g) return;
   g.innerHTML = '';
+  renderTimelineAxis();
 
   const events = getCurrentTimelineEvents(topic.key);
   const shape = theme.shape;
@@ -2656,19 +4200,22 @@ function renderTimeline(topic, theme) {
 
 let tlDrag=false;
 const tlSvg=document.getElementById('tl-svg');
-tlSvg.addEventListener('mousedown',e=>{tlDrag=true;moveScrub(e);});
-document.addEventListener('mousemove',e=>{if(tlDrag)moveScrub(e);});
-document.addEventListener('mouseup',()=>{tlDrag=false;});
-tlSvg.addEventListener('touchstart', e => {
-  tlDrag = true;
-  moveScrub(e.touches[0]);
-}, { passive: true });
-document.addEventListener('touchmove', e => {
-  if (tlDrag && e.touches[0]) moveScrub(e.touches[0]);
-}, { passive: true });
-document.addEventListener('touchend', () => { tlDrag = false; });
+if (tlSvg) {
+  tlSvg.addEventListener('mousedown',e=>{tlDrag=true;moveScrub(e);});
+  document.addEventListener('mousemove',e=>{if(tlDrag)moveScrub(e);});
+  document.addEventListener('mouseup',()=>{tlDrag=false;});
+  tlSvg.addEventListener('touchstart', e => {
+    tlDrag = true;
+    moveScrub(e.touches[0]);
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (tlDrag && e.touches[0]) moveScrub(e.touches[0]);
+  }, { passive: true });
+  document.addEventListener('touchend', () => { tlDrag = false; });
+}
 
 function moveScrub(e){
+  if (!tlSvg) return;
   if (!currentTopic) return;
   const r = tlSvg.getBoundingClientRect();
   const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
@@ -2694,9 +4241,152 @@ function moveScrub(e){
   }
 }
 
+function renderTimelineLegacyCards(topic, theme) {
+  const stage = document.getElementById('timeline-stage');
+  if (!stage) return;
+
+  const events = getCurrentTimelineEvents(topic.key);
+  const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0] || null;
+  const level = getTimelineLevelLabel();
+  const isMonthView = timelineViewLevel === 'overview';
+  const yearStart = new Date().getFullYear() - 3;
+  const rangeStart = events[0]?.label || '';
+  const rangeEnd = events[events.length - 1]?.label || '';
+  const subText = isMonthView
+    ? 'Big picture is grouped into monthly snapshots. Click any month to open what happened, read a concise overview, and review the strongest coverage from that period.'
+    : 'Closer view breaks the topic into major current developments. Click any happening to open background coverage and the latest reporting in the sidebar.';
+  const metaText = isMonthView
+    ? `${rangeStart} back to ${rangeEnd} · ${events.length} monthly snapshots · Click a month to read its overview and key coverage.`
+    : `${events.length} live happenings visible · Scroll on desktop or tap the level buttons to change focus.`;
+
+  if (!events.length) {
+    stage.innerHTML = `
+      <div class="timeline-empty">
+        <div class="art-loading"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Loading happenings...</div>
+      </div>
+    `;
+    return;
+  }
+
+  const markerHtml = events.map((ev, index) => {
+    const left = events.length === 1 ? 50 : 8 + (index / (events.length - 1)) * 84;
+    return `
+      <button class="timeline-marker ${ev.id === activeTimelineEventId ? 'active' : ''}" style="left:${left}%;" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
+        <span class="timeline-marker-date">${escapeHtml(ev.dateLabel || 'Now')}</span>
+        <span class="timeline-marker-dot" style="background:${theme.color};"></span>
+        <span class="timeline-marker-label">${escapeHtml(ev.label || 'Happening')}</span>
+      </button>
+    `;
+  }).join('');
+
+  const cardHtml = events.map(ev => `
+    <article class="timeline-card ${ev.id === activeTimelineEventId ? 'active' : ''}" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
+      <div class="timeline-card-top">
+        <div class="timeline-card-date">${escapeHtml(ev.dateLabel || 'Now')}</div>
+        <div class="timeline-card-badge" style="background:${theme.bg};color:${theme.color};">${ev.importance === 'high' ? 'Major' : 'Signal'}</div>
+      </div>
+      <div class="timeline-card-label">${escapeHtml(ev.label || 'Happening')}</div>
+      <div class="timeline-card-copy">${escapeHtml(ev.whyItMatters || 'A key part of the story right now.')}</div>
+      <div class="timeline-card-action">${ev.id === activeTimelineEventId ? (isMonthView ? 'Open month in sidebar' : 'Open in sidebar') : (isMonthView ? 'View month' : 'Open happening')}</div>
+    </article>
+  `).join('');
+
+  stage.innerHTML = `
+    <div class="timeline-stage-top">
+      <div>
+        <div class="timeline-kicker">${escapeHtml(topic.name)} timeline</div>
+        <div class="timeline-headline">${escapeHtml(level)}</div>
+        <div class="timeline-sub">${escapeHtml(subText)}</div>
+      </div>
+      <div class="timeline-scale">
+        <button class="timeline-scale-btn ${timelineViewLevel === 'overview' ? 'active' : ''}" onclick="setTimelineViewLevel('overview')">Big picture</button>
+        <button class="timeline-scale-btn ${timelineViewLevel === 'detail' ? 'active' : ''}" onclick="setTimelineViewLevel('detail')">Closer view</button>
+      </div>
+    </div>
+    <div class="timeline-meta-bar">
+      <div class="timeline-meta-note">Range ${yearStart} to ${yearStart + 3} · ${events.length} happenings visible · Scroll on desktop or tap the level buttons to change focus.</div>
+      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Happening')}` : 'Select a happening'}</div>
+    </div>
+    <div class="timeline-rail-shell">
+      <div class="timeline-markers">${markerHtml}</div>
+      <div class="timeline-card-grid">${cardHtml}</div>
+    </div>
+  `;
+
+  const metaNoteEl = stage.querySelector('.timeline-meta-note');
+  if (metaNoteEl) {
+    metaNoteEl.textContent = isMonthView
+      ? `${rangeStart} back to ${rangeEnd} - ${events.length} monthly snapshots - Click a month to read its overview and key coverage.`
+      : `${events.length} live happenings visible - Scroll on desktop or tap the level buttons to change focus.`;
+  }
+}
+
 /* ══════════════════════
    MAP
 ══════════════════════ */
+function renderTimeline(topic, theme) {
+  const stage = document.getElementById('timeline-stage');
+  if (!stage) return;
+
+  const events = getCurrentTimelineEvents(topic.key);
+  const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0] || null;
+  const level = getTimelineLevelLabel();
+  const rangeStart = events[0]?.label || events[0]?.dateLabel || '';
+  const rangeEnd = events[events.length - 1]?.label || events[events.length - 1]?.dateLabel || '';
+  const subText = 'Follow the topic month by month, then open any checkpoint for context and connected coverage.';
+  const metaText = `${events.length} checkpoints from ${rangeStart} to ${rangeEnd}.`;
+
+  if (!events.length) {
+    stage.innerHTML = `
+      <div class="timeline-empty">
+        <div class="art-loading"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Loading happenings...</div>
+      </div>
+    `;
+    return;
+  }
+
+  const flowHtml = events.map((ev, index) => {
+    const side = index % 2 === 0 ? 'left' : 'right';
+    const intensity = ev.importance === 'high' || ev.id === activeTimelineEventId || index === 0 ? 'focus' : 'context';
+    const badgeLabel = ev.importance === 'high' ? 'Focus month' : 'Context month';
+    const summaryCopy = ev.whyItMatters || 'Open this checkpoint to read the clearest connected coverage from that month.';
+
+    return `
+      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}">
+        <button class="timeline-entry-card" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
+          <div class="timeline-entry-meta">
+            <div class="timeline-entry-badge">${escapeHtml(badgeLabel)}</div>
+            ${ev.id === activeTimelineEventId ? '<div class="timeline-entry-state">Selected</div>' : ''}
+          </div>
+          <div class="timeline-entry-title">${escapeHtml(ev.label || 'Happening')}</div>
+          <div class="timeline-entry-copy">${escapeHtml(summaryCopy)}</div>
+        </button>
+        <button class="timeline-entry-spine" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')" aria-label="Open ${escapeHtml(ev.label || 'timeline item')}">
+          <div class="timeline-entry-date">${escapeHtml(ev.dateLabel || 'Now')}</div>
+          <div class="timeline-entry-node" style="background:${theme.color};${getTimelineNodeStyle(theme)}"></div>
+        </button>
+      </article>
+    `;
+  }).join('');
+
+  stage.innerHTML = `
+    <div class="timeline-stage-top">
+      <div>
+        <div class="timeline-kicker">${escapeHtml(topic.name)} timeline</div>
+        <div class="timeline-headline">${escapeHtml(level)}</div>
+        <div class="timeline-sub">${escapeHtml(subText)}</div>
+      </div>
+    </div>
+    <div class="timeline-meta-bar">
+      <div class="timeline-meta-note">${escapeHtml(metaText)}</div>
+      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Happening')}` : 'Select a happening'}</div>
+    </div>
+    <div class="timeline-rail-shell">
+      <div class="timeline-flow">${flowHtml}</div>
+    </div>
+  `;
+}
+
 const MAP_BACKGROUNDS = {
   climate: `
     <rect width="100%" height="100%" fill="#D8E8F0"/>
@@ -3173,9 +4863,11 @@ window.addEventListener('resize', () => {
   if (currentTopic && document.getElementById('explore').classList.contains('active')) {
     initGraph(currentTopic);
     renderMap(TOPICS[currentTopic], THEMES[currentTopic]);
+    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
   }
 });
 const mapWrapEl = document.getElementById('map-wrap');
+const timelineWrapEl = document.getElementById('timeline-wrap');
 
 function getTouchDistance(t1, t2) {
   const dx = t2.clientX - t1.clientX;
@@ -3219,6 +4911,11 @@ mapWrapEl.addEventListener('touchmove', (e) => {
     mapZoom = nextZoom;
     applyMapTransform();
   }
+}, { passive: false });
+
+timelineWrapEl.addEventListener('wheel', (e) => {
+  if (currentView !== 'timeline') return;
+  timelineViewLevel = 'overview';
 }, { passive: false });
 
 mapWrapEl.addEventListener('touchend', () => {
