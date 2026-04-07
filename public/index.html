@@ -945,8 +945,43 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   min-height: 0;
   scroll-behavior: smooth;
 }
-.sb-scroll::-webkit-scrollbar { width: 3px; }
-.sb-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
+
+.timeline-rail-shell {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26,24,20,0.16) transparent;
+}
+
+.timeline-rail-shell::-webkit-scrollbar {
+  width: 8px;
+}
+
+.timeline-rail-shell::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-rail-shell::-webkit-scrollbar-thumb {
+  min-height: 44px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background: transparent;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 0 999px rgba(26,24,20,0.14);
+}
+
+.timeline-rail-shell:hover::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0 999px rgba(26,24,20,0.22);
+}
+
+.timeline-rail-shell::-webkit-scrollbar-thumb:active {
+  box-shadow: inset 0 0 0 999px rgba(26,24,20,0.3);
+}
+
+.timeline-rail-shell::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
 .sb-empty { font-size: 13px; color: var(--ink3); line-height: 1.7; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
 .chip { font-size: 11px; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--border); color: var(--ink2); cursor: pointer; background: var(--bg); transition: background 0.12s; font-weight: 500; }
@@ -1340,10 +1375,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-flow {
+  --timeline-row-height: 176px;
+  --timeline-row-gap: 36px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  gap: var(--timeline-row-gap);
+  align-content: start;
+  height: 100%;
   min-height: 100%;
   padding: 12px 0 18px;
 }
@@ -1351,8 +1389,8 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .timeline-flow::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: calc(12px + (var(--timeline-row-height) / 2));
+  bottom: calc(18px + (var(--timeline-row-height) / 2));
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
@@ -1361,14 +1399,19 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-entry {
+  --timeline-spine-width: 88px;
+  --timeline-card-gap: 18px;
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) var(--timeline-spine-width) minmax(0, 1fr);
+  align-items: stretch;
+  height: 100%;
+  min-height: var(--timeline-row-height);
 }
 
 .timeline-entry-card {
   position: relative;
+  align-self: center;
   width: min(100%, 360px);
   padding: 14px 16px 15px;
   text-align: left;
@@ -1392,7 +1435,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   content: "";
   position: absolute;
   top: 28px;
-  width: 18px;
+  width: var(--timeline-card-gap);
   height: 1px;
   background: rgba(26,24,20,0.12);
   pointer-events: none;
@@ -1401,30 +1444,29 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .timeline-entry.left .timeline-entry-card {
   grid-column: 1;
   justify-self: end;
-  margin-right: 12px;
 }
 
 .timeline-entry.left .timeline-entry-card::before {
-  right: -18px;
+  right: calc(-1 * var(--timeline-card-gap));
 }
 
 .timeline-entry.right .timeline-entry-card {
   grid-column: 3;
   justify-self: start;
-  margin-left: 12px;
 }
 
 .timeline-entry.right .timeline-entry-card::before {
-  left: -18px;
+  left: calc(-1 * var(--timeline-card-gap));
 }
 
 .timeline-entry-spine {
   grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  min-height: 118px;
+  position: relative;
+  align-self: stretch;
+  display: block;
+  width: var(--timeline-spine-width);
+  height: 100%;
+  min-height: 100%;
   z-index: 1;
   background: transparent;
   border: none;
@@ -1436,22 +1478,40 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-entry-date {
+  position: absolute;
+  top: 50%;
+  white-space: nowrap;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--ink3);
   font-family: var(--serif);
   font-weight: 700;
-  text-align: center;
+  transform: translateY(-50%);
   line-height: 1.4;
 }
 
+.timeline-entry.left .timeline-entry-date {
+  left: calc(100% + 12px);
+  text-align: left;
+}
+
+.timeline-entry.right .timeline-entry-date {
+  right: calc(100% + 12px);
+  text-align: right;
+}
+
 .timeline-entry-node {
+  --timeline-node-scale: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 14px;
   height: 14px;
   border: 1.5px solid rgba(26,24,20,0.75);
   background: var(--ink);
   box-shadow: 0 0 0 6px rgba(248,246,241,0.96);
+  transform: translate(-50%, -50%) scale(var(--timeline-node-scale));
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -1460,7 +1520,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-entry-spine:hover .timeline-entry-node {
-  transform: scale(1.08);
+  --timeline-node-scale: 1.08;
 }
 
 .timeline-entry-meta {
@@ -1532,7 +1592,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-entry.active .timeline-entry-node {
-  transform: scale(1.12);
+  --timeline-node-scale: 1.12;
 }
 
 .sb-section-copy {
@@ -1562,6 +1622,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.85fr);
   gap: 18px;
+}
+
+.story-grid-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.story-grid-stacked .story-side {
+  gap: 14px;
 }
 
 .sb-overview-main {
@@ -1849,11 +1919,18 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   }
 
   .timeline-flow::before {
+    top: 0;
+    bottom: 0;
     left: 18px;
     transform: none;
   }
 
   .timeline-entry {
+    position: relative;
+    inset-inline: auto;
+    top: auto !important;
+    min-height: auto;
+    height: auto;
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 8px;
   }
@@ -1877,13 +1954,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     grid-column: 1;
     min-height: 0;
     padding-top: 14px;
+    justify-content: flex-start;
   }
 
   .timeline-entry-date {
+    position: static;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     font-size: 9px;
     letter-spacing: 0.08em;
+    white-space: normal;
   }
 
   .timeline-entry-title {
@@ -3048,19 +3128,143 @@ function setTimelineSectionTitle(title) {
   if (titleEl) titleEl.textContent = title;
 }
 
+const MONTH_SUMMARY_STOPWORDS = new Set([
+  'about','after','again','also','amid','among','another','around','because','before','being','between',
+  'both','could','during','first','from','have','into','just','last','latest','more','most','news',
+  'over','report','reported','reporting','reports','says','said','still','story','stories','their',
+  'there','these','they','this','those','through','today','under','update','updates','while','with',
+  'would','where','which','will','year','years','month','months','march','april','may','june','july',
+  'august','september','october','november','december','january','february','press','shows','showed',
+  'headline','headlines','coverage','across','inside','toward','towards','after','earlier','later',
+  'into','onto','when','what','were','them','than','then','that','your','ours','theirs','newsphere'
+]);
+
+const MONTH_THEME_PHRASES = {
+  politics: 'political maneuvering, institutional pressure, and policy decisions',
+  conflict: 'military pressure, battlefield developments, and diplomatic positioning',
+  international: 'diplomatic coordination, foreign positioning, and international responses',
+  climate: 'climate pressure, energy questions, and policy responses',
+  economy: 'economic pressure, market implications, and budget decisions',
+  welfare: 'public services, social pressure, and institutional strain',
+  domestic: 'domestic fallout, local responses, and national debate',
+  people: 'leadership decisions, public-facing figures, and political messaging'
+};
+
+const MONTH_ANALYTICAL_CLOSE = {
+  politics: 'Taken together, the month read as a stretch of strategic positioning, with institutions and political actors shaping the pace of the story.',
+  conflict: 'Taken together, the month read as a period of shifting leverage, where developments on the ground and diplomatic signals were tightly linked.',
+  international: 'Taken together, the month read as a diplomatic balancing act, with outside responses helping define the direction of the story.',
+  climate: 'Taken together, the month read as a convergence of pressure and response, with impacts and policy debates moving in parallel.',
+  economy: 'Taken together, the month read as a period of economic pressure, where policy choices and market signals reinforced each other.',
+  welfare: 'Taken together, the month read as a test of public systems, with practical consequences becoming more visible in the coverage.',
+  domestic: 'Taken together, the month read as a broad domestic shift, with local developments feeding into the wider national picture.',
+  people: 'Taken together, the month read as a leadership-driven phase, with individual decisions and public messaging shaping the narrative.'
+};
+
+function formatNaturalList(items = []) {
+  const cleanItems = [...new Set((items || []).map(item => cleanText(item)).filter(Boolean))];
+  if (!cleanItems.length) return '';
+  if (cleanItems.length === 1) return cleanItems[0];
+  if (cleanItems.length === 2) return `${cleanItems[0]} and ${cleanItems[1]}`;
+  return `${cleanItems.slice(0, -1).join(', ')}, and ${cleanItems[cleanItems.length - 1]}`;
+}
+
+function getTopicStopwords(topicName = '') {
+  return new Set(
+    cleanText(topicName)
+      .toLowerCase()
+      .match(/[a-z][a-z'-]{2,}/g) || []
+  );
+}
+
+function extractMonthSummaryTerms(articles = [], topicName = '', limit = 4) {
+  const counts = new Map();
+  const topicWords = getTopicStopwords(topicName);
+
+  (articles || []).slice(0, 8).forEach(article => {
+    const text = cleanText(`${article.title || ''} ${article.description || ''}`).toLowerCase();
+    const tokens = text.match(/[a-z][a-z'-]{2,}/g) || [];
+    const seenInArticle = new Set();
+
+    tokens.forEach(token => {
+      if (MONTH_SUMMARY_STOPWORDS.has(token) || topicWords.has(token)) return;
+      if (token.length < 4) return;
+      if (seenInArticle.has(token)) return;
+      seenInArticle.add(token);
+      counts.set(token, (counts.get(token) || 0) + 1);
+    });
+  });
+
+  const ranked = [...counts.entries()]
+    .sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      return b[0].length - a[0].length;
+    })
+    .map(([term, count]) => ({ term, count }));
+
+  const repeated = ranked.filter(item => item.count > 1);
+  const picked = (repeated.length ? repeated : ranked).slice(0, limit);
+  return picked.map(item => item.term);
+}
+
+function getDominantMonthCategories(articles = [], limit = 2) {
+  const counts = new Map();
+
+  (articles || []).slice(0, 8).forEach(article => {
+    const cat = categorize(`${article.title || ''} ${article.description || ''}`);
+    counts.set(cat, (counts.get(cat) || 0) + 1);
+  });
+
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([cat]) => cat);
+}
+
 function buildFakeMonthOverview(topicKey, monthLabel, articles = []) {
   const topicName = TOPICS[topicKey]?.name || topicKey;
-  const picked = (articles || []).slice(0, 3);
-  const details = picked
+  const picked = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, 8);
+  const dominantCategories = getDominantMonthCategories(picked, 2);
+  const themePhrases = dominantCategories
+    .map(cat => MONTH_THEME_PHRASES[cat])
+    .filter(Boolean);
+  const recurringTerms = extractMonthSummaryTerms(picked, topicName, 4);
+  const leadDetails = picked
     .map(article => cleanText(article.description || article.title))
     .filter(Boolean)
     .slice(0, 2);
+  const fallbackCategory = dominantCategories[0] || categorize(topicName);
 
-  const detailText = details.length
-    ? details.map(text => text.replace(/\.+$/, '') + '.').join(' ')
-    : `Coverage in ${monthLabel} tracked the clearest shifts in ${topicName} across the reporting reviewed here.`;
+  const sentences = [];
 
-  return `In ${monthLabel}, coverage of ${topicName} centered on the clearest developments visible in the reporting we reviewed. ${detailText}`;
+  sentences.push(
+    `In ${monthLabel}, coverage of ${topicName} focused on ${formatNaturalList(themePhrases.length ? themePhrases : ['the clearest developments across the story'])}.`
+  );
+
+  if (recurringTerms.length) {
+    sentences.push(
+      `Reporting repeatedly returned to ${formatNaturalList(recurringTerms.slice(0, 3))}, which helped define the month across multiple angles.`
+    );
+  }
+
+  if (leadDetails.length) {
+    const detailSentence = leadDetails
+      .map(text => text.replace(/\.+$/, ''))
+      .join(' ')
+      .slice(0, 220)
+      .trim();
+
+    if (detailSentence) {
+      sentences.push(`${detailSentence.replace(/[^a-z0-9)\]]$/i, '')}.`);
+    }
+  }
+
+  sentences.push(
+    MONTH_ANALYTICAL_CLOSE[fallbackCategory] ||
+      `Taken together, the month read as a meaningful shift in ${topicName}, with several related strands reinforcing the overall direction of the story.`
+  );
+
+  return sentences.slice(0, 4).join(' ');
 }
 
 function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
@@ -3083,9 +3287,8 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
           <h3 class="story-title">${escapeHtml(event.label || 'This month')}</h3>
           <div class="story-pill" style="background:${theme.bg};color:${theme.color};">${event.importance === 'high' ? 'Focus month' : 'Context month'}</div>
         </div>
-        <div class="story-deck">${escapeHtml(event.whyItMatters || `A curated checkpoint in the longer arc of ${TOPICS[topicKey]?.name || topicKey}.`)}</div>
       </div>
-      <div class="story-grid">
+      <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
         </div>
@@ -4335,6 +4538,7 @@ function renderTimeline(topic, theme) {
   const rangeEnd = events[events.length - 1]?.label || events[events.length - 1]?.dateLabel || '';
   const subText = 'Follow the topic month by month, then open any checkpoint for context and connected coverage.';
   const metaText = `${events.length} checkpoints from ${rangeStart} to ${rangeEnd}.`;
+  const isMobileTimeline = window.innerWidth <= 700;
 
   if (!events.length) {
     stage.innerHTML = `
@@ -4369,6 +4573,10 @@ function renderTimeline(topic, theme) {
     `;
   }).join('');
 
+  const flowStyle = isMobileTimeline
+    ? ''
+    : ` style="--timeline-entry-count:${events.length};min-height:calc(var(--timeline-entry-count) * var(--timeline-row-height));grid-template-rows:repeat(${events.length}, var(--timeline-row-height));"`;
+
   stage.innerHTML = `
     <div class="timeline-stage-top">
       <div>
@@ -4377,12 +4585,8 @@ function renderTimeline(topic, theme) {
         <div class="timeline-sub">${escapeHtml(subText)}</div>
       </div>
     </div>
-    <div class="timeline-meta-bar">
-      <div class="timeline-meta-note">${escapeHtml(metaText)}</div>
-      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Happening')}` : 'Select a happening'}</div>
-    </div>
     <div class="timeline-rail-shell">
-      <div class="timeline-flow">${flowHtml}</div>
+      <div class="timeline-flow"${flowStyle}>${flowHtml}</div>
     </div>
   `;
 }
