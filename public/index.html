@@ -631,19 +631,59 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .sb-timeline-inline {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
+  position: relative;
 }
 
 .sb-tl-item {
-  display: flex;
-  align-items: center;
+  position: relative;
+  display: grid;
+  grid-template-columns: 68px 16px 1fr;
+  align-items: start;
   gap: 10px;
-  background: none;
+  background: transparent;
   border: none;
+  width: 100%;
   text-align: left;
   cursor: pointer;
-  padding: 0;
+  padding: 0 0 14px 0;
   color: var(--ink);
+}
+
+.sb-tl-item:last-child {
+  padding-bottom: 0;
+}
+
+.sb-tl-date {
+  font-size: 10px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--serif);
+  font-weight: 700;
+  padding-top: 2px;
+}
+
+.sb-tl-rail {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  justify-content: center;
+}
+
+.sb-tl-rail::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: -6px;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--border2);
+}
+
+.sb-tl-item:last-child .sb-tl-rail::after {
+  display: none;
 }
 
 .sb-tl-dot {
@@ -652,6 +692,69 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   border-radius: 50%;
   background: var(--ink);
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  box-shadow: 0 0 0 5px var(--white);
+}
+
+.sb-tl-dot.hi {
+  width: 12px;
+  height: 12px;
+}
+
+.sb-tl-copy {
+  min-width: 0;
+  padding: 2px 0 0;
+}
+
+.sb-tl-label {
+  display: block;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.sb-tl-meta {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.sb-tl-item.active .sb-tl-label {
+  color: var(--ink);
+}
+
+.sb-tl-item.active .sb-tl-copy {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.sb-tl-item.active .sb-tl-dot {
+  transform: scale(1.08);
+}
+
+.sb-subsection-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  margin: 16px 0 8px;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.sb-mini-note {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink2);
+  margin-top: 8px;
 }
 .sb-sources {
   margin-top: 18px;
@@ -1310,7 +1413,10 @@ let currentTopic=null, selectedNode=null, currentView='graph';
 let nodes=[], edgeList=[], animId=null;
 let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
 let cache={};
+let timelineEventCache = {};
 let activeTopicRequest = 0;
+let activeTimelineEventId = null;
+let timelineScrubPct = 0.5;
 let zoomScale = 1;
 const MIN_ZOOM = 0.7;
 const MAX_ZOOM = 2.2;
@@ -1329,6 +1435,8 @@ function openTopic(key) {
   panOffset = { x: 0, y: 0 };
   zoomScale = 1;
   cache = {};
+  timelineEventCache = {};
+  activeTimelineEventId = null;
   nodes = [];
   edgeList = [];
 
@@ -1398,8 +1506,10 @@ function goBack() {
   nodes = [];
   edgeList = [];
   cache = {};
+  timelineEventCache = {};
   panOffset = { x: 0, y: 0 };
   zoomScale = 1;
+  activeTimelineEventId = null;
   isPanning = false;
 
   // reset UI
@@ -1683,12 +1793,245 @@ function hitTest(pos) {
 }
 function renderSidebarTimeline(topicKey, events) {
   const wrap = document.getElementById('sb-timeline-inline');
+  if (!wrap) return;
+
+  if (!events || events.length === 0) {
+    wrap.innerHTML = `<div class="sb-empty">No major happenings found yet for this topic.</div>`;
+    return;
+  }
+
   wrap.innerHTML = events.map(ev => `
-    <button class="sb-tl-item" onclick="selectTimelineEvent('${topicKey}', '${ev.id}')">
-      <span class="sb-tl-dot"></span>
-      <span>${ev.label}</span>
+    <button class="sb-tl-item ${ev.active ? 'active' : ''}" onclick="selectTimelineEvent('${topicKey}', '${ev.id}')">
+      <span class="sb-tl-date">${ev.dateLabel || 'Now'}</span>
+      <span class="sb-tl-rail">
+        <span class="sb-tl-dot ${ev.importance === 'high' ? 'hi' : ''}" style="background:${THEMES[topicKey].color}"></span>
+      </span>
+      <span class="sb-tl-copy">
+        <span class="sb-tl-label">${ev.label}</span>
+        <span class="sb-tl-meta">${ev.whyItMatters || 'A major storyline inside this topic.'}</span>
+      </span>
     </button>
   `).join('');
+}
+
+function setTimelineActiveEvent(topicKey, eventId) {
+  const data = timelineEventCache[topicKey];
+  if (!data) return [];
+
+  ['overviewEvents', 'detailEvents'].forEach(groupName => {
+    data[groupName] = (data[groupName] || []).map(ev => ({
+      ...ev,
+      active: ev.id === eventId
+    }));
+  });
+
+  activeTimelineEventId = eventId;
+  return getCurrentTimelineEvents(topicKey);
+}
+
+async function fetchTimelineEvents(topicKey, articles) {
+  if (timelineEventCache[topicKey]?.overviewEvents || timelineEventCache[topicKey]?.detailEvents) {
+    return timelineEventCache[topicKey];
+  }
+
+  const topic = TOPICS[topicKey];
+
+  try {
+    const res = await fetch('/api/timeline-events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicKey,
+        topicName: topic?.name || topicKey,
+        mainQuery: topic?.mainQuery || topic?.label || topicKey,
+        articles
+      })
+    });
+
+    const text = await res.text();
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return { error: 'Timeline API returned HTML instead of JSON. Restart the server so the new /api/timeline-events route is loaded.' };
+    }
+
+    if (!res.ok || data.error) {
+      return { error: data.error || 'Timeline request failed' };
+    }
+
+    const normalizeEvents = (events = []) => events.map((event, index) => ({
+      ...event,
+      id: event.id || `${topicKey}-event-${index + 1}`,
+      dateLabel: event.dateLabel || 'Now',
+      importance: event.importance === 'high' ? 'high' : 'medium',
+      active: false
+    }));
+
+    timelineEventCache[topicKey] = {
+      overviewEvents: normalizeEvents(data.overviewEvents || data.events || []),
+      detailEvents: normalizeEvents(data.detailEvents || [])
+    };
+
+    return timelineEventCache[topicKey];
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+function getTimelineZoomLevel() {
+  return zoomScale >= 1.18 ? 'detail' : 'overview';
+}
+
+function getCurrentTimelineEvents(topicKey) {
+  const data = timelineEventCache[topicKey];
+  if (!data) return [];
+  return getTimelineZoomLevel() === 'detail'
+    ? (data.detailEvents?.length ? data.detailEvents : data.overviewEvents || [])
+    : (data.overviewEvents || []);
+}
+
+function getTimelineLevelLabel() {
+  return getTimelineZoomLevel() === 'detail'
+    ? 'Closer view'
+    : 'Big picture';
+}
+
+function syncTimelineToZoom() {
+  if (!currentTopic || !timelineEventCache[currentTopic]) return;
+
+  const currentEvents = getCurrentTimelineEvents(currentTopic);
+  if (!currentEvents.length) {
+    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+    return;
+  }
+
+  const stillVisible = currentEvents.some(ev => ev.id === activeTimelineEventId);
+  if (!stillVisible) {
+    selectTimelineEvent(currentTopic, currentEvents[0].id);
+    return;
+  }
+
+  renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+}
+
+async function fetchEventOverview(topicKey, eventLabel, articles) {
+  try {
+    const res = await fetch('/api/event-overview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicName: TOPICS[topicKey]?.name || topicKey,
+        eventLabel,
+        articles
+      })
+    });
+
+    const text = await res.text();
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return { error: 'Event overview API returned HTML instead of JSON. Restart the server so the new /api/event-overview route is loaded.' };
+    }
+
+    if (!res.ok || data.error) {
+      return { error: data.error || 'Event overview request failed' };
+    }
+
+    return data;
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles, latestArticles) {
+  const wrap = document.getElementById('sb-event-details');
+  if (!wrap) return;
+
+  wrap.innerHTML = `
+    <div class="news-card" style="border-left:3px solid ${THEMES[topicKey].color}">
+      <div class="nc-head" style="background:${THEMES[topicKey].bg}">
+        ${badgeHTML(topicKey)}
+        <div class="nc-headline">${event.label}</div>
+      </div>
+      <div class="nc-body">
+        <div class="nc-summary">${overview}</div>
+        <div class="sb-mini-note">${event.whyItMatters || ''}</div>
+      </div>
+    </div>
+    <div class="sb-subsection-title">What This Is About</div>
+    <div id="sb-event-background"></div>
+    <div class="sb-subsection-title">Latest On This Happening</div>
+    <div id="sb-event-latest"></div>
+  `;
+
+  renderArticleList('sb-event-background', backgroundArticles || []);
+  renderArticleList('sb-event-latest', latestArticles || []);
+}
+
+async function selectTimelineEvent(topicKey, eventId) {
+  const isMobile = window.innerWidth <= 700;
+  const requestId = ++activeTopicRequest;
+  const events = [
+    ...(timelineEventCache[topicKey]?.overviewEvents || []),
+    ...(timelineEventCache[topicKey]?.detailEvents || [])
+  ];
+  const event = events.find(ev => ev.id === eventId);
+  if (!event) return;
+
+  setTimelineActiveEvent(topicKey, eventId);
+  renderTimeline(TOPICS[topicKey], THEMES[topicKey]);
+
+  const detailWrap = document.getElementById('sb-event-details');
+  if (detailWrap) {
+    detailWrap.innerHTML = `<div class="art-loading"><span class="mini-spin" style="border-top-color:${THEMES[topicKey].color}"></span>Loading event overview...</div>`;
+  }
+
+  const backgroundArticles = await fetchNews(event.backgroundQuery, `${event.id}-background`);
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+
+  const latestArticles = await fetchNews(event.latestQuery, `${event.id}-latest`);
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+
+  if (!backgroundArticles || backgroundArticles.error) {
+    if (detailWrap) {
+      detailWrap.innerHTML = `<div class="err-box"><strong>Could not load event</strong>${backgroundArticles?.error || 'Unknown error'}</div>`;
+    }
+    return;
+  }
+
+  const overviewResponse = await fetchEventOverview(topicKey, event.label, backgroundArticles);
+  if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+
+  const overviewText = overviewResponse.error
+    ? `Coverage around ${event.label} is still evolving across several reports.`
+    : overviewResponse.overview;
+
+  renderTimelineEventPanel(
+    topicKey,
+    event,
+    overviewText,
+    Array.isArray(backgroundArticles) ? backgroundArticles : [],
+    Array.isArray(latestArticles) ? latestArticles : []
+  );
+
+  const sbScroll = document.getElementById('sb-scroll');
+  if (sbScroll) {
+    const eventSection = document.getElementById('sb-event-section');
+    if (eventSection) {
+      eventSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  }
+
+  if (isMobile) {
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerContent = document.getElementById('drawer-content');
+    drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
+    drawer.classList.add('open');
+  }
 }
 
 document.getElementById('gc').addEventListener('click', async e => {
@@ -1736,6 +2079,7 @@ document.getElementById('gc').addEventListener('wheel', e => {
   panOffset.x = mouseX - worldX * newZoom;
   panOffset.y = mouseY - worldY * newZoom;
   zoomScale = newZoom;
+  syncTimelineToZoom();
 }, { passive: false });
 
 /* ══════════════════════
@@ -1799,19 +2143,24 @@ function renderLongOverview(topicKey, longSummary, articles, requestId) {
 async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest) {
   const topic = TOPICS[topicKey];
   const mainQuery = topic.mainQuery || topic.label;
+  timelineEventCache[topicKey] = { overviewEvents: [], detailEvents: [] };
+  activeTimelineEventId = null;
 
   document.getElementById('sb-top').innerHTML = `
     <div id="sb-badge">${badgeHTML(topicKey)}</div>
     <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
-    <div class="sb-title" id="sb-title">Overview</div>
-    <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
-    <button class="sb-more-btn" id="sb-more-btn" style="display:none;">Read more</button>
   `;
 
   document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section">
-      <div class="sb-section-title">Timeline</div>
-      <div id="sb-timeline-inline"></div>
+    <div class="sb-section" id="sb-overview-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+        <div class="sb-section-title">Overview</div>
+      </div>
+      <div class="sb-main-summary" id="sb-main-summary">Loading summary...</div>
+    </div>
+    <div class="sb-section" id="sb-event-section">
+      <div class="sb-section-title">Happening overview</div>
+      <div id="sb-event-details" class="sb-empty">Choose a point on the timeline to see why it matters and how the coverage is moving.</div>
     </div>
     <div class="sb-section">
       <div class="sb-section-title">Latest articles</div>
@@ -1822,105 +2171,48 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
   const articles = await fetchNews(mainQuery, `${topicKey}-main`);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-if (!articles || articles.error) {
-  document.getElementById('sb-main-summary').textContent =
-    `Could not load summary: ${articles?.error || 'Unknown fetch error'}`;
-  return;
-}
+  if (!articles || articles.error) {
+    document.getElementById('sb-main-summary').textContent =
+      `Could not load summary: ${articles?.error || 'Unknown fetch error'}`;
+    return;
+  }
 
-if (articles.length === 0) {
-  document.getElementById('sb-main-summary').textContent =
-    `No articles found for query: ${mainQuery}`;
-  return;
-}
+  if (articles.length === 0) {
+    document.getElementById('sb-main-summary').textContent =
+      `No articles found for query: ${mainQuery}`;
+    return;
+  }
 
   const summary = await fetchSummary(topicKey, articles, 'short');
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-if (summary.error) {
-  document.getElementById('sb-main-summary').textContent =
-    `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
-} else {
-  renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
-}
-
-    const sidebarEvents = (topic.tlEvents || []).slice(0, 3);
-  renderSidebarTimeline(topicKey, sidebarEvents);
+  if (summary.error) {
+    document.getElementById('sb-main-summary').textContent =
+      `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
+  } else {
+    renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
+  }
 
   renderArticleList('sb-latest-articles', articles);
 
-document.getElementById('sb-more-btn').onclick = async () => {
-  const longSummary = await fetchSummary(topicKey, articles, 'long');
+  const timelineEvents = await fetchTimelineEvents(topicKey, articles);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-  if (longSummary.error) return;
 
-  const overviewSection = document.getElementById('sb-overview-section');
-  if (!overviewSection) return;
+  if (!timelineEvents || timelineEvents.error) {
+    document.getElementById('sb-event-details').innerHTML =
+      `<div class="err-box"><strong>Could not load happenings</strong>${timelineEvents?.error || 'Unknown error'}</div>`;
+    return;
+  }
 
-  overviewSection.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-      <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
-      <button class="sb-more-btn" id="sb-less-btn">Back</button>
-    </div>
+  renderTimeline(topic, THEMES[topicKey]);
 
-    <div class="sb-main-summary">
-      <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
-      <div class="sb-sources">
-        <strong>Sources</strong>
-        ${longSummary.sources.map(src => `
-          <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
-        `).join('')}
-      </div>
-    </div>
-  `;
-
-  const sbScroll = document.getElementById('sb-scroll');
-  if (sbScroll) sbScroll.scrollTop = 0;
-
-  document.getElementById('sb-less-btn').onclick = async () => {
-    const shortSummary = await fetchSummary(topicKey, articles, 'short');
-    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
-    const overviewSection = document.getElementById('sb-overview-section');
-    if (!overviewSection) return;
-
-    overviewSection.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-        <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Overview</div>
-        <button class="sb-more-btn" id="sb-more-btn">Read more</button>
-      </div>
-      <div class="sb-main-summary" id="sb-main-summary">${shortSummary.shortSummary}</div>
-    `;
-
-    document.getElementById('sb-more-btn').onclick = async () => {
-      const longSummary = await fetchSummary(topicKey, articles, 'long');
-      if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-      if (longSummary.error) return;
-
-      const overviewSection = document.getElementById('sb-overview-section');
-      if (!overviewSection) return;
-
-      overviewSection.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Full overview</div>
-          <button class="sb-more-btn" id="sb-less-btn">Back</button>
-        </div>
-
-        <div class="sb-main-summary">
-          <p style="margin:0 0 16px 0;">${longSummary.longSummary}</p>
-          <div class="sb-sources">
-            <strong>Sources</strong>
-            ${longSummary.sources.map(src => `
-              <a href="${src.url}" target="_blank" rel="noopener">${src.title}</a>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
-      document.getElementById('sb-less-btn').onclick = arguments.callee.caller;
-    };
-  };
-};
+  const initialEvents = getCurrentTimelineEvents(topicKey);
+  if (initialEvents.length > 0) {
+    await selectTimelineEvent(topicKey, initialEvents[0].id);
+  } else {
+    document.getElementById('sb-event-details').innerHTML =
+      `<div class="sb-empty">No major happenings were identified from the latest coverage yet.</div>`;
+  }
 }
 
 /* ══════════════════════
@@ -2113,6 +2405,11 @@ function renderArticleList(containerId, articles) {
 
   wrap.innerHTML = '';
 
+  if (!articles || articles.length === 0) {
+    wrap.innerHTML = `<div class="art-loading">No articles found.</div>`;
+    return;
+  }
+
   articles.forEach(art => {
     const artCat = categorize((art.title || '') + ' ' + (art.description || ''));
     const artColor = getCatColor(artCat);
@@ -2274,34 +2571,87 @@ async function fetchSummary(topicKey, articles, mode = 'short') {
    TIMELINE
 ══════════════════════ */
 function renderTimeline(topic, theme) {
-  const g=document.getElementById('tl-evts'); g.innerHTML='';
-  const shape=theme.shape, color=theme.color;
+  const g = document.getElementById('tl-evts');
+  if (!g) return;
+  g.innerHTML = '';
 
-  topic.tlEvents.forEach(ev=>{
-    const cx=ev.x, cy=28, sz=ev.hi?6:4;
+  const events = getCurrentTimelineEvents(topic.key);
+  const shape = theme.shape;
+  const color = theme.color;
+  const ns = 'http://www.w3.org/2000/svg';
+  const isMobile = window.innerWidth <= 700;
+
+  if (!events.length) {
+    document.getElementById('tl-date').textContent = 'Loading happenings...';
+    document.getElementById('tl-prog').setAttribute('x2', 500);
+    return;
+  }
+
+  events.forEach((ev, index) => {
+    const cx = events.length === 1 ? 500 : Math.round((index / (events.length - 1)) * 940) + 30;
+    const cy = 28;
+    const active = ev.id === activeTimelineEventId;
+    const size = active ? 8 : ev.importance === 'high' ? 6 : 5;
+
+    const hit = document.createElementNS(ns, 'circle');
+    hit.setAttribute('cx', cx);
+    hit.setAttribute('cy', cy);
+    hit.setAttribute('r', isMobile ? 16 : 14);
+    hit.setAttribute('fill', 'transparent');
+    hit.style.cursor = 'pointer';
+    hit.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
+
     let shapeEl;
-    const ns='http://www.w3.org/2000/svg';
-    if(shape==='circle'){
-      shapeEl=document.createElementNS(ns,'circle');
-      shapeEl.setAttribute('cx',cx);shapeEl.setAttribute('cy',cy);shapeEl.setAttribute('r',sz);
-    } else if(shape==='square'){
-      shapeEl=document.createElementNS(ns,'rect');
-      shapeEl.setAttribute('x',cx-sz);shapeEl.setAttribute('y',cy-sz);shapeEl.setAttribute('width',sz*2);shapeEl.setAttribute('height',sz*2);shapeEl.setAttribute('rx','1');
+    if (shape === 'circle') {
+      shapeEl = document.createElementNS(ns, 'circle');
+      shapeEl.setAttribute('cx', cx);
+      shapeEl.setAttribute('cy', cy);
+      shapeEl.setAttribute('r', size);
+    } else if (shape === 'square') {
+      shapeEl = document.createElementNS(ns, 'rect');
+      shapeEl.setAttribute('x', cx - size);
+      shapeEl.setAttribute('y', cy - size);
+      shapeEl.setAttribute('width', size * 2);
+      shapeEl.setAttribute('height', size * 2);
+      shapeEl.setAttribute('rx', '2');
     } else {
-      shapeEl=document.createElementNS(ns,'polygon');
-      shapeEl.setAttribute('points',`${cx},${cy-sz*1.1} ${cx-sz},${cy+sz*.8} ${cx+sz},${cy+sz*.8}`);
+      shapeEl = document.createElementNS(ns, 'polygon');
+      shapeEl.setAttribute('points', `${cx},${cy-size*1.2} ${cx-size},${cy+size*.9} ${cx+size},${cy+size*.9}`);
     }
-    shapeEl.setAttribute('fill',ev.hi?color:color+'55');
-    shapeEl.setAttribute('stroke',color);shapeEl.setAttribute('stroke-width','0.8');
-    shapeEl.style.cursor='pointer';
 
-    const tx=document.createElementNS(ns,'text');
-    tx.setAttribute('x',cx);tx.setAttribute('y',ev.hi?'13':'15');tx.setAttribute('text-anchor','middle');
-    tx.setAttribute('font-size','8');tx.setAttribute('font-family',"'Syne',sans-serif");
-    tx.setAttribute('font-weight','600');tx.setAttribute('fill','rgba(26,24,20,0.45)');
-    tx.textContent=ev.label;
-    g.appendChild(tx); g.appendChild(shapeEl);
+    shapeEl.setAttribute('fill', active ? color : `${color}${ev.importance === 'high' ? 'CC' : '88'}`);
+    shapeEl.setAttribute('stroke', color);
+    shapeEl.setAttribute('stroke-width', active ? '2' : '1');
+    shapeEl.style.cursor = 'pointer';
+    shapeEl.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
+
+    const tx = document.createElementNS(ns, 'text');
+    tx.setAttribute('x', cx);
+    tx.setAttribute('y', active ? '12' : '14');
+    tx.setAttribute('text-anchor', 'middle');
+    tx.setAttribute('font-size', isMobile ? '7' : '8');
+    tx.setAttribute('font-family', "'Syne',sans-serif");
+    tx.setAttribute('font-weight', active ? '700' : '600');
+    tx.setAttribute('fill', active ? 'rgba(26,24,20,0.88)' : 'rgba(26,24,20,0.45)');
+    tx.textContent = isMobile && ev.label.length > 14 ? `${ev.label.slice(0, 13)}…` : ev.label;
+    tx.style.cursor = 'pointer';
+    tx.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
+
+    g.appendChild(tx);
+    g.appendChild(shapeEl);
+    g.appendChild(hit);
+
+    ev.positionX = cx;
   });
+
+  const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0];
+  const x = activeEvent?.positionX || 500;
+  timelineScrubPct = x / 1000;
+  document.getElementById('tl-scrub-circ').setAttribute('cx', x);
+  document.getElementById('tl-scrub-rect').setAttribute('x', x - 7);
+  document.getElementById('tl-scrub-tri').setAttribute('points', `${x},21 ${x-7},35 ${x+7},35`);
+  document.getElementById('tl-prog').setAttribute('x2', x);
+  document.getElementById('tl-date').textContent = `${getTimelineLevelLabel()} · ${activeEvent?.label || 'Happenings'}`;
 }
 
 let tlDrag=false;
@@ -2309,17 +2659,39 @@ const tlSvg=document.getElementById('tl-svg');
 tlSvg.addEventListener('mousedown',e=>{tlDrag=true;moveScrub(e);});
 document.addEventListener('mousemove',e=>{if(tlDrag)moveScrub(e);});
 document.addEventListener('mouseup',()=>{tlDrag=false;});
+tlSvg.addEventListener('touchstart', e => {
+  tlDrag = true;
+  moveScrub(e.touches[0]);
+}, { passive: true });
+document.addEventListener('touchmove', e => {
+  if (tlDrag && e.touches[0]) moveScrub(e.touches[0]);
+}, { passive: true });
+document.addEventListener('touchend', () => { tlDrag = false; });
 
 function moveScrub(e){
-  const r=tlSvg.getBoundingClientRect(), pct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
-  const x=Math.round(pct*1000);
-  // Move all 3 scrubbers, only the visible one matters
-  document.getElementById('tl-scrub-circ').setAttribute('cx',x);
-  const rx=x-7; document.getElementById('tl-scrub-rect').setAttribute('x',rx);
-  document.getElementById('tl-scrub-tri').setAttribute('points',`${x},${21} ${x-7},${35} ${x+7},${35}`);
-  document.getElementById('tl-prog').setAttribute('x2',x);
-  const ls=['Jan 2022','Apr 2022','Jul 2022','Oct 2022','Jan 2023','Apr 2023','Jul 2023','Oct 2023','Jan 2024','Apr 2024','Jul 2024','Oct 2024','Jan 2025'];
-  document.getElementById('tl-date').textContent=ls[Math.round(pct*(ls.length-1))];
+  if (!currentTopic) return;
+  const r = tlSvg.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+  timelineScrubPct = pct;
+  const events = getCurrentTimelineEvents(currentTopic);
+  if (!events.length) return;
+
+  let nearest = events[0];
+  let nearestDist = Infinity;
+  events.forEach(ev => {
+    const pos = (ev.positionX || 500) / 1000;
+    const dist = Math.abs(pos - pct);
+    if (dist < nearestDist) {
+      nearestDist = dist;
+      nearest = ev;
+    }
+  });
+
+  if (nearest && nearest.id !== activeTimelineEventId) {
+    selectTimelineEvent(currentTopic, nearest.id);
+  } else {
+    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+  }
 }
 
 /* ══════════════════════
