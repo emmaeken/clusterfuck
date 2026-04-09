@@ -508,7 +508,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   display: none;
   overflow: hidden;
   background: #D8E8F0;
-  touch-action: none;
+  touch-action: auto;
   align-items: center;
   justify-content: center;
   z-index: 2;
@@ -602,6 +602,11 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   background: var(--white);
   color: var(--ink);
   box-shadow: 0 1px 4px rgba(26,24,20,0.08);
+}
+
+.timeline-scale-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .timeline-meta-bar {
@@ -909,7 +914,51 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   pointer-events: auto;
 }
 }
-.canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink3); background: var(--white); border: 1px solid var(--border); padding: 3px 8px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink2); background: rgba(253,252,250,0.94); border: 1px solid var(--border); padding: 5px 10px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; box-shadow: 0 8px 20px rgba(26,24,20,0.08); }
+
+.map-marker {
+  cursor: pointer;
+}
+
+.map-marker-pulse,
+.map-marker-glyph,
+.map-marker-label {
+  transition: opacity 0.18s ease, transform 0.18s ease, fill 0.18s ease, stroke 0.18s ease;
+}
+
+.map-marker-pulse {
+  opacity: 0.12;
+}
+
+.map-marker-glyph {
+  opacity: 0.88;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.map-marker-label {
+  fill: rgba(26,24,20,0.68);
+}
+
+.map-marker:hover .map-marker-pulse,
+.map-marker.active .map-marker-pulse {
+  opacity: 0.24;
+}
+
+.map-marker:hover .map-marker-glyph {
+  transform: scale(1.08);
+}
+
+.map-marker.active .map-marker-glyph {
+  opacity: 1;
+  transform: scale(1.12);
+  stroke-width: 2.4;
+}
+
+.map-marker:hover .map-marker-label,
+.map-marker.active .map-marker-label {
+  fill: rgba(26,24,20,0.96);
+}
 
 /* SIDEBAR */
 .sidebar {
@@ -929,21 +978,99 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   flex-shrink: 0;
   background: var(--white);
 }
+.sb-top-primary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sb-topic-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.sb-selection-card {
+  margin-top: 14px;
+  padding: 14px 14px 13px;
+  border: 1px solid rgba(26,24,20,0.08);
+  border-left: 3px solid var(--selection-color, var(--ink));
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.94));
+}
+
+.sb-selection-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sb-selection-kicker,
+.sb-selection-source {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.sb-selection-kicker {
+  color: var(--ink3);
+}
+
+.sb-selection-source {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(26,24,20,0.06);
+  color: var(--ink2);
+}
+
+.sb-selection-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.sb-selection-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(26,24,20,0.05);
+  color: var(--ink2);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
 #sb-overview-section .sb-main-summary {
   padding-left: 0;
   padding-right: 0;
   max-width: none;
 }
-.sb-title {   font-family: var(--serif);   font-size: 18px;   font-weight: 700;   color: var(--ink);  line-height: 1.2;   margin-top: 14px;}
+.sb-title {   font-family: var(--serif);   font-size: 22px;   font-weight: 700;   color: var(--ink);  line-height: 1.1;   margin-top: 10px;}
 .sb-topic-name {   font-family: var(--serif);   font-size: 24px;   font-weight: 700;   color: var(--ink);   line-height: 1.1;   margin-top: 10px; }
-.sb-topic-summary {   font-size: 12px; color: var(--ink2);   line-height: 1.6;   margin-top: 10px;   max-width: 34ch; }
+.sb-topic-summary {   font-size: 12px; color: var(--ink2);   line-height: 1.7;   margin-top: 10px;   max-width: 40ch; }
 .sb-scroll {
   flex: 1;
   height: 0;
   overflow-y: auto;
-  padding: 18px 16px 24px;
+  padding: 18px 16px 28px;
   min-height: 0;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26,24,20,0.16) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .timeline-rail-shell {
@@ -1270,6 +1397,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
     z-index: 50;
     padding: 0 16px 32px;
+    -webkit-overflow-scrolling: touch;
   }
   .mobile-drawer.open {
     transform: translateY(0);
@@ -1367,6 +1495,8 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   box-shadow: none;
   overflow: auto;
   padding: 8px 0 32px;
+  scroll-behavior: smooth;
+  overflow-anchor: none;
 }
 
 .timeline-rail-shell::before,
@@ -1593,6 +1723,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
 .timeline-entry.active .timeline-entry-node {
   --timeline-node-scale: 1.12;
+}
+
+.timeline-entry-card:focus-visible,
+.timeline-entry-spine:focus-visible,
+.timeline-scale-btn:focus-visible,
+.vbtn:focus-visible,
+.back-btn:focus-visible,
+.sb-more-btn:focus-visible {
+  outline: 2px solid rgba(26,24,20,0.7);
+  outline-offset: 2px;
 }
 
 .sb-section-copy {
@@ -2127,7 +2267,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
       <div class="timeline-wrap" id="timeline-wrap">
         <div class="timeline-stage" id="timeline-stage"></div>
       </div>
-      <div class="canvas-hint" id="canvas-hint">Click node · Drag pan</div>
+      <div class="canvas-hint" id="canvas-hint">Click a node to focus the sidebar</div>
     </div>
 
     <!-- SIDEBAR -->
@@ -2315,6 +2455,71 @@ function badgeHTML(topicKey) {
   return `<span class="badge ${t.type}" style="background:${t.bg};color:${t.color}"><span class="badge-shape" style="${shapeStyle}"></span>${t.label}</span>`;
 }
 
+function toUiKey(text = '') {
+  return String(text)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'item';
+}
+
+function getMapMarkerId(marker = {}) {
+  return marker.id || `map-${toUiKey(marker.label || marker.query || 'marker')}`;
+}
+
+function renderSidebarTop(topicKey, options = {}) {
+  const topic = TOPICS[topicKey];
+  const theme = THEMES[topicKey];
+  if (!topic || !theme) return;
+
+  const metaItems = (options.metaItems || [])
+    .map(item => cleanText(item))
+    .filter(Boolean);
+
+  document.getElementById('sb-top').innerHTML = `
+    <div class="sb-top-primary">
+      <div id="sb-badge">${badgeHTML(topicKey)}</div>
+      <div>
+        <div class="sb-topic-eyebrow">Topic</div>
+        <div class="sb-topic-name" id="sb-topic-name">${escapeHtml(topic.name)}</div>
+      </div>
+    </div>
+    <div class="sb-selection-card" style="--selection-color:${theme.color};">
+      <div class="sb-selection-row">
+        <div class="sb-selection-kicker">${escapeHtml(options.contextLabel || 'Sidebar focus')}</div>
+        <div class="sb-selection-source">${escapeHtml(options.sourceLabel || 'Overview')}</div>
+      </div>
+      <div class="sb-title" id="sb-title">${escapeHtml(options.title || topic.name)}</div>
+      ${metaItems.length
+        ? `<div class="sb-selection-meta">${metaItems.map(item => `<span class="sb-selection-chip">${escapeHtml(item)}</span>`).join('')}</div>`
+        : ''}
+      <div class="sb-topic-summary" id="sb-topic-summary">${escapeHtml(options.summary || topic.summary)}</div>
+    </div>
+  `;
+}
+
+function scrollSidebarToTop() {
+  const scrollEl = document.getElementById('sb-scroll');
+  if (scrollEl) scrollEl.scrollTop = 0;
+}
+
+function syncMobileDrawerFromSidebar(isOpen = false) {
+  if (window.innerWidth > 700) return;
+  const drawer = document.getElementById('mobile-drawer');
+  const drawerContent = document.getElementById('drawer-content');
+  const sidebarContent = document.getElementById('sb-scroll');
+  if (!drawer || !drawerContent || !sidebarContent) return;
+
+  drawerContent.innerHTML = sidebarContent.innerHTML;
+  drawer.classList.toggle('open', Boolean(isOpen));
+}
+
+function setCanvasHint(text = '', visible = true) {
+  const hint = document.getElementById('canvas-hint');
+  if (!hint) return;
+  hint.textContent = text;
+  hint.style.display = visible ? '' : 'none';
+}
+
 /* ══════════════════════
    TOPIC DATA
 ══════════════════════ */
@@ -2480,7 +2685,7 @@ mapMarkers: [
 ══════════════════════ */
 let currentTopic=null, selectedNode=null, currentView='graph';
 let nodes=[], edgeList=[], animId=null;
-let panOffset={x:0,y:0}, isPanning=false, panStart={x:0,y:0};
+let panOffset={x:0,y:0};
 let cache={};
 let cacheMeta={};
 let timelineEventCache = {};
@@ -2490,9 +2695,11 @@ let activeTimelineEventId = null;
 let timelineScrubPct = 0.5;
 let timelineViewLevel = 'overview';
 let zoomScale = 1;
+let hoveredNodeId = null;
+let selectedMapMarkerId = null;
+let timelineRailScrollTop = 0;
+let shouldRevealTimelineSelection = false;
 const ARTICLE_SECTION_LABEL = 'Recent coverage';
-const MIN_ZOOM = 0.7;
-const MAX_ZOOM = 2.2;
 const USE_FAKE_AI_SUMMARY = true;
 const DEFAULT_MAP_VIEWBOX = '0 0 800 480';
 const MAP_VIEWBOXES = {
@@ -2500,10 +2707,6 @@ const MAP_VIEWBOXES = {
   ukraine: '190 95 560 360',
   climate: '95 70 730 360'
 };
-let mapZoom = 1;
-let mapPan = { x: 0, y: 0 };
-let mapPanStart = { x: 0, y: 0 };
-let isMapPanning = false;
 
 /* ══════════════════════
    NAVIGATION
@@ -2511,13 +2714,18 @@ let isMapPanning = false;
 function openTopic(key) {
   // Stop any running animation loop immediately
   if (animId) { cancelAnimationFrame(animId); animId = null; }
+  closeDrawer();
 
   currentTopic = key;
   selectedNode = null;
+  selectedMapMarkerId = null;
+  hoveredNodeId = null;
   currentView = 'graph';
   panOffset = { x: 0, y: 0 };
   zoomScale = 1;
   timelineViewLevel = 'overview';
+  timelineRailScrollTop = 0;
+  shouldRevealTimelineSelection = false;
   cache = {};
   cacheMeta = {};
   timelineEventCache = {};
@@ -2536,16 +2744,12 @@ function openTopic(key) {
   document.getElementById('explore').classList.add('active');
   document.getElementById('tb-title').textContent = topic.label;
   document.getElementById('tb-badge').innerHTML = badgeHTML(key);
-  document.getElementById('sb-badge').innerHTML = badgeHTML(key);
-  document.getElementById('sb-topic-name').textContent = topic.name;
-  document.getElementById('sb-topic-summary').textContent = topic.summary;
-  document.getElementById('sb-title').textContent = 'Graph overview';
   document.getElementById('vbtn-graph').classList.add('active');
   document.getElementById('vbtn-timeline').classList.remove('active');
   document.getElementById('vbtn-map').classList.remove('active');
   document.getElementById('map-wrap').classList.remove('on');
   document.getElementById('timeline-wrap').classList.remove('on');
-  document.getElementById('canvas-hint').style.display = '';
+  setCanvasHint('Click a node to focus the sidebar', true);
 
 updateScrubShape(key, theme.color);
 
@@ -2557,9 +2761,14 @@ if (canvas) {
 }
 
 const mapSvg = document.getElementById('map-svg');
-if (mapSvg) {
-  mapSvg.innerHTML = '';
-}
+  if (mapSvg) {
+    mapSvg.innerHTML = '';
+  }
+
+  renderMainTopicSidebarShell(key, {
+    overviewCopy: 'Loading the main overview and strongest current signals.',
+    summaryText: 'Loading summary...'
+  });
 
 // wait one frame so the explore screen is fully visible before drawing
 requestAnimationFrame(() => {
@@ -2583,6 +2792,7 @@ function goBack() {
     cancelAnimationFrame(animId);
     animId = null;
   }
+  closeDrawer();
 
   // invalidate all old async responses
   activeTopicRequest += 1;
@@ -2591,6 +2801,8 @@ function goBack() {
   // reset state completely
   currentTopic = null;
   selectedNode = null;
+  selectedMapMarkerId = null;
+  hoveredNodeId = null;
   currentView = 'graph';
   nodes = [];
   edgeList = [];
@@ -2601,7 +2813,8 @@ function goBack() {
   zoomScale = 1;
   timelineViewLevel = 'overview';
   activeTimelineEventId = null;
-  isPanning = false;
+  timelineRailScrollTop = 0;
+  shouldRevealTimelineSelection = false;
 
   // reset UI
   document.getElementById('explore').classList.remove('active');
@@ -2612,7 +2825,7 @@ function goBack() {
   document.getElementById('vbtn-map').classList.remove('active');
   document.getElementById('map-wrap').classList.remove('on');
   document.getElementById('timeline-wrap').classList.remove('on');
-  document.getElementById('canvas-hint').style.display = '';
+  setCanvasHint('Click a node to focus the sidebar', true);
 
   // clear canvas
   const canvas = document.getElementById('gc');
@@ -2646,23 +2859,37 @@ function goBack() {
 }
 
 async function switchView(v) {
+  closeDrawer();
   currentView = v;
   document.getElementById('vbtn-graph').classList.toggle('active', v === 'graph');
   document.getElementById('vbtn-timeline').classList.toggle('active', v === 'timeline');
   document.getElementById('vbtn-map').classList.toggle('active', v === 'map');
   document.getElementById('map-wrap').classList.toggle('on', v === 'map');
   document.getElementById('timeline-wrap').classList.toggle('on', v === 'timeline');
-  document.getElementById('canvas-hint').style.display = v === 'graph' ? '' : 'none';
+  if (v === 'graph') {
+    setCanvasHint('Click a node to focus the sidebar', true);
+  } else if (v === 'map') {
+    setCanvasHint('Click a marker to focus the sidebar', true);
+  } else {
+    setCanvasHint('', false);
+  }
 
   if (v === 'map') {
-    resetMapViewportState();
     if (currentTopic) {
       requestAnimationFrame(() => {
         if (currentView === 'map' && currentTopic) {
-          renderMap(TOPICS[currentTopic], THEMES[currentTopic]);
+          const topic = TOPICS[currentTopic];
+          renderMap(topic, THEMES[currentTopic]);
+          const activeMarker = topic.mapMarkers.find(marker => getMapMarkerId(marker) === selectedMapMarkerId);
+          if (activeMarker) {
+            selectMapMarker(activeMarker);
+          } else {
+            renderMapSidebarShell(currentTopic);
+          }
         }
       });
     }
+    return;
   }
 
   if (v === 'graph' && currentTopic) {
@@ -2677,7 +2904,6 @@ async function switchView(v) {
   }
 
   if (v === 'timeline' && currentTopic) {
-    timelineViewLevel = 'overview';
     await ensureTimelineSidebarReady(currentTopic);
     renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
   }
@@ -2817,6 +3043,7 @@ function loop(key) {
   nodes.forEach(n=>{
     if(n.alpha<=0) return;
     const sel=selectedNode===n.id;
+    const hov=hoveredNodeId===n.id;
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
     const shape = 'circle';
@@ -2829,10 +3056,10 @@ function loop(key) {
     ctx.save();
 
     // Selection glow
-    if(sel){
+    if(sel || hov){
       ctx.save();
-      ctx.globalAlpha = n.alpha * 0.18;
-      drawShape(ctx, shape, n.px, n.py, r+14);
+      ctx.globalAlpha = n.alpha * (sel ? 0.18 : 0.1);
+      drawShape(ctx, shape, n.px, n.py, r + (sel ? 14 : 10));
       ctx.fillStyle = nodeFill;
       ctx.fill();
       ctx.restore();
@@ -2841,8 +3068,8 @@ function loop(key) {
     // Node fill
     ctx.globalAlpha = n.tier === 'main' ? n.alpha : n.alpha * (n.tier === 'core' ? 0.9 : 0.72);
     ctx.fillStyle   = nodeFill;
-    ctx.strokeStyle = sel ? '#333' : nodeFill;
-    ctx.lineWidth   = sel ? 2.5 : 1.2;
+    ctx.strokeStyle = sel ? '#1A1814' : hov ? blendColors(nodeFill, '#FDFCFA', 0.25) : nodeFill;
+    ctx.lineWidth   = sel ? 2.6 : hov ? 2 : 1.2;
     drawShape(ctx, shape, n.px, n.py, r);
     ctx.fill();
     ctx.stroke();
@@ -2896,8 +3123,8 @@ function loop(key) {
 function lp(e){
     const r = document.getElementById('gc').getBoundingClientRect();
     return {
-      x: (e.clientX - r.left - panOffset.x) / zoomScale,
-      y: (e.clientY - r.top - panOffset.y) / zoomScale
+      x: e.clientX - r.left,
+      y: e.clientY - r.top
     };
 }
 
@@ -3016,18 +3243,36 @@ function getTimelineZoomLevel() {
 function getCurrentTimelineEvents(topicKey) {
   const data = timelineEventCache[topicKey];
   if (!data) return [];
-  return data.overviewEvents || [];
+  const detailEvents = data.detailEvents || [];
+  const overviewEvents = data.overviewEvents || [];
+
+  if (timelineViewLevel === 'detail' && detailEvents.length) {
+    return detailEvents;
+  }
+
+  return overviewEvents;
 }
 
 function getTimelineLevelLabel() {
-  return 'Big picture by month';
+  return timelineViewLevel === 'detail'
+    ? 'Live happenings'
+    : 'Big picture by month';
 }
 
-function setTimelineViewLevel(level) {
-  timelineViewLevel = 'overview';
+async function setTimelineViewLevel(level) {
+  timelineViewLevel = level === 'detail' ? 'detail' : 'overview';
   if (!currentTopic) return;
 
+  const visibleEvents = getCurrentTimelineEvents(currentTopic);
+  if (!visibleEvents.some(ev => ev.id === activeTimelineEventId)) {
+    activeTimelineEventId = visibleEvents[0]?.id || null;
+  }
+
+  shouldRevealTimelineSelection = true;
   renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+  if (currentView === 'timeline' && activeTimelineEventId) {
+    await selectTimelineEvent(currentTopic, activeTimelineEventId);
+  }
 }
 
 function renderTimelineAxis() {
@@ -3363,6 +3608,19 @@ async function selectTimelineEvent(topicKey, eventId) {
   if (!event) return;
 
   setTimelineActiveEvent(topicKey, eventId);
+  shouldRevealTimelineSelection = true;
+  renderTimelineSidebarShell(topicKey, {
+    title: event.label || 'Selected checkpoint',
+    summary: event.eventType === 'month'
+      ? `The sidebar is showing a month checkpoint because ${event.label || 'this month'} is selected in the timeline.`
+      : `The sidebar is showing a live happening because ${event.label || 'this event'} is selected in the timeline.`,
+    sectionTitle: event.eventType === 'month' ? 'Selected checkpoint' : 'Selected happening',
+    sectionCopy: event.eventType === 'month'
+      ? 'This panel explains why the selected month matters and which coverage best anchors it.'
+      : 'This panel explains the selected happening and separates background coverage from newer reporting.',
+    eventText: 'Loading event overview...'
+  });
+  scrollSidebarToTop();
   renderTimeline(TOPICS[topicKey], THEMES[topicKey]);
 
   const detailWrap = document.getElementById('sb-event-details');
@@ -3374,11 +3632,13 @@ async function selectTimelineEvent(topicKey, eventId) {
     const topic = TOPICS[topicKey];
     setTimelineSectionTitle('Selected month');
     const monthArticles = await fetchNews(
-      topic?.mainQuery || topic?.label || topicKey,
-      `${topicKey}-main`,
+      event.query || topic?.mainQuery || topic?.label || topicKey,
+      `${event.id}-month`,
       {
         topicKey,
-        kind: 'main',
+        kind: 'month',
+        from: event.fromDate || '',
+        to: event.toDate || '',
         pageSize: 8,
         sortBy: 'relevancy'
       }
@@ -3395,20 +3655,10 @@ async function selectTimelineEvent(topicKey, eventId) {
     const monthlyArticles = Array.isArray(monthArticles) ? monthArticles : [];
     const overviewText = buildFakeMonthOverview(topicKey, event.label, monthlyArticles);
     renderTimelineMonthPanel(topicKey, event, overviewText, monthlyArticles);
-
-    const sbScroll = document.getElementById('sb-scroll');
-    if (sbScroll) {
-      const eventSection = document.getElementById('sb-event-section');
-      if (eventSection) {
-        eventSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
-      }
-    }
+    scrollSidebarToTop();
 
     if (isMobile) {
-      const drawer = document.getElementById('mobile-drawer');
-      const drawerContent = document.getElementById('drawer-content');
-      drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
-      drawer.classList.add('open');
+      syncMobileDrawerFromSidebar(true);
     }
 
     return;
@@ -3453,20 +3703,10 @@ async function selectTimelineEvent(topicKey, eventId) {
     Array.isArray(backgroundArticles) ? backgroundArticles : [],
     Array.isArray(latestArticles) ? latestArticles : []
   );
-
-  const sbScroll = document.getElementById('sb-scroll');
-  if (sbScroll) {
-    const eventSection = document.getElementById('sb-event-section');
-    if (eventSection) {
-      eventSection.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
-  }
+  scrollSidebarToTop();
 
   if (isMobile) {
-    const drawer = document.getElementById('mobile-drawer');
-    const drawerContent = document.getElementById('drawer-content');
-    drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
-    drawer.classList.add('open');
+    syncMobileDrawerFromSidebar(true);
   }
 }
 
@@ -3474,14 +3714,20 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
 
-  document.getElementById('sb-top').innerHTML = `
-    <div id="sb-badge">${badgeHTML(topicKey)}</div>
-    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
-  `;
+  renderSidebarTop(topicKey, {
+    contextLabel: 'Graph overview',
+    sourceLabel: 'Graph',
+    title: 'Main cluster',
+    summary: 'The sidebar is showing the topic overview from the graph. Select a connected node to narrow the story.',
+    metaItems: [
+      `Category: ${THEMES[topicKey].label}`,
+      'Selection: Topic overview'
+    ]
+  });
 
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section" id="sb-overview-section">
-      <div class="sb-section-title">Briefing</div>
+      <div class="sb-section-title">Topic briefing</div>
       <div class="sb-section-copy">${escapeHtml(options.overviewCopy || 'Loading the main overview and strongest recent reporting.')}</div>
       <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(options.summaryText || 'Loading summary...')}</div>
     </div>
@@ -3497,14 +3743,47 @@ function renderTimelineSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
 
-  document.getElementById('sb-top').innerHTML = `
-    <div id="sb-badge">${badgeHTML(topicKey)}</div>
-    <div class="sb-topic-name" id="sb-topic-name">${topic.name}</div>
-    <div class="sb-topic-summary" id="sb-topic-summary">The timeline is focused on the monthly arc of the story.</div>
-  `;
+  renderSidebarTop(topicKey, {
+    contextLabel: 'Timeline selection',
+    sourceLabel: 'Timeline',
+    title: options.title || 'Choose a checkpoint',
+    summary: options.summary || 'The sidebar explains the selected point in time and why it matters.',
+    metaItems: [
+      `Category: ${THEMES[topicKey].label}`,
+      `Mode: ${timelineViewLevel === 'detail' ? 'Live happenings' : 'Monthly checkpoints'}`
+    ]
+  });
 
   document.getElementById('sb-scroll').innerHTML = `
-    <div id="sb-event-details" class="sb-empty">${escapeHtml(options.eventText || 'Loading month overview...')}</div>
+    <div class="sb-section" id="sb-event-section">
+      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Selected checkpoint')}</div>
+      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Select a month or happening in the timeline to load context and related coverage.')}</div>
+      <div id="sb-event-details" class="sb-empty">${escapeHtml(options.eventText || 'Loading month overview...')}</div>
+    </div>
+  `;
+}
+
+function renderMapSidebarShell(topicKey, options = {}) {
+  const topic = TOPICS[topicKey];
+  if (!topic) return;
+
+  renderSidebarTop(topicKey, {
+    contextLabel: 'Map selection',
+    sourceLabel: 'Map',
+    title: options.title || 'Choose a marker',
+    summary: options.summary || 'Click a marker on the map to show the linked location coverage in the sidebar.',
+    metaItems: [
+      `Category: ${THEMES[topicKey].label}`,
+      'Selection: Location'
+    ]
+  });
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section" id="sb-map-section">
+      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Location coverage')}</div>
+      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Select a marker to open reporting tied to that place.')}</div>
+      <div class="sb-empty">${escapeHtml(options.bodyText || 'No marker is selected yet.')}</div>
+    </div>
   `;
 }
 
@@ -3579,38 +3858,22 @@ document.getElementById('gc').addEventListener('click', async e => {
 
   if (mainNode) {
     selectedNode = mainNode.id;
+    hoveredNodeId = mainNode.id;
     await renderMainTopicOverview(currentTopic);
   }
 });
 document.getElementById('gc').addEventListener('mousemove',e=>{
-  if(isPanning){panOffset.x=e.clientX-panStart.x;panOffset.y=e.clientY-panStart.y;return;}
   const p=lp(e), tt=document.getElementById('tt');
   const n=hitTest(p);
+  hoveredNodeId = n ? n.id : null;
   if(n){tt.textContent=n.label;tt.style.left=(e.clientX+14)+'px';tt.style.top=(e.clientY-6)+'px';tt.classList.add('show');document.getElementById('gc').style.cursor='pointer';}
   else{tt.classList.remove('show');document.getElementById('gc').style.cursor='default';}
 });
-document.getElementById('gc').addEventListener('mousedown',e=>{
-  if(!hitTest(lp(e))){isPanning=true;panStart.x=e.clientX-panOffset.x;panStart.y=e.clientY-panOffset.y;document.getElementById('gc').style.cursor='grabbing';}
+document.getElementById('gc').addEventListener('mouseleave', () => {
+  hoveredNodeId = null;
+  document.getElementById('tt').classList.remove('show');
+  document.getElementById('gc').style.cursor = 'default';
 });
-document.addEventListener('mouseup',()=>{isPanning=false;});
-document.getElementById('gc').addEventListener('wheel', e => {
-  e.preventDefault();
-
-  const rect = document.getElementById('gc').getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
-  const worldX = (mouseX - panOffset.x) / zoomScale;
-  const worldY = (mouseY - panOffset.y) / zoomScale;
-
-  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-  const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomScale * zoomFactor));
-
-  panOffset.x = mouseX - worldX * newZoom;
-  panOffset.y = mouseY - worldY * newZoom;
-  zoomScale = newZoom;
-  syncTimelineToZoom();
-}, { passive: false });
 
 /* ══════════════════════
    ÖVERBLICKSPANEL NODE
@@ -3627,7 +3890,7 @@ function renderShortOverview(topicKey, shortSummary, articles, requestId) {
     <div class="sb-overview-layout">
       <div class="sb-overview-top">
         <div>
-          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Briefing</div>
+          <div class="sb-section-title" style="margin-bottom:0;">Briefing</div>
           <div class="sb-section-copy">A fast editorial read on the main arc before you move into the timeline.</div>
         </div>
         <button class="sb-more-btn" id="sb-more-btn">Expand brief</button>
@@ -3678,7 +3941,7 @@ function renderLongOverview(topicKey, longSummary, articles, requestId) {
     <div class="sb-overview-layout">
       <div class="sb-overview-top">
         <div>
-          <div class="sb-section-title" id="sb-title" style="margin-bottom:0;">Deep brief</div>
+          <div class="sb-section-title" style="margin-bottom:0;">Deep brief</div>
           <div class="sb-section-copy">A longer read with extra context and a quieter source trail.</div>
         </div>
         <button class="sb-more-btn" id="sb-less-btn">Back</button>
@@ -3719,14 +3982,15 @@ function renderLongOverview(topicKey, longSummary, articles, requestId) {
 async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest) {
   const topic = TOPICS[topicKey];
   const mainQuery = topic.mainQuery || topic.label;
-  timelineEventCache[topicKey] = { overviewEvents: [], detailEvents: [] };
-  activeTimelineEventId = null;
   activeTimelineDetailRequest += 1;
+  selectedMapMarkerId = null;
+  hoveredNodeId = selectedNode;
 
   renderMainTopicSidebarShell(topicKey, {
     overviewCopy: 'Loading the main overview and strongest current signals.',
     summaryText: 'Loading summary...'
   });
+  scrollSidebarToTop();
 
   const articles = await fetchNews(mainQuery, `${topicKey}-main`, {
     topicKey,
@@ -3767,6 +4031,9 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     return;
   }
 
+  if (!activeTimelineEventId) {
+    activeTimelineEventId = getCurrentTimelineEvents(topicKey)[0]?.id || null;
+  }
   renderTimeline(topic, THEMES[topicKey]);
 }
 
@@ -3775,12 +4042,31 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
 ══════════════════════ */
 async function selectMapMarker(marker) {
   const theme = THEMES[currentTopic];
-    const s = document.getElementById('sb-scroll');
-    const sbTitle = document.getElementById('sb-title');
-    if (sbTitle) sbTitle.textContent = marker.label;
+  const topic = TOPICS[currentTopic];
+  const s = document.getElementById('sb-scroll');
+  if (!theme || !topic || !s) return;
+
+  hoveredNodeId = null;
+  selectedMapMarkerId = getMapMarkerId(marker);
+  updateMapMarkerSelection(selectedMapMarkerId);
+
+  renderSidebarTop(currentTopic, {
+    contextLabel: 'Selected marker',
+    sourceLabel: 'Map',
+    title: marker.label,
+    summary: `The sidebar is showing coverage connected to ${marker.label} because that map marker is selected.`,
+    metaItems: [
+      `Topic: ${topic.name}`,
+      'Type: Location coverage'
+    ]
+  });
+  scrollSidebarToTop();
 
   s.innerHTML = `
-    <div class="news-card" style="border-left:3px solid ${theme.color}">
+    <div class="sb-section" id="sb-map-section">
+      <div class="sb-section-title">Location brief</div>
+      <div class="sb-section-copy">This location is active on the map, and the articles below are the ones tied to that marker.</div>
+      <div class="news-card" style="border-left:3px solid ${theme.color}">
       <div class="nc-head" style="background:${theme.bg}">
         ${badgeHTML(currentTopic)}
         <div class="nc-headline">${marker.label}</div>
@@ -3788,6 +4074,7 @@ async function selectMapMarker(marker) {
       <div class="nc-body">
         <div class="nc-summary">Articles connected to this location.</div>
       </div>
+    </div>
     </div>
   `;
 
@@ -3817,20 +4104,25 @@ async function selectMapMarker(marker) {
 
   if (!result || result.error) {
     live.innerHTML += `<div class="err-box"><strong>Could not load articles</strong>${result?.error || 'Unknown error'}</div>`;
+    syncMobileDrawerFromSidebar(true);
     return;
   }
 
   if (result.length === 0) {
     live.innerHTML += `<div class="art-loading">No recent coverage found.</div>`;
+    syncMobileDrawerFromSidebar(true);
     return;
   }
 
   appendArticleItems(live, result);
+  syncMobileDrawerFromSidebar(true);
 }
 async function selectNode(id) {
   const isMobile = window.innerWidth <= 700;
   const requestId = ++activeTopicRequest;
   selectedNode = id;
+  hoveredNodeId = id;
+  selectedMapMarkerId = null;
 
   const topic = TOPICS[currentTopic];
   const theme = THEMES[currentTopic];
@@ -3844,28 +4136,44 @@ async function selectNode(id) {
   }
 
   const s = document.getElementById('sb-scroll');
-  const sbTitle = document.getElementById('sb-title');
-  if (sbTitle) sbTitle.textContent = n.label;
+  if (!s) return;
 
   const st=topic.staticData&&topic.staticData[id];
+  const nodeCategory = getCatLabel(getCat(n));
+
+  renderSidebarTop(currentTopic, {
+    contextLabel: 'Selected node',
+    sourceLabel: 'Graph',
+    title: n.label,
+    summary: `The sidebar is showing the ${n.label} cluster because that node is selected in the graph.`,
+    metaItems: [
+      `Topic: ${topic.name}`,
+      `Category: ${nodeCategory}`
+    ]
+  });
+  scrollSidebarToTop();
 
   // Build nc-head border color
   const borderStyle=`border-left:3px solid ${theme.color}`;
 
   s.innerHTML = st ? `
-    <div class="news-card" style="${borderStyle}">
-      <div class="nc-head" style="background:${theme.bg}">
-        ${badgeHTML(currentTopic)}
-        <div class="nc-headline">${st.headline}</div>
-      </div>
-      <div class="nc-body">
-        <div class="nc-summary">${st.summary}</div>
-        <div class="nc-divider"></div>
-        <div class="nc-facts-lbl">
-          <svg width="10" height="10" viewBox="0 0 10 10"><${theme.shape==='circle'?`circle cx="5" cy="5" r="4"`:theme.shape==='square'?`rect x="1" y="1" width="8" height="8" rx="1"`:theme.shape==='triangle'?`polygon points="5,1 1,9 9,9"`:'circle cx="5" cy="5" r="4"'} fill="${theme.color}"/></svg>
-          Key facts
+    <div class="sb-section" id="sb-node-section">
+      <div class="sb-section-title">Node brief</div>
+      <div class="sb-section-copy">This is the selected cluster inside the graph, with key facts first and live coverage underneath.</div>
+      <div class="news-card" style="${borderStyle}">
+        <div class="nc-head" style="background:${theme.bg}">
+          ${badgeHTML(currentTopic)}
+          <div class="nc-headline">${st.headline}</div>
         </div>
-        ${st.facts.map(f=>`<div class="fact">${f}</div>`).join('')}
+        <div class="nc-body">
+          <div class="nc-summary">${st.summary}</div>
+          <div class="nc-divider"></div>
+          <div class="nc-facts-lbl">
+            <svg width="10" height="10" viewBox="0 0 10 10"><${theme.shape==='circle'?`circle cx="5" cy="5" r="4"`:theme.shape==='square'?`rect x="1" y="1" width="8" height="8" rx="1"`:theme.shape==='triangle'?`polygon points="5,1 1,9 9,9"`:'circle cx="5" cy="5" r="4"'} fill="${theme.color}"/></svg>
+            Key facts
+          </div>
+          ${st.facts.map(f=>`<div class="fact">${f}</div>`).join('')}
+        </div>
       </div>
     </div>` : '';
 
@@ -3893,10 +4201,7 @@ async function selectNode(id) {
     appendArticleItems(live, result, getCat(n));
   }
     if (isMobile) {
-    const drawer = document.getElementById('mobile-drawer');
-    const drawerContent = document.getElementById('drawer-content');
-    drawerContent.innerHTML = document.getElementById('sb-scroll').innerHTML;
-    drawer.classList.add('open');
+    syncMobileDrawerFromSidebar(true);
   }
  
 }
@@ -4551,13 +4856,31 @@ function renderTimeline(topic, theme) {
   const stage = document.getElementById('timeline-stage');
   if (!stage) return;
 
+  const previousRail = stage.querySelector('.timeline-rail-shell');
+  if (previousRail) {
+    timelineRailScrollTop = previousRail.scrollTop;
+  }
+
+  const hasDetailEvents = (timelineEventCache[topic.key]?.detailEvents?.length || 0) > 0;
+  const isDetailView = timelineViewLevel === 'detail' && hasDetailEvents;
   const events = getCurrentTimelineEvents(topic.key);
   const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0] || null;
+  if (activeEvent && activeEvent.id !== activeTimelineEventId) {
+    activeTimelineEventId = activeEvent.id;
+  }
+  const activeIndex = activeEvent ? Math.max(0, events.findIndex(ev => ev.id === activeEvent.id)) : -1;
   const level = getTimelineLevelLabel();
-  const rangeStart = events[0]?.label || events[0]?.dateLabel || '';
-  const rangeEnd = events[events.length - 1]?.label || events[events.length - 1]?.dateLabel || '';
-  const subText = 'Follow the topic month by month, then open any checkpoint for context and connected coverage.';
-  const metaText = `${events.length} checkpoints from ${rangeStart} to ${rangeEnd}.`;
+  const rangeStart = events[0]?.dateLabel || events[0]?.label || '';
+  const rangeEnd = events[events.length - 1]?.dateLabel || events[events.length - 1]?.label || '';
+  const subText = isDetailView
+    ? 'Trace the current storylines inside this topic, then open any happening for background coverage and the latest reporting.'
+    : 'Follow the topic month by month, then open any checkpoint for context and connected coverage.';
+  const metaText = isDetailView
+    ? `${events.length} live happenings in view from ${rangeStart} to ${rangeEnd}.`
+    : `${events.length} checkpoints in view from ${rangeStart} to ${rangeEnd}.`;
+  const currentText = activeEvent
+    ? `${activeIndex + 1} of ${events.length} · ${activeEvent.dateLabel || activeEvent.label || 'Selected'}`
+    : 'Select a checkpoint';
   const isMobileTimeline = window.innerWidth <= 700;
 
   if (!events.length) {
@@ -4572,11 +4895,15 @@ function renderTimeline(topic, theme) {
   const flowHtml = events.map((ev, index) => {
     const side = index % 2 === 0 ? 'left' : 'right';
     const intensity = ev.importance === 'high' || ev.id === activeTimelineEventId || index === 0 ? 'focus' : 'context';
-    const badgeLabel = ev.importance === 'high' ? 'Focus month' : 'Context month';
-    const summaryCopy = ev.whyItMatters || 'Open this checkpoint to read the clearest connected coverage from that month.';
+    const badgeLabel = isDetailView
+      ? (ev.importance === 'high' ? 'Major signal' : 'Current signal')
+      : (ev.importance === 'high' ? 'Focus month' : 'Context month');
+    const summaryCopy = ev.whyItMatters || (isDetailView
+      ? 'Open this happening to read the clearest connected coverage right now.'
+      : 'Open this checkpoint to read the clearest connected coverage from that month.');
 
     return `
-      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}">
+      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}">
         <button class="timeline-entry-card" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
           <div class="timeline-entry-meta">
             <div class="timeline-entry-badge">${escapeHtml(badgeLabel)}</div>
@@ -4604,11 +4931,44 @@ function renderTimeline(topic, theme) {
         <div class="timeline-headline">${escapeHtml(level)}</div>
         <div class="timeline-sub">${escapeHtml(subText)}</div>
       </div>
+      <div class="timeline-scale">
+        <button class="timeline-scale-btn ${!isDetailView ? 'active' : ''}" onclick="setTimelineViewLevel('overview')">Big picture</button>
+        <button class="timeline-scale-btn ${isDetailView ? 'active' : ''}" onclick="setTimelineViewLevel('detail')" ${hasDetailEvents ? '' : 'disabled'}>${hasDetailEvents ? 'Live happenings' : 'Months only'}</button>
+      </div>
+    </div>
+    <div class="timeline-meta-bar">
+      <div class="timeline-meta-note">${escapeHtml(metaText)}</div>
+      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Checkpoint')} · ${escapeHtml(currentText)}` : 'Select a checkpoint'}</div>
     </div>
     <div class="timeline-rail-shell">
       <div class="timeline-flow"${flowStyle}>${flowHtml}</div>
     </div>
   `;
+
+  const rail = stage.querySelector('.timeline-rail-shell');
+  if (!rail) return;
+
+  rail.scrollTop = Math.min(
+    timelineRailScrollTop,
+    Math.max(0, rail.scrollHeight - rail.clientHeight)
+  );
+  rail.addEventListener('scroll', () => {
+    timelineRailScrollTop = rail.scrollTop;
+  }, { passive: true });
+
+  if (shouldRevealTimelineSelection) {
+    const activeEntry = rail.querySelector('.timeline-entry.active');
+    if (activeEntry) {
+      requestAnimationFrame(() => {
+        const targetTop = Math.max(
+          0,
+          activeEntry.offsetTop - Math.max(80, (rail.clientHeight - activeEntry.offsetHeight) / 2)
+        );
+        rail.scrollTo({ top: targetTop, behavior: 'smooth' });
+      });
+    }
+    shouldRevealTimelineSelection = false;
+  }
 }
 
 const MAP_BACKGROUNDS = {
@@ -4969,103 +5329,95 @@ const MAP_BACKGROUNDS = {
 
 function renderMap(topic, theme) {
   const svg = document.getElementById('map-svg');
+  if (!svg) return;
   const ns = 'http://www.w3.org/2000/svg';
   const { color, shape } = theme;
 
- svg.innerHTML = MAP_BACKGROUNDS[topic.key];
- svg.setAttribute('viewBox', MAP_VIEWBOXES[topic.key] || DEFAULT_MAP_VIEWBOX);
+  svg.innerHTML = MAP_BACKGROUNDS[topic.key];
+  svg.setAttribute('viewBox', MAP_VIEWBOXES[topic.key] || DEFAULT_MAP_VIEWBOX);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   resetMapViewportState();
 
-  const targetLayer =
-    topic.key === 'politics'
-      ? document.getElementById('usa-map')
-      : topic.key === 'ukraine'
-      ? document.getElementById('ukraine-map')
-      : topic.key === 'climate'
-      ? document.getElementById('world-map')
-      : svg;
-
-  if (!targetLayer) {
-    console.error('Hittar inte rätt kartlager');
-    return;
-  }
-
   const g = document.createElementNS(ns, 'g');
   g.setAttribute('id', 'map-markers');
-  // Marker coordinates are authored in the root SVG viewBox space, not the
-  // transformed country/world artwork group space.
   svg.appendChild(g);
 
   const resolvedMarkers = topic.mapMarkers
-    .map(marker => ({ ...marker, ...resolveMapMarkerPosition(marker) }))
+    .map(marker => ({
+      ...marker,
+      id: getMapMarkerId(marker),
+      ...resolveMapMarkerPosition(marker)
+    }))
     .filter(marker => Number.isFinite(marker.x) && Number.isFinite(marker.y));
 
-resolvedMarkers.forEach(m => {
-  const px = m.x;
-  const py = m.y;
-  const sz = m.size;
+  resolvedMarkers.forEach(m => {
+    const markerGroup = document.createElementNS(ns, 'g');
+    markerGroup.classList.add('map-marker');
+    markerGroup.dataset.markerId = m.id;
+    markerGroup.setAttribute('transform', `translate(${m.x} ${m.y})`);
 
-  const pulse = document.createElementNS(ns, 'circle');
-  pulse.setAttribute('cx', px);
-  pulse.setAttribute('cy', py);
-  pulse.setAttribute('r', sz + 6);
-  pulse.setAttribute('fill', color);
-  pulse.setAttribute('opacity', '0.12');
-  g.appendChild(pulse);
+    const pulse = document.createElementNS(ns, 'circle');
+    pulse.classList.add('map-marker-pulse');
+    pulse.setAttribute('cx', '0');
+    pulse.setAttribute('cy', '0');
+    pulse.setAttribute('r', String(m.size + 6));
+    pulse.setAttribute('fill', color);
 
-  let marker;
+    const hit = document.createElementNS(ns, 'circle');
+    hit.classList.add('map-marker-hit');
+    hit.setAttribute('cx', '0');
+    hit.setAttribute('cy', '0');
+    hit.setAttribute('r', String(Math.max(18, m.size + 12)));
+    hit.setAttribute('fill', 'transparent');
 
-  if (shape === 'circle') {
-    marker = document.createElementNS(ns, 'circle');
-    marker.setAttribute('cx', px);
-    marker.setAttribute('cy', py);
-    marker.setAttribute('r', sz);
-  } else if (shape === 'square') {
-    marker = document.createElementNS(ns, 'rect');
-    marker.setAttribute('x', px - sz);
-    marker.setAttribute('y', py - sz);
-    marker.setAttribute('width', sz * 2);
-    marker.setAttribute('height', sz * 2);
-    marker.setAttribute('rx', '2');
-  } else {
-    marker = document.createElementNS(ns, 'polygon');
-    marker.setAttribute('points', `${px},${py-sz*1.1} ${px-sz},${py+sz*.8} ${px+sz},${py+sz*.8}`);
-  }
+    let markerGlyph;
 
-  marker.setAttribute('fill', color);
-  marker.setAttribute('opacity', '0.85');
-  marker.setAttribute('stroke', 'white');
-  marker.setAttribute('stroke-width', '1.5');
-  marker.style.cursor = 'pointer';
-  marker.style.pointerEvents = 'all';
-  g.appendChild(marker);
+    if (shape === 'circle') {
+      markerGlyph = document.createElementNS(ns, 'circle');
+      markerGlyph.setAttribute('cx', '0');
+      markerGlyph.setAttribute('cy', '0');
+      markerGlyph.setAttribute('r', String(m.size));
+    } else if (shape === 'square') {
+      markerGlyph = document.createElementNS(ns, 'rect');
+      markerGlyph.setAttribute('x', String(-m.size));
+      markerGlyph.setAttribute('y', String(-m.size));
+      markerGlyph.setAttribute('width', String(m.size * 2));
+      markerGlyph.setAttribute('height', String(m.size * 2));
+      markerGlyph.setAttribute('rx', '2');
+    } else {
+      markerGlyph = document.createElementNS(ns, 'polygon');
+      markerGlyph.setAttribute('points', `0,${-m.size*1.1} ${-m.size},${m.size*.8} ${m.size},${m.size*.8}`);
+    }
 
-  const isMobile = window.innerWidth <= 700;
+    markerGlyph.classList.add('map-marker-glyph');
+    markerGlyph.setAttribute('fill', color);
+    markerGlyph.setAttribute('stroke', 'white');
+    markerGlyph.setAttribute('stroke-width', '1.5');
 
-  const lbl = document.createElementNS(ns, 'text');
-  lbl.setAttribute('x', px + sz + (isMobile ? 4 : 6));
-  lbl.setAttribute('y', py + 3.5);
-  lbl.setAttribute('font-size', isMobile ? '8' : '9');
-  lbl.setAttribute('font-family', "'Syne',sans-serif");
-  lbl.setAttribute('font-weight', '600');
-  lbl.setAttribute('fill', 'rgba(26,24,20,0.65)');
-  lbl.textContent = m.label;
-  lbl.style.cursor = 'pointer';
-  lbl.style.pointerEvents = 'all';
-  g.appendChild(lbl);
+    const isMobile = window.innerWidth <= 700;
+    const lbl = document.createElementNS(ns, 'text');
+    lbl.classList.add('map-marker-label');
+    lbl.setAttribute('x', String(m.size + (isMobile ? 4 : 6)));
+    lbl.setAttribute('y', '3.5');
+    lbl.setAttribute('font-size', isMobile ? '8' : '9');
+    lbl.setAttribute('font-family', "'Syne',sans-serif");
+    lbl.setAttribute('font-weight', '700');
+    lbl.textContent = m.label;
 
-  marker.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    await selectMapMarker(m);
+    markerGroup.appendChild(pulse);
+    markerGroup.appendChild(markerGlyph);
+    markerGroup.appendChild(lbl);
+    markerGroup.appendChild(hit);
+    g.appendChild(markerGroup);
+
+    markerGroup.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await selectMapMarker(m);
+    });
   });
 
-  lbl.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    await selectMapMarker(m);
-  });
-});
-setupMapClicks(resolvedMarkers);
+  updateMapMarkerSelection(selectedMapMarkerId);
+  setupMapClicks(resolvedMarkers);
 }
 function getTransformedBBox(el) {
   if (!el || typeof el.getBBox !== 'function') return null;
@@ -5125,14 +5477,20 @@ function resolveMapMarkerPosition(marker) {
 function applyMapTransform() {
   const svg = document.getElementById('map-svg');
   if (!svg) return;
-  svg.style.transformOrigin = '50% 50%';
-  svg.style.transform = `translate(${mapPan.x}px, ${mapPan.y}px) scale(${mapZoom})`;
+  svg.style.transform = '';
 }
 
 function resetMapViewportState() {
-  mapZoom = 1;
-  mapPan = { x: 0, y: 0 };
   applyMapTransform();
+}
+
+function updateMapMarkerSelection(activeMarkerId = selectedMapMarkerId) {
+  const svg = document.getElementById('map-svg');
+  if (!svg) return;
+
+  svg.querySelectorAll('.map-marker').forEach(markerGroup => {
+    markerGroup.classList.toggle('active', markerGroup.dataset.markerId === activeMarkerId);
+  });
 }
 
 function getMapPoint(svg, clientX, clientY) {
@@ -5168,76 +5526,30 @@ function setupMapClicks(markers) {
       }
     });
 
-    if (closest) await selectMapMarker(closest);
+    if (closest) {
+      await selectMapMarker(closest);
+      return;
+    }
+
+    selectedMapMarkerId = null;
+    updateMapMarkerSelection(null);
+    if (currentTopic) {
+      renderMapSidebarShell(currentTopic);
+      scrollSidebarToTop();
+      syncMobileDrawerFromSidebar(false);
+    }
   };
 }
 
 window.addEventListener('resize', () => {
   if (currentTopic && document.getElementById('explore').classList.contains('active')) {
     initGraph(currentTopic);
-    renderMap(TOPICS[currentTopic], THEMES[currentTopic]);
-    renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
-  }
-});
-const mapWrapEl = document.getElementById('map-wrap');
-const timelineWrapEl = document.getElementById('timeline-wrap');
-
-function getTouchDistance(t1, t2) {
-  const dx = t2.clientX - t1.clientX;
-  const dy = t2.clientY - t1.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-let pinchStartDist = 0;
-let pinchStartZoom = 1;
-
-mapWrapEl.addEventListener('touchstart', (e) => {
-  if (currentView !== 'map') return;
-
-  if (e.touches.length === 1) {
-    isMapPanning = true;
-    mapPanStart.x = e.touches[0].clientX - mapPan.x;
-    mapPanStart.y = e.touches[0].clientY - mapPan.y;
-  }
-
-  if (e.touches.length === 2) {
-    isMapPanning = false;
-    pinchStartDist = getTouchDistance(e.touches[0], e.touches[1]);
-    pinchStartZoom = mapZoom;
-  }
-}, { passive: true });
-
-mapWrapEl.addEventListener('touchmove', (e) => {
-  if (currentView !== 'map') return;
-
-  if (e.touches.length === 1 && isMapPanning && mapZoom > 1) {
-    mapPan.x = e.touches[0].clientX - mapPanStart.x;
-    mapPan.y = e.touches[0].clientY - mapPanStart.y;
-    applyMapTransform();
-  }
-
-  if (e.touches.length === 2) {
-    e.preventDefault();
-
-    const newDist = getTouchDistance(e.touches[0], e.touches[1]);
-    const nextZoom = Math.max(1, Math.min(4, pinchStartZoom * (newDist / pinchStartDist)));
-    mapZoom = nextZoom;
-    applyMapTransform();
-  }
-}, { passive: false });
-
-timelineWrapEl.addEventListener('wheel', (e) => {
-  if (currentView !== 'timeline') return;
-  timelineViewLevel = 'overview';
-}, { passive: false });
-
-mapWrapEl.addEventListener('touchend', () => {
-  isMapPanning = false;
-
-  if (mapZoom <= 1) {
-    mapZoom = 1;
-    mapPan = { x: 0, y: 0 };
-    applyMapTransform();
+    if (currentView === 'map') {
+      renderMap(TOPICS[currentTopic], THEMES[currentTopic]);
+    }
+    if (currentView === 'timeline') {
+      renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
+    }
   }
 });
 </script>
