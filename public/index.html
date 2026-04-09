@@ -2418,7 +2418,6 @@ mapMarkers: [
   { x: 430, y: 160, label:'Kyiv', size:12, query:'Kyiv Ukraine war' },
   { x: 480, y: 130, label:'Kharkiv', size:9, query:'Kharkiv Ukraine war' },
   { x: 470, y: 210, label:'Zaporizhzhia', size:8, query:'Zaporizhzhia Ukraine war' },
-  { x: 530, y: 80,  label:'Moscow', size:11, query:'Moscow Russia Ukraine war' },
   { x: 400, y: 230, label:'Odesa', size:8, query:'Odesa Ukraine war' }
 ]
   },
@@ -2495,6 +2494,16 @@ const ARTICLE_SECTION_LABEL = 'Recent coverage';
 const MIN_ZOOM = 0.7;
 const MAX_ZOOM = 2.2;
 const USE_FAKE_AI_SUMMARY = true;
+const DEFAULT_MAP_VIEWBOX = '0 0 800 480';
+const MAP_VIEWBOXES = {
+  politics: '0 0 800 480',
+  ukraine: '190 95 560 360',
+  climate: '95 70 730 360'
+};
+let mapZoom = 1;
+let mapPan = { x: 0, y: 0 };
+let mapPanStart = { x: 0, y: 0 };
+let isMapPanning = false;
 
 /* ══════════════════════
    NAVIGATION
@@ -2644,6 +2653,17 @@ async function switchView(v) {
   document.getElementById('map-wrap').classList.toggle('on', v === 'map');
   document.getElementById('timeline-wrap').classList.toggle('on', v === 'timeline');
   document.getElementById('canvas-hint').style.display = v === 'graph' ? '' : 'none';
+
+  if (v === 'map') {
+    resetMapViewportState();
+    if (currentTopic) {
+      requestAnimationFrame(() => {
+        if (currentView === 'map' && currentTopic) {
+          renderMap(TOPICS[currentTopic], THEMES[currentTopic]);
+        }
+      });
+    }
+  }
 
   if (v === 'graph' && currentTopic) {
     const topic = TOPICS[currentTopic];
@@ -4953,6 +4973,9 @@ function renderMap(topic, theme) {
   const { color, shape } = theme;
 
  svg.innerHTML = MAP_BACKGROUNDS[topic.key];
+ svg.setAttribute('viewBox', MAP_VIEWBOXES[topic.key] || DEFAULT_MAP_VIEWBOX);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  resetMapViewportState();
 
   const targetLayer =
     topic.key === 'politics'
@@ -4970,9 +4993,15 @@ function renderMap(topic, theme) {
 
   const g = document.createElementNS(ns, 'g');
   g.setAttribute('id', 'map-markers');
-  targetLayer.appendChild(g);
+  // Marker coordinates are authored in the root SVG viewBox space, not the
+  // transformed country/world artwork group space.
+  svg.appendChild(g);
 
-topic.mapMarkers.forEach(m => {
+  const resolvedMarkers = topic.mapMarkers
+    .map(marker => ({ ...marker, ...resolveMapMarkerPosition(marker) }))
+    .filter(marker => Number.isFinite(marker.x) && Number.isFinite(marker.y));
+
+resolvedMarkers.forEach(m => {
   const px = m.x;
   const py = m.y;
   const sz = m.size;
@@ -5036,22 +5065,102 @@ topic.mapMarkers.forEach(m => {
     await selectMapMarker(m);
   });
 });
-setupMapClicks(topic);
+setupMapClicks(resolvedMarkers);
 }
-function setupMapClicks(topic) {
+function getTransformedBBox(el) {
+  if (!el || typeof el.getBBox !== 'function') return null;
+  const box = el.getBBox();
+  const matrix = typeof el.getCTM === 'function' ? el.getCTM() : null;
+  if (!matrix) return box;
+
+  const corners = [
+    { x: box.x, y: box.y },
+    { x: box.x + box.width, y: box.y },
+    { x: box.x, y: box.y + box.height },
+    { x: box.x + box.width, y: box.y + box.height }
+  ].map(point => ({
+    x: matrix.a * point.x + matrix.c * point.y + matrix.e,
+    y: matrix.b * point.x + matrix.d * point.y + matrix.f
+  }));
+
+  const xs = corners.map(point => point.x);
+  const ys = corners.map(point => point.y);
+
+  return {
+    x: Math.min(...xs),
+    y: Math.min(...ys),
+    width: Math.max(...xs) - Math.min(...xs),
+    height: Math.max(...ys) - Math.min(...ys)
+  };
+}
+
+function resolveMapMarkerPosition(marker) {
+  if (!marker.regionId && !marker.regionIds) {
+    return { x: marker.x, y: marker.y };
+  }
+
+  const targetIds = marker.regionIds || [marker.regionId];
+  const boxes = targetIds
+    .map(id => document.getElementById(id))
+    .map(getTransformedBBox)
+    .filter(Boolean);
+
+  if (!boxes.length) {
+    return { x: marker.x, y: marker.y };
+  }
+
+  const minX = Math.min(...boxes.map(box => box.x));
+  const minY = Math.min(...boxes.map(box => box.y));
+  const maxX = Math.max(...boxes.map(box => box.x + box.width));
+  const maxY = Math.max(...boxes.map(box => box.y + box.height));
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  return {
+    x: minX + width * (marker.regionAnchorX ?? 0.5) + (marker.offsetX ?? 0),
+    y: minY + height * (marker.regionAnchorY ?? 0.5) + (marker.offsetY ?? 0)
+  };
+}
+
+function applyMapTransform() {
+  const svg = document.getElementById('map-svg');
+  if (!svg) return;
+  svg.style.transformOrigin = '50% 50%';
+  svg.style.transform = `translate(${mapPan.x}px, ${mapPan.y}px) scale(${mapZoom})`;
+}
+
+function resetMapViewportState() {
+  mapZoom = 1;
+  mapPan = { x: 0, y: 0 };
+  applyMapTransform();
+}
+
+function getMapPoint(svg, clientX, clientY) {
+  const ctm = typeof svg.getScreenCTM === 'function' ? svg.getScreenCTM() : null;
+  if (!ctm) return null;
+  if (typeof svg.createSVGPoint === 'function') {
+    const point = svg.createSVGPoint();
+    point.x = clientX;
+    point.y = clientY;
+    return point.matrixTransform(ctm.inverse());
+  }
+  return new DOMPoint(clientX, clientY).matrixTransform(ctm.inverse());
+}
+
+function setupMapClicks(markers) {
   const svg = document.getElementById('map-svg');
   svg.onclick = async (e) => {
-    const svgRect = svg.getBoundingClientRect();
-    const scaleX = 800 / svgRect.width;
-    const scaleY = 480 / svgRect.height;
-    const clickX = (e.clientX - svgRect.left) * scaleX;
-    const clickY = (e.clientY - svgRect.top) * scaleY;
+    const point = getMapPoint(svg, e.clientX, e.clientY);
+    if (!point) return;
+
+    const clickX = point.x;
+    const clickY = point.y;
 
     let closest = null;
     let closestDist = Infinity;
     const hitRadius = window.innerWidth <= 700 ? 28 : 20;
 
-    topic.mapMarkers.forEach(m => {
+    markers.forEach(m => {
       const dist = Math.sqrt((clickX - m.x) ** 2 + (clickY - m.y) ** 2);
       if (dist < hitRadius + m.size && dist < closestDist) {
         closestDist = dist;
