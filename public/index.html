@@ -509,6 +509,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   overflow: hidden;
   background: #D8E8F0;
   touch-action: auto;
+  padding: 0;
   align-items: center;
   justify-content: center;
   z-index: 2;
@@ -621,13 +622,6 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   font-size: 11px;
   color: var(--ink3);
   line-height: 1.6;
-}
-
-.timeline-current {
-  font-size: 12px;
-  color: var(--ink2);
-  font-family: var(--serif);
-  font-weight: 700;
 }
 
 .timeline-rail-shell {
@@ -973,82 +967,34 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   height: 100%;
 }
 .sb-top {
-  padding: 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid rgba(26,24,20,0.1);
   flex-shrink: 0;
   background: var(--white);
 }
 .sb-top-primary {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 11px;
 }
 
-.sb-topic-eyebrow {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink3);
-  font-family: var(--serif);
-  font-weight: 700;
+.sb-heading-text {
+  min-width: 0;
 }
 
-.sb-selection-card {
-  margin-top: 14px;
-  padding: 14px 14px 13px;
-  border: 1px solid rgba(26,24,20,0.08);
-  border-left: 3px solid var(--selection-color, var(--ink));
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.94));
-}
-
-.sb-selection-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.sb-selection-kicker,
-.sb-selection-source {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-family: var(--serif);
-  font-weight: 700;
-}
-
-.sb-selection-kicker {
-  color: var(--ink3);
-}
-
-.sb-selection-source {
+.sb-topic-mark {
   display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(26,24,20,0.06);
-  color: var(--ink2);
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  margin-top: 1px;
 }
 
-.sb-selection-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.sb-selection-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 8px;
-  border-radius: 999px;
-  background: rgba(26,24,20,0.05);
-  color: var(--ink2);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  font-family: var(--serif);
-  font-weight: 700;
+.sb-topic-mark .badge-shape {
+  width: 10px;
+  height: 10px;
 }
 
 #sb-overview-section .sb-main-summary {
@@ -1056,9 +1002,29 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   padding-right: 0;
   max-width: none;
 }
-.sb-title {   font-family: var(--serif);   font-size: 22px;   font-weight: 700;   color: var(--ink);  line-height: 1.1;   margin-top: 10px;}
-.sb-topic-name {   font-family: var(--serif);   font-size: 24px;   font-weight: 700;   color: var(--ink);   line-height: 1.1;   margin-top: 10px; }
-.sb-topic-summary {   font-size: 12px; color: var(--ink2);   line-height: 1.7;   margin-top: 10px;   max-width: 40ch; }
+.sb-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--ink2);
+  line-height: 1.25;
+  margin-top: 4px;
+}
+.sb-topic-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.08;
+  margin-top: 0;
+}
+.sb-topic-summary {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.75;
+  margin-top: 12px;
+  max-width: 42ch;
+}
 .sb-scroll {
   flex: 1;
   height: 0;
@@ -1148,9 +1114,9 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .sb-section {
-  padding-bottom: 18px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(26,24,20,0.09);
 }
 
 .sb-section:last-child {
@@ -1158,11 +1124,17 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   margin-bottom: 0;
 }
 
+.sb-section-flat {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
 .sb-section-title {
   font-family: var(--serif);
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 12px;
+  line-height: 1.15;
+  margin-bottom: 8px;
 }
 
 .sb-timeline-inline {
@@ -1278,11 +1250,11 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .sb-subsection-title {
-  font-size: 10px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--ink3);
-  margin: 16px 0 8px;
+  color: var(--ink);
+  margin: 18px 0 8px;
   font-family: var(--serif);
   font-weight: 700;
 }
@@ -1340,18 +1312,102 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .fact { font-size: 12px; color: var(--ink2); line-height: 1.5; padding: 3px 0 3px 12px; position: relative; }
 .fact::before { content: '—'; position: absolute; left: 0; color: var(--ink3); font-size: 10px; top: 5px; }
 
-.live-section { margin-top: 12px; }
-.live-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; font-family: var(--serif); font-weight: 700; }
-.ldot { width: 5px; height: 5px; border-radius: 50%; animation: lp 2s infinite; }
-@keyframes lp { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.article-item { padding: 8px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.12s; }
-.article-item:last-child { border-bottom: none; }
-.article-item:hover { opacity: 0.65; }
-.art-src { font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; font-family: var(--serif); font-weight: 600; text-decoration: none; }
-.art-title { font-size: 12px; color: var(--ink); line-height: 1.4; font-weight: 400; text-decoration: none; display: block; }
-.art-src:hover,
-.art-title:hover { text-decoration: underline; }
-.art-time { font-size: 10px; color: var(--ink3); margin-top: 3px; }
+.live-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(26,24,20,0.09);
+}
+.live-header {
+  margin-bottom: 6px;
+}
+.live-lbl {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--ink);
+}
+.article-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.article-item {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 13px 14px;
+  border: 1px solid rgba(26,24,20,0.09);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.62);
+  cursor: default;
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.article-item[href] {
+  cursor: pointer;
+}
+
+.article-item[href]:hover .art-title,
+.article-item[href]:focus-visible .art-title {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.article-item[href]:hover,
+.article-item[href]:focus-visible {
+  border-color: rgba(26,24,20,0.2);
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 24px rgba(26,24,20,0.07);
+  transform: translateY(-1px);
+}
+.article-item:focus-visible {
+  outline: 2px solid rgba(26,24,20,0.7);
+  outline-offset: 4px;
+}
+.article-feature {
+  padding-top: 15px;
+  padding-bottom: 16px;
+}
+.article-feature .art-title {
+  font-size: 20px;
+  line-height: 1.18;
+}
+.article-compact .art-title {
+  font-size: 15px;
+  line-height: 1.35;
+}
+.art-title {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--ink);
+}
+.art-summary {
+  margin-top: 9px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink2);
+  max-width: 42ch;
+}
+.art-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: var(--ink3);
+}
+.art-meta span + span::before {
+  content: "/";
+  margin-right: 6px;
+  color: rgba(26,24,20,0.28);
+}
 .art-loading { font-size: 12px; color: var(--ink3); padding: 8px 0; font-style: italic; display: flex; gap: 7px; align-items: center; }
 .mini-spin { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border2); animation: spin 0.75s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -1419,6 +1475,26 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     color: var(--ink3); background: none; border: 1px solid var(--border);
     border-radius: 20px; padding: 3px 10px; cursor: pointer;
   }
+  .drawer-summary {
+    padding: 0 0 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(26,24,20,0.1);
+  }
+  .drawer-topic-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.08;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .drawer-focus-title {
+    margin-top: 4px;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 650;
+    color: var(--ink2);
+  }
   /* Hide desktop sidebar on mobile */
   .sidebar { display: none; }
   /* Graph takes full height on mobile */
@@ -1481,13 +1557,6 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   max-width: 58ch;
 }
 
-.timeline-current {
-  padding: 10px 14px;
-  border: 1px solid rgba(26,24,20,0.08);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.7);
-}
-
 .timeline-rail-shell {
   border: none;
   border-radius: 0;
@@ -1511,8 +1580,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   display: grid;
   gap: var(--timeline-row-gap);
   align-content: start;
-  height: 100%;
-  min-height: 100%;
+  grid-auto-rows: var(--timeline-row-height);
   padding: 12px 0 18px;
 }
 
@@ -1534,16 +1602,33 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--timeline-spine-width) minmax(0, 1fr);
-  align-items: stretch;
-  height: 100%;
+  align-items: center;
+  height: var(--timeline-row-height);
   min-height: var(--timeline-row-height);
+  max-height: var(--timeline-row-height);
+}
+
+.timeline-entry-side {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+}
+
+.timeline-entry-side.left {
+  grid-column: 1;
+  justify-content: flex-end;
+}
+
+.timeline-entry-side.right {
+  grid-column: 3;
+  justify-content: flex-start;
 }
 
 .timeline-entry-card {
   position: relative;
-  align-self: center;
   width: min(100%, 360px);
-  padding: 14px 16px 15px;
+  padding: 18px 18px 17px;
   text-align: left;
   font: inherit;
   color: inherit;
@@ -1553,50 +1638,80 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   box-shadow: 0 10px 24px rgba(26,24,20,0.06);
   cursor: pointer;
   appearance: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.timeline-entry-card:hover {
+.timeline-entry-card:hover,
+.timeline-entry-card:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(26,24,20,0.08);
+  border-color: rgba(26,24,20,0.24);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(246,243,236,0.98));
+  box-shadow: 0 16px 34px rgba(26,24,20,0.1);
 }
 
 .timeline-entry-card::before {
   content: "";
   position: absolute;
-  top: 28px;
+  top: 50%;
   width: var(--timeline-card-gap);
   height: 1px;
   background: rgba(26,24,20,0.12);
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
-.timeline-entry.left .timeline-entry-card {
-  grid-column: 1;
-  justify-self: end;
+.timeline-entry-card::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(26,24,20,0);
+  transition: background 0.18s ease, opacity 0.18s ease;
+  pointer-events: none;
 }
 
-.timeline-entry.left .timeline-entry-card::before {
+.timeline-entry-side.left .timeline-entry-card::before {
   right: calc(-1 * var(--timeline-card-gap));
 }
 
-.timeline-entry.right .timeline-entry-card {
-  grid-column: 3;
-  justify-self: start;
+.timeline-entry-side.left .timeline-entry-card::after {
+  left: 10px;
 }
 
-.timeline-entry.right .timeline-entry-card::before {
+.timeline-entry-side.left .timeline-entry-card {
+  padding-left: 24px;
+}
+
+.timeline-entry-side.right .timeline-entry-card::before {
   left: calc(-1 * var(--timeline-card-gap));
+}
+
+.timeline-entry-side.right .timeline-entry-card::after {
+  right: 10px;
+}
+
+.timeline-entry-side.right .timeline-entry-card {
+  padding-right: 24px;
+}
+
+.timeline-entry-card:hover::after,
+.timeline-entry-card:focus-visible::after {
+  background: rgba(26,24,20,0.22);
 }
 
 .timeline-entry-spine {
   grid-column: 2;
   position: relative;
-  align-self: stretch;
-  display: block;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: var(--timeline-spine-width);
-  height: 100%;
-  min-height: 100%;
+  height: var(--timeline-row-height);
+  min-height: var(--timeline-row-height);
+  max-height: var(--timeline-row-height);
   z-index: 1;
   background: transparent;
   border: none;
@@ -1656,9 +1771,9 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .timeline-entry-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .timeline-entry-badge {
@@ -1673,20 +1788,6 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   white-space: nowrap;
 }
 
-.timeline-entry-state {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink2);
-  background: rgba(26,24,20,0.05);
-  font-family: var(--serif);
-  font-weight: 700;
-}
-
 .timeline-entry-title {
   font-family: var(--serif);
   font-size: clamp(18px, 1.7vw, 24px);
@@ -1696,7 +1797,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .timeline-entry-copy {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 12px;
   line-height: 1.6;
   color: var(--ink2);
@@ -1716,13 +1817,28 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,240,232,0.98));
 }
 
+.timeline-entry.context .timeline-entry-card:hover,
+.timeline-entry.context .timeline-entry-card:focus-visible,
+.timeline-entry.focus .timeline-entry-card:hover,
+.timeline-entry.focus .timeline-entry-card:focus-visible {
+  border-color: rgba(26,24,20,0.24);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(246,243,236,0.98));
+  box-shadow: 0 16px 34px rgba(26,24,20,0.1);
+}
+
 .timeline-entry.active .timeline-entry-card {
-  border-color: rgba(26,24,20,0.18);
-  box-shadow: 0 14px 34px rgba(26,24,20,0.1);
+  border-color: rgba(26,24,20,0.34);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(239,235,226,0.98));
+  box-shadow: 0 18px 40px rgba(26,24,20,0.14), 0 0 0 3px rgba(26,24,20,0.05);
+}
+
+.timeline-entry.active .timeline-entry-card::after {
+  background: var(--story-accent, rgba(26,24,20,0.72));
 }
 
 .timeline-entry.active .timeline-entry-node {
   --timeline-node-scale: 1.12;
+  box-shadow: 0 0 0 8px rgba(248,246,241,0.98), 0 0 0 11px rgba(26,24,20,0.12);
 }
 
 .timeline-entry-card:focus-visible,
@@ -1736,7 +1852,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .sb-section-copy {
-  margin: 5px 0 14px;
+  margin: 4px 0 16px;
   font-size: 11px;
   line-height: 1.7;
   color: var(--ink3);
@@ -1757,8 +1873,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .sb-overview-grid,
-.story-grid,
-.story-coverage {
+.story-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.85fr);
   gap: 18px;
@@ -1810,13 +1925,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .sb-highlight-box,
-.story-highlight,
-.story-side-note {
-  margin: 20px 10px;
-  padding: 15px;
-  border: 1px solid rgba(26,24,20,0.08);
-  border-radius: 16px;
-  background: rgba(248,246,241,0.86);
+.story-highlight {
+  margin: 14px 10px;
+  padding: 0 0 0 12px;
+  border: none;
+  border-left: 2px solid rgba(26,24,20,0.14);
+  border-radius: 0;
+  background: transparent;
 }
 
 .sb-highlight-label,
@@ -1836,6 +1951,19 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   font-size: 12px;
   line-height: 1.5;
   color: var(--ink);
+}
+
+.story-info-box {
+  margin: 2px 10px 0;
+  padding: 14px 15px;
+  border: 1px solid rgba(26,24,20,0.12);
+  border-left: 3px solid var(--story-accent, rgba(26,24,20,0.28));
+  border-radius: 8px;
+  background: rgba(248,246,241,0.7);
+}
+
+.story-info-box .story-highlight-label {
+  color: var(--ink2);
 }
 
 .sb-source-strip {
@@ -1868,51 +1996,15 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .story-panel {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .story-head {
-  padding: 16px 18px 18px;
-  border: 1px solid rgba(26,24,20,0.08);
-  border-left: 3px solid var(--ink);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.92));
-}
-
-.story-kicker {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink3);
-  font-family: var(--serif);
-  font-weight: 700;
-}
-
-.story-title-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.story-title {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 28px;
-  line-height: 1;
-  color: var(--ink);
-}
-
-.story-pill {
-  flex-shrink: 0;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--serif);
-  font-weight: 700;
+  padding: 0 0 12px 12px;
+  border: none;
+  border-left: 2px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
 }
 
 .story-deck {
@@ -1923,10 +2015,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   color: var(--ink2);
 }
 
-.story-side-note {
-  font-size: 11px;
-  line-height: 1.7;
-  color: var(--ink2);
+.story-head .story-deck {
+  margin-top: 0;
+}
+
+.story-panel-minimal {
+  gap: 22px;
+}
+
+.story-panel-minimal .story-highlight {
+  border-left-color: var(--story-accent, rgba(26,24,20,0.18));
 }
 
 .story-column {
@@ -1934,93 +2032,104 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 
 .story-column-secondary {
-  padding-top: 6px;
+  margin-top: 2px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(26,24,20,0.12);
 }
 
-.story-coverage-stacked {
+.story-coverage {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 26px;
+  margin-top: 2px;
 }
 
 .story-coverage-stacked .story-column-secondary {
-  padding-top: 0;
+  padding-top: 24px;
+}
+
+.story-column-secondary .sb-subsection-title {
+  color: var(--ink);
 }
 
 .story-section-note {
-  margin: -2px 0 10px;
+  margin: 5px 0 12px;
   font-size: 11px;
   line-height: 1.65;
-  color: var(--ink3);
+  color: var(--ink);
+  max-width: 42ch;
 }
 
 .editorial-article-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .editorial-article {
+  position: relative;
   display: block;
   color: inherit;
   text-decoration: none;
+  border: 1px solid rgba(26,24,20,0.09);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.62);
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
-.editorial-article:hover .editorial-article-title {
+.editorial-article[href] {
+  cursor: pointer;
+}
+
+.editorial-article[href]:hover,
+.editorial-article[href]:focus-visible {
+  border-color: rgba(26,24,20,0.2);
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 24px rgba(26,24,20,0.07);
+  transform: translateY(-1px);
+}
+
+.editorial-article[href]:hover .editorial-article-title,
+.editorial-article[href]:focus-visible .editorial-article-title {
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .editorial-article-feature {
-  padding: 0 0 14px;
-  border-bottom: 1px solid var(--border);
+  padding: 14px 14px 15px;
+  margin-top: 12px;
 }
 
 .editorial-article-list .editorial-article {
-  padding: 10px 0 0 14px;
-  border-left: 1px solid var(--border);
+  padding: 12px 13px 13px;
 }
 
 .editorial-article-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
-.editorial-article-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-}
-
-.editorial-article-tag::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.editorial-article-source,
-.editorial-article-time {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.editorial-article-meta span {
+  font-size: 11px;
+  letter-spacing: 0;
   color: var(--ink3);
   font-family: var(--serif);
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.editorial-article-meta span + span::before {
+  content: "/";
+  margin-right: 6px;
+  color: rgba(26,24,20,0.28);
 }
 
 .editorial-article-title {
-  margin-top: 7px;
+  margin-top: 0;
   font-family: var(--serif);
   font-size: 19px;
   line-height: 1.2;
@@ -2038,6 +2147,32 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   color: var(--ink2);
 }
 
+.editorial-article-action,
+.art-action {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink2);
+}
+
+.editorial-article-action::after,
+.art-action::after {
+  content: ">";
+  margin-left: 6px;
+  font-size: 10px;
+  transform: translateY(-1px);
+}
+
+.editorial-article[href]:hover .editorial-article-action,
+.editorial-article[href]:focus-visible .editorial-article-action,
+.article-item[href]:hover .art-action,
+.article-item:focus-visible .art-action {
+  color: var(--ink);
+}
+
 .story-source-footnote .sb-subsection-title {
   margin-top: 0;
 }
@@ -2046,21 +2181,43 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   margin-top: 8px;
 }
 
+.story-source-links a {
+  display: block;
+  padding: 11px 12px;
+  border: 1px solid rgba(26,24,20,0.09);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.62);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.story-source-links a + a {
+  margin-top: 8px;
+}
+
+.story-source-links a:hover,
+.story-source-links a:focus-visible {
+  border-color: rgba(26,24,20,0.2);
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 24px rgba(26,24,20,0.07);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 700px) {
   .timeline-stage {
     padding: 20px 16px 18px;
   }
 
   .timeline-meta-bar,
-  .sb-overview-top,
-  .story-title-row {
+  .sb-overview-top {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .timeline-flow::before {
-    top: 0;
-    bottom: 0;
+    top: calc(12px + (var(--timeline-row-height) / 2));
+    bottom: calc(18px + (var(--timeline-row-height) / 2));
     left: 18px;
     transform: none;
   }
@@ -2069,22 +2226,32 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     position: relative;
     inset-inline: auto;
     top: auto !important;
-    min-height: auto;
-    height: auto;
+    min-height: var(--timeline-row-height);
+    height: var(--timeline-row-height);
+    max-height: var(--timeline-row-height);
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 8px;
   }
 
-  .timeline-entry.left .timeline-entry-card,
-  .timeline-entry.right .timeline-entry-card {
+  .timeline-entry-side.left,
+  .timeline-entry-side.right {
     grid-column: 2;
-    justify-self: stretch;
+    justify-content: flex-start;
+  }
+
+  .timeline-entry.left .timeline-entry-side.right,
+  .timeline-entry.right .timeline-entry-side.left {
+    display: none;
+  }
+
+  .timeline-entry-side.left .timeline-entry-card,
+  .timeline-entry-side.right .timeline-entry-card {
     width: 100%;
     margin: 0 0 0 6px;
   }
 
-  .timeline-entry.left .timeline-entry-card::before,
-  .timeline-entry.right .timeline-entry-card::before {
+  .timeline-entry-side.left .timeline-entry-card::before,
+  .timeline-entry-side.right .timeline-entry-card::before {
     left: -20px;
     right: auto;
     width: 14px;
@@ -2092,18 +2259,26 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 
   .timeline-entry-spine {
     grid-column: 1;
-    min-height: 0;
-    padding-top: 14px;
-    justify-content: flex-start;
+    height: var(--timeline-row-height);
+    min-height: var(--timeline-row-height);
+    max-height: var(--timeline-row-height);
   }
 
   .timeline-entry-date {
-    position: static;
+    position: absolute;
+    top: 50%;
     writing-mode: vertical-rl;
-    transform: rotate(180deg);
+    transform: translateY(-50%) rotate(180deg);
     font-size: 9px;
     letter-spacing: 0.08em;
     white-space: normal;
+  }
+
+  .timeline-entry.left .timeline-entry-date,
+  .timeline-entry.right .timeline-entry-date {
+    right: auto;
+    left: calc(100% + 8px);
+    text-align: left;
   }
 
   .timeline-entry-title {
@@ -2111,8 +2286,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   }
 
   .sb-overview-grid,
-  .story-grid,
-  .story-coverage {
+  .story-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2273,10 +2447,14 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sb-top" id="sb-top">
-        <div id="sb-badge"></div>
-        <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
+        <div class="sb-top-primary">
+          <div id="sb-badge"></div>
+          <div class="sb-heading-text">
+            <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
+            <div class="sb-title" id="sb-title">Overview</div>
+          </div>
+        </div>
         <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
-        <div class="sb-title" id="sb-title">Overview</div>
       </div>
       <div class="sb-scroll" id="sb-scroll">
         <p class="sb-empty">Click any node in the graph to load recent coverage and context.</p>
@@ -2455,6 +2633,16 @@ function badgeHTML(topicKey) {
   return `<span class="badge ${t.type}" style="background:${t.bg};color:${t.color}"><span class="badge-shape" style="${shapeStyle}"></span>${t.label}</span>`;
 }
 
+function sidebarTopicMarkHTML(topicKey) {
+  const t = THEMES[topicKey];
+  const shapeStyle = t.shape === 'circle'
+    ? `border-radius:50%;background:${t.color}`
+    : t.shape === 'square'
+    ? `border-radius:1px;background:${t.color}`
+    : `clip-path:polygon(50% 0%,0% 100%,100% 100%);background:${t.color}`;
+  return `<span class="sb-topic-mark" style="background:${t.bg};color:${t.color}" aria-hidden="true"><span class="badge-shape" style="${shapeStyle}"></span></span>`;
+}
+
 function toUiKey(text = '') {
   return String(text)
     .toLowerCase()
@@ -2468,32 +2656,21 @@ function getMapMarkerId(marker = {}) {
 
 function renderSidebarTop(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
-  const theme = THEMES[topicKey];
-  if (!topic || !theme) return;
+  if (!topic || !THEMES[topicKey]) return;
 
-  const metaItems = (options.metaItems || [])
-    .map(item => cleanText(item))
-    .filter(Boolean);
+  const focusTitle = cleanText(options.title || '');
+  const summary = cleanText(options.summary || '');
+  const showFocusTitle = focusTitle && focusTitle.toLowerCase() !== cleanText(topic.name).toLowerCase();
 
   document.getElementById('sb-top').innerHTML = `
     <div class="sb-top-primary">
-      <div id="sb-badge">${badgeHTML(topicKey)}</div>
-      <div>
-        <div class="sb-topic-eyebrow">Topic</div>
+      <div id="sb-badge">${sidebarTopicMarkHTML(topicKey)}</div>
+      <div class="sb-heading-text">
         <div class="sb-topic-name" id="sb-topic-name">${escapeHtml(topic.name)}</div>
+        ${showFocusTitle ? `<div class="sb-title" id="sb-title">${escapeHtml(focusTitle)}</div>` : ''}
       </div>
     </div>
-    <div class="sb-selection-card" style="--selection-color:${theme.color};">
-      <div class="sb-selection-row">
-        <div class="sb-selection-kicker">${escapeHtml(options.contextLabel || 'Sidebar focus')}</div>
-        <div class="sb-selection-source">${escapeHtml(options.sourceLabel || 'Overview')}</div>
-      </div>
-      <div class="sb-title" id="sb-title">${escapeHtml(options.title || topic.name)}</div>
-      ${metaItems.length
-        ? `<div class="sb-selection-meta">${metaItems.map(item => `<span class="sb-selection-chip">${escapeHtml(item)}</span>`).join('')}</div>`
-        : ''}
-      <div class="sb-topic-summary" id="sb-topic-summary">${escapeHtml(options.summary || topic.summary)}</div>
-    </div>
+    ${summary ? `<div class="sb-topic-summary" id="sb-topic-summary">${escapeHtml(summary)}</div>` : ''}
   `;
 }
 
@@ -2507,9 +2684,18 @@ function syncMobileDrawerFromSidebar(isOpen = false) {
   const drawer = document.getElementById('mobile-drawer');
   const drawerContent = document.getElementById('drawer-content');
   const sidebarContent = document.getElementById('sb-scroll');
+  const sidebarTopic = document.getElementById('sb-topic-name')?.textContent || '';
+  const sidebarTitle = document.getElementById('sb-title')?.textContent || '';
   if (!drawer || !drawerContent || !sidebarContent) return;
 
-  drawerContent.innerHTML = sidebarContent.innerHTML;
+  const drawerHeader = sidebarTopic
+    ? `<div class="drawer-summary">
+        <div class="drawer-topic-name">${escapeHtml(sidebarTopic)}</div>
+        ${sidebarTitle && sidebarTitle !== sidebarTopic ? `<div class="drawer-focus-title">${escapeHtml(sidebarTitle)}</div>` : ''}
+      </div>`
+    : '';
+
+  drawerContent.innerHTML = `${drawerHeader}${sidebarContent.innerHTML}`;
   drawer.classList.toggle('open', Boolean(isOpen));
 }
 
@@ -2620,10 +2806,10 @@ tlEvents: [
   { id:'ceasefire-talks', label:'Ceasefire talks', x:660, hi:true, summaryQuery:'Ukraine ceasefire talks latest', articleQuery:'Ukraine ceasefire talks latest news' }
 ],
 mapMarkers: [
-  { x: 430, y: 160, label:'Kyiv', size:12, query:'Kyiv Ukraine war' },
-  { x: 480, y: 130, label:'Kharkiv', size:9, query:'Kharkiv Ukraine war' },
-  { x: 470, y: 210, label:'Zaporizhzhia', size:8, query:'Zaporizhzhia Ukraine war' },
-  { x: 400, y: 230, label:'Odesa', size:8, query:'Odesa Ukraine war' }
+  { coords: [50.4501, 30.5234], label:'Kyiv', size:12, query:'Kyiv Ukraine war' },
+  { coords: [49.9935, 36.2304], label:'Kharkiv', size:9, query:'Kharkiv Ukraine war' },
+  { coords: [47.8388, 35.1396], label:'Zaporizhzhia', size:8, query:'Zaporizhzhia Ukraine war' },
+  { coords: [46.4825, 30.7233], label:'Odesa', size:8, query:'Odesa Ukraine war' }
 ]
   },
 
@@ -2671,11 +2857,11 @@ tlEvents: [
   {x:840,label:'COP29',hi:false}
 ],
 mapMarkers: [
-  { x: 80,  y: 178, label:'California fires', size:10, query:'California wildfires climate' },
-  { x: 195, y: 310, label:'Amazon', size:10, query:'Amazon rainforest climate' },
-  { x: 395, y: 255, label:'Sahel drought', size:9, query:'Sahel drought climate' },
-  { x: 605, y: 235, label:'Bangladesh floods', size:10, query:'Bangladesh floods climate' },
-  { x: 670, y: 360, label:'Great Barrier Reef', size:9, query:'Great Barrier Reef climate coral bleaching' }
+  { coords: [-3.4653, -62.2159], label:'Amazon rainforest', size:10, query:'Amazon rainforest deforestation biodiversity carbon storage climate tipping point' },
+  { coords: [-18.2871, 147.6992], label:'Great Barrier Reef', size:9, query:'Great Barrier Reef coral bleaching ocean warming reef ecosystem collapse climate' },
+  { coords: [-69.0, 0.0], label:'Antarctic ice melt', size:10, query:'Antarctic ice sheet melt instability long-term sea level rise climate' },
+  { coords: [78.0, -40.0], label:'Arctic sea ice loss', size:10, query:'Arctic sea ice loss polar amplification rapid Arctic warming climate' },
+  { coords: [1.5, -170.0], label:'Sea level rise', size:10, query:'sea level rise Pacific islands coastal flooding low lying settlements climate' }
 ]
   }
 };
@@ -2691,6 +2877,7 @@ let cacheMeta={};
 let timelineEventCache = {};
 let activeTopicRequest = 0;
 let activeTimelineDetailRequest = 0;
+let activeMapDetailRequest = 0;
 let activeTimelineEventId = null;
 let timelineScrubPct = 0.5;
 let timelineViewLevel = 'overview';
@@ -2699,13 +2886,12 @@ let hoveredNodeId = null;
 let selectedMapMarkerId = null;
 let timelineRailScrollTop = 0;
 let shouldRevealTimelineSelection = false;
-const ARTICLE_SECTION_LABEL = 'Recent coverage';
 const USE_FAKE_AI_SUMMARY = true;
 const DEFAULT_MAP_VIEWBOX = '0 0 800 480';
 const MAP_VIEWBOXES = {
   politics: '0 0 800 480',
-  ukraine: '190 95 560 360',
-  climate: '95 70 730 360'
+  ukraine: '110 45 740 400',
+  climate: '55 55 900 410'
 };
 
 /* ══════════════════════
@@ -2731,6 +2917,7 @@ function openTopic(key) {
   timelineEventCache = {};
   activeTimelineEventId = null;
   activeTimelineDetailRequest += 1;
+  activeMapDetailRequest += 1;
   nodes = [];
   edgeList = [];
 
@@ -2797,6 +2984,7 @@ function goBack() {
   // invalidate all old async responses
   activeTopicRequest += 1;
   activeTimelineDetailRequest += 1;
+  activeMapDetailRequest += 1;
 
   // reset state completely
   currentTopic = null;
@@ -2842,10 +3030,14 @@ function goBack() {
 
   // reset sidebar
   document.getElementById('sb-top').innerHTML = `
-    <div id="sb-badge"></div>
-    <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
+    <div class="sb-top-primary">
+      <div id="sb-badge"></div>
+      <div class="sb-heading-text">
+        <div class="sb-topic-name" id="sb-topic-name">Topic overview</div>
+        <div class="sb-title" id="sb-title">Overview</div>
+      </div>
+    </div>
     <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
-    <div class="sb-title" id="sb-title">Overview</div>
   `;
 
   document.getElementById('sb-scroll').innerHTML = `
@@ -2861,6 +3053,9 @@ function goBack() {
 async function switchView(v) {
   closeDrawer();
   currentView = v;
+  if (v !== 'map') {
+    activeMapDetailRequest += 1;
+  }
   document.getElementById('vbtn-graph').classList.toggle('active', v === 'graph');
   document.getElementById('vbtn-timeline').classList.toggle('active', v === 'timeline');
   document.getElementById('vbtn-map').classList.toggle('active', v === 'map');
@@ -3181,6 +3376,56 @@ function setTimelineActiveEvent(topicKey, eventId) {
   return getCurrentTimelineEvents(topicKey);
 }
 
+function getTimelineEventDateValue(event = {}) {
+  const directDate = event.publishedAt || event.date || event.toDate || event.fromDate;
+  if (directDate) {
+    const parsed = new Date(directDate);
+    if (!isNaN(parsed)) return parsed.getTime();
+  }
+
+  const label = cleanText(event.dateLabel || '').toLowerCase();
+  const now = new Date();
+
+  if (!label || label === 'now' || label === 'today' || label === 'this week') {
+    return now.getTime();
+  }
+
+  if (label === 'yesterday') {
+    return now.getTime() - 24 * 60 * 60 * 1000;
+  }
+
+  if (label === 'last week') {
+    return now.getTime() - 7 * 24 * 60 * 60 * 1000;
+  }
+
+  const monthMatch = label.match(/^([a-z]{3,9})\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?$/i);
+  if (monthMatch) {
+    const monthIndex = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+      .indexOf(monthMatch[1].slice(0, 3).toLowerCase());
+    const day = Number(monthMatch[2]);
+    const year = monthMatch[3] ? Number(monthMatch[3]) : now.getFullYear();
+
+    if (monthIndex >= 0 && day >= 1 && day <= 31) {
+      return new Date(year, monthIndex, day).getTime();
+    }
+  }
+
+  const parsedLabelDate = new Date(event.dateLabel || '');
+  return !isNaN(parsedLabelDate) ? parsedLabelDate.getTime() : 0;
+}
+
+function sortTimelineEventsByDate(events = [], direction = 'desc') {
+  const multiplier = direction === 'asc' ? 1 : -1;
+  return [...(events || [])]
+    .map((event, index) => ({ event, index }))
+    .sort((a, b) => {
+      const dateDelta = getTimelineEventDateValue(a.event) - getTimelineEventDateValue(b.event);
+      if (dateDelta !== 0) return dateDelta * multiplier;
+      return a.index - b.index;
+    })
+    .map(item => item.event);
+}
+
 async function fetchTimelineEvents(topicKey, articles) {
   const cachedTimeline = timelineEventCache[topicKey];
   const hasCachedTimelineEvents =
@@ -3226,8 +3471,8 @@ async function fetchTimelineEvents(topicKey, articles) {
     }));
 
     timelineEventCache[topicKey] = {
-      overviewEvents: normalizeEvents(data.overviewEvents || data.events || []),
-      detailEvents: normalizeEvents(data.detailEvents || [])
+      overviewEvents: sortTimelineEventsByDate(normalizeEvents(data.overviewEvents || data.events || []), 'desc'),
+      detailEvents: sortTimelineEventsByDate(normalizeEvents(data.detailEvents || []), 'desc')
     };
 
     return timelineEventCache[topicKey];
@@ -3247,10 +3492,10 @@ function getCurrentTimelineEvents(topicKey) {
   const overviewEvents = data.overviewEvents || [];
 
   if (timelineViewLevel === 'detail' && detailEvents.length) {
-    return detailEvents;
+    return sortTimelineEventsByDate(detailEvents, 'desc');
   }
 
-  return overviewEvents;
+  return sortTimelineEventsByDate(overviewEvents, 'desc');
 }
 
 function getTimelineLevelLabel() {
@@ -3332,29 +3577,20 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
   const summaryParagraphs = summaryParts.length ? summaryParts : [summaryText].filter(Boolean);
   const takeaway = event.whyItMatters || splitSummarySentences(summaryText)[1] || splitSummarySentences(summaryText)[0] || 'Coverage around this development is still moving.';
   const deck = event.whyItMatters || splitSummarySentences(summaryText)[0] || 'A key development inside this topic.';
-  const coverageSources = uniqueSourceNames([...background, ...latest]).length;
 
   wrap.innerHTML = `
-    <div class="story-panel">
+    <div class="story-panel" style="--story-accent:${theme.color};">
       <div class="story-head" style="border-left-color:${theme.color};">
-        <div class="story-kicker">Selected happening</div>
-        <div class="story-title-row">
-          <h3 class="story-title">${escapeHtml(event.label || 'Happening')}</h3>
-          <div class="story-pill" style="background:${theme.bg};color:${theme.color};">${event.importance === 'high' ? 'Major signal' : 'Context signal'}</div>
-        </div>
         <div class="story-deck">${escapeHtml(deck)}</div>
       </div>
-      <div class="story-grid">
+      <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
         </div>
-        <aside class="story-side">
-          <div class="story-highlight">
-            <div class="story-highlight-label">Why it matters</div>
-            <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
-          </div>
-          <div class="story-side-note">${escapeHtml(latest.length ? `Use Key coverage for grounding and Deeper reading for the most recent reporting in this view. ${coverageSources ? `${coverageSources} sources are represented in this view.` : ''}` : `This view prioritizes the strongest explanatory coverage for the selected development.${coverageSources ? ` ${coverageSources} sources are represented here.` : ''}`)}</div>
-        </aside>
+      </div>
+      <div class="story-highlight story-info-box">
+        <div class="story-highlight-label">Why it matters</div>
+        <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
       </div>
       <div class="story-coverage">
         <div class="story-column">
@@ -3363,7 +3599,7 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
           <div id="story-key-coverage"></div>
         </div>
         ${latest.length ? `
-          <div class="story-column story-column-secondary">
+          <div class="story-column story-column-secondary" aria-label="Deeper reading">
             <div class="sb-subsection-title">Deeper reading</div>
             <div class="story-section-note">Follow-on coverage and newer reporting around the same strand.</div>
             <div id="story-deeper-reading"></div>
@@ -3386,11 +3622,6 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
     getRelevantSourceLinks([...background, ...latest], 6),
     `No source trail is available for ${event.label} yet.`
   );
-}
-
-function setTimelineSectionTitle(title) {
-  const titleEl = document.querySelector('#sb-event-section .sb-section-title');
-  if (titleEl) titleEl.textContent = title;
 }
 
 const MONTH_SUMMARY_STOPWORDS = new Set([
@@ -3542,17 +3773,9 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
   const introText = cleanText(overview || '');
   const summaryParagraphs = leadParagraphs.length ? leadParagraphs.slice(0, 3) : [introText].filter(Boolean);
   const takeaway = `Monthly overview of the biggest shifts in ${topicName} during ${event.label || 'this month'}.`;
-  const noteText = `This month checkpoint uses locally generated framing, while the article selections below come from reported coverage about the topic.`;
 
   wrap.innerHTML = `
-    <div class="story-panel">
-      <div class="story-head" style="border-left-color:${theme.color};">
-        <div class="story-kicker">Month checkpoint</div>
-        <div class="story-title-row">
-          <h3 class="story-title">${escapeHtml(event.label || 'This month')}</h3>
-          <div class="story-pill" style="background:${theme.bg};color:${theme.color};">${event.importance === 'high' ? 'Focus month' : 'Context month'}</div>
-        </div>
-      </div>
+    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -3562,7 +3785,6 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
             <div class="story-highlight-label">What changed</div>
             <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
           </div>
-          <div class="story-side-note">${escapeHtml(noteText)}</div>
         </aside>
       </div>
       <div class="story-coverage story-coverage-stacked">
@@ -3572,7 +3794,7 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
           <div id="story-key-coverage"></div>
         </div>
         ${monthly.length > 4 ? `
-          <div class="story-column story-column-secondary">
+          <div class="story-column story-column-secondary" aria-label="Deeper reading">
             <div class="sb-subsection-title">Deeper reading</div>
             <div class="story-section-note">Additional reporting if you want more texture around this point in time.</div>
             <div id="story-deeper-reading"></div>
@@ -3610,14 +3832,7 @@ async function selectTimelineEvent(topicKey, eventId) {
   setTimelineActiveEvent(topicKey, eventId);
   shouldRevealTimelineSelection = true;
   renderTimelineSidebarShell(topicKey, {
-    title: event.label || 'Selected checkpoint',
-    summary: event.eventType === 'month'
-      ? `The sidebar is showing a month checkpoint because ${event.label || 'this month'} is selected in the timeline.`
-      : `The sidebar is showing a live happening because ${event.label || 'this event'} is selected in the timeline.`,
-    sectionTitle: event.eventType === 'month' ? 'Selected checkpoint' : 'Selected happening',
-    sectionCopy: event.eventType === 'month'
-      ? 'This panel explains why the selected month matters and which coverage best anchors it.'
-      : 'This panel explains the selected happening and separates background coverage from newer reporting.',
+    title: event.label || (event.eventType === 'month' ? 'This month' : 'Happening'),
     eventText: 'Loading event overview...'
   });
   scrollSidebarToTop();
@@ -3630,7 +3845,6 @@ async function selectTimelineEvent(topicKey, eventId) {
 
   if (event.eventType === 'month') {
     const topic = TOPICS[topicKey];
-    setTimelineSectionTitle('Selected month');
     const monthArticles = await fetchNews(
       event.query || topic?.mainQuery || topic?.label || topicKey,
       `${event.id}-month`,
@@ -3663,8 +3877,6 @@ async function selectTimelineEvent(topicKey, eventId) {
 
     return;
   }
-
-  setTimelineSectionTitle('Selected happening');
 
   const backgroundArticles = await fetchNews(event.backgroundQuery, `${event.id}-background`, {
     topicKey,
@@ -3715,14 +3927,7 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
   if (!topic) return;
 
   renderSidebarTop(topicKey, {
-    contextLabel: 'Graph overview',
-    sourceLabel: 'Graph',
-    title: 'Main cluster',
-    summary: 'The sidebar is showing the topic overview from the graph. Select a connected node to narrow the story.',
-    metaItems: [
-      `Category: ${THEMES[topicKey].label}`,
-      'Selection: Topic overview'
-    ]
+    title: 'Overview'
   });
 
   document.getElementById('sb-scroll').innerHTML = `
@@ -3742,22 +3947,18 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
 function renderTimelineSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
+  const sectionTitle = cleanText(options.sectionTitle || '');
+  const sectionCopy = cleanText(options.sectionCopy || '');
 
   renderSidebarTop(topicKey, {
-    contextLabel: 'Timeline selection',
-    sourceLabel: 'Timeline',
-    title: options.title || 'Choose a checkpoint',
-    summary: options.summary || 'The sidebar explains the selected point in time and why it matters.',
-    metaItems: [
-      `Category: ${THEMES[topicKey].label}`,
-      `Mode: ${timelineViewLevel === 'detail' ? 'Live happenings' : 'Monthly checkpoints'}`
-    ]
+    title: options.title || (timelineViewLevel === 'detail' ? 'Closer view' : 'Monthly checkpoints'),
+    summary: options.summary || ''
   });
 
   document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section" id="sb-event-section">
-      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Selected checkpoint')}</div>
-      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Select a month or happening in the timeline to load context and related coverage.')}</div>
+    <div class="sb-section sb-section-flat" id="sb-event-section">
+      ${sectionTitle ? `<div class="sb-section-title">${escapeHtml(sectionTitle)}</div>` : ''}
+      ${sectionCopy ? `<div class="sb-section-copy">${escapeHtml(sectionCopy)}</div>` : ''}
       <div id="sb-event-details" class="sb-empty">${escapeHtml(options.eventText || 'Loading month overview...')}</div>
     </div>
   `;
@@ -3768,14 +3969,8 @@ function renderMapSidebarShell(topicKey, options = {}) {
   if (!topic) return;
 
   renderSidebarTop(topicKey, {
-    contextLabel: 'Map selection',
-    sourceLabel: 'Map',
     title: options.title || 'Choose a marker',
-    summary: options.summary || 'Click a marker on the map to show the linked location coverage in the sidebar.',
-    metaItems: [
-      `Category: ${THEMES[topicKey].label}`,
-      'Selection: Location'
-    ]
+    summary: options.summary || ''
   });
 
   document.getElementById('sb-scroll').innerHTML = `
@@ -3785,6 +3980,252 @@ function renderMapSidebarShell(topicKey, options = {}) {
       <div class="sb-empty">${escapeHtml(options.bodyText || 'No marker is selected yet.')}</div>
     </div>
   `;
+}
+
+function renderMapDetailSidebarShell(topicKey, marker, options = {}) {
+  const topic = TOPICS[topicKey];
+  if (!topic || !marker) return;
+
+  renderSidebarTop(topicKey, {
+    title: marker.label || 'Selected location',
+    summary: options.summary || ''
+  });
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section sb-section-flat" id="sb-map-section">
+      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Place brief')}</div>
+      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Loading the newest reporting tied to this marker.')}</div>
+      <div id="sb-map-details" class="sb-empty">${options.bodyHtml || escapeHtml(options.bodyText || 'Loading location coverage...')}</div>
+    </div>
+  `;
+}
+
+function trimStoryDetail(text = '', maxLength = 230) {
+  const cleaned = cleanText(text).replace(/\.+$/, '');
+  if (!cleaned || cleaned.length <= maxLength) return cleaned;
+
+  return cleaned
+    .slice(0, maxLength)
+    .replace(/\s+\S*$/, '')
+    .replace(/[,\s]+$/, '')
+    .trim();
+}
+
+function buildMapLocationBrief(topicKey, marker, articles = []) {
+  const topicName = TOPICS[topicKey]?.name || topicKey;
+  const locationName = cleanText(marker?.label || 'this location');
+  const picked = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, 8);
+  const latest = picked[0] || {};
+  const latestDetail = trimStoryDetail(latest.description || latest.title || '');
+  const dominantCategory = getDominantMonthCategories(picked, 1)[0] || categorize(`${topicName} ${locationName}`);
+  const themePhrase = MONTH_THEME_PHRASES[dominantCategory] || 'local developments, public pressure, and wider responses';
+  const recurringTerms = extractMonthSummaryTerms(picked, `${topicName} ${locationName}`, 3);
+  const visibleSources = uniqueSourceNames(picked).slice(0, 3);
+  const sentences = [];
+
+  sentences.push(
+    `Recent coverage around ${locationName} has focused on ${themePhrase} within the wider ${topicName} story.`
+  );
+
+  if (latestDetail) {
+    sentences.push(
+      `Most recently, reports have centered on ${latestDetail.replace(/[^a-z0-9)\]]$/i, '')}.`
+    );
+  }
+
+  if (recurringTerms.length) {
+    sentences.push(
+      `Across the reporting, ${formatNaturalList(recurringTerms)} are the signals that keep reappearing.`
+    );
+  }
+
+  const whyItMatters = visibleSources.length > 1
+    ? `${locationName} matters because it gives the broader ${topicName} story a specific place to track, with reporting from ${formatNaturalList(visibleSources)} showing how the issue is playing out on the ground.`
+    : `${locationName} matters because it gives the broader ${topicName} story a specific place to track as new reporting comes in.`;
+
+  return {
+    summary: sentences.slice(0, 3).join(' '),
+    whyItMatters
+  };
+}
+
+function renderMapLocationPanel(topicKey, marker, articles) {
+  const wrap = document.getElementById('sb-map-details');
+  if (!wrap) return;
+  const theme = THEMES[topicKey];
+  const locationName = cleanText(marker?.label || 'this location');
+  const coverage = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
+  const brief = buildMapLocationBrief(topicKey, marker, coverage);
+  const summaryParagraphs = splitSummarySentences(brief.summary || '').slice(0, 3);
+
+  wrap.classList.remove('sb-empty');
+  wrap.innerHTML = `
+    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
+      <div class="story-grid story-grid-stacked">
+        <div class="story-intro">
+          ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+        </div>
+        <aside class="story-side">
+          <div class="story-highlight">
+            <div class="story-highlight-label">Why it matters</div>
+            <div class="story-highlight-text">${escapeHtml(brief.whyItMatters)}</div>
+          </div>
+        </aside>
+      </div>
+      <div class="story-coverage story-coverage-stacked">
+        <div class="story-column">
+          <div class="sb-subsection-title">Key coverage</div>
+          <div class="story-section-note">Start with the strongest reporting that anchors this location in the wider story.</div>
+          <div id="map-key-coverage"></div>
+        </div>
+        ${coverage.length > 4 ? `
+          <div class="story-column story-column-secondary" aria-label="Deeper reading">
+            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="story-section-note">More reporting for extra texture around this place.</div>
+            <div id="map-deeper-reading"></div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="story-source-footnote">
+        <div class="sb-subsection-title">Source trail</div>
+        <div class="story-source-links" id="map-source-links"></div>
+      </div>
+    </div>
+  `;
+
+  renderEditorialCoverage('map-key-coverage', coverage.slice(0, 4), { limit: 4 });
+  if (coverage.length > 4) {
+    renderEditorialCoverage('map-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4 });
+  }
+  renderSourceLinks(
+    'map-source-links',
+    getRelevantSourceLinks(coverage, 6),
+    `No source trail is available for ${locationName} yet.`
+  );
+}
+
+function renderNodeStorySidebarShell(topicKey, node, options = {}) {
+  const topic = TOPICS[topicKey];
+  if (!topic || !node) return;
+
+  renderSidebarTop(topicKey, {
+    title: node.label || 'Selected node',
+    summary: options.summary || ''
+  });
+
+  document.getElementById('sb-scroll').innerHTML = `
+    <div class="sb-section sb-section-flat" id="sb-node-section">
+      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Node brief')}</div>
+      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Building a focused editorial read around this graph node.')}</div>
+      <div id="sb-node-details" class="sb-empty">${options.bodyHtml || escapeHtml(options.bodyText || 'Loading node coverage...')}</div>
+    </div>
+  `;
+}
+
+function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
+  const topicName = TOPICS[topicKey]?.name || topicKey;
+  const nodeName = cleanText(node?.label || 'this topic node');
+  const picked = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, 8);
+  const latest = picked[0] || {};
+  const latestDetail = trimStoryDetail(latest.description || latest.title || '');
+  const dominantCategory = getDominantMonthCategories(picked, 1)[0] || categorize(`${topicName} ${nodeName}`);
+  const themePhrase = MONTH_THEME_PHRASES[dominantCategory] || 'the clearest developments, public pressure, and wider responses';
+  const recurringTerms = extractMonthSummaryTerms(picked, `${topicName} ${nodeName}`, 3);
+  const visibleSources = uniqueSourceNames(picked).slice(0, 3);
+  const staticSummary = cleanText(staticData?.summary || staticData?.headline || '');
+  const staticFacts = Array.isArray(staticData?.facts)
+    ? staticData.facts.map(fact => cleanText(fact)).filter(Boolean)
+    : [];
+  const sentences = [];
+
+  if (staticSummary) {
+    sentences.push(splitSummarySentences(staticSummary)[0] || staticSummary);
+  } else {
+    sentences.push(
+      `Recent coverage around ${nodeName} is focused on ${themePhrase} within the wider ${topicName} story.`
+    );
+  }
+
+  if (latestDetail) {
+    sentences.push(
+      `Most recently, reports have centered on ${latestDetail.replace(/[^a-z0-9)\]]$/i, '')}.`
+    );
+  }
+
+  if (recurringTerms.length) {
+    sentences.push(
+      `Across the reporting, ${formatNaturalList(recurringTerms)} are the signals that keep reappearing.`
+    );
+  } else if (staticFacts.length) {
+    sentences.push(staticFacts[0].replace(/[^a-z0-9)\]]$/i, '') + '.');
+  }
+
+  const whyItMatters = staticFacts[1] ||
+    (visibleSources.length > 1
+      ? `${nodeName} matters because it concentrates one important strand of the ${topicName} story, with reporting from ${formatNaturalList(visibleSources)} showing how that strand is developing.`
+      : `${nodeName} matters because it concentrates one important strand of the ${topicName} story and gives the graph a clearer point of focus as new reporting comes in.`);
+
+  return {
+    summary: sentences.slice(0, 3).join(' '),
+    whyItMatters: cleanText(whyItMatters)
+  };
+}
+
+function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
+  const wrap = document.getElementById('sb-node-details');
+  if (!wrap) return;
+  const theme = THEMES[topicKey];
+  const nodeName = cleanText(node?.label || 'this node');
+  const coverage = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
+  const brief = buildNodeStoryBrief(topicKey, node, coverage, staticData);
+  const summaryParagraphs = splitSummarySentences(brief.summary || '').slice(0, 3);
+
+  wrap.classList.remove('sb-empty');
+  wrap.innerHTML = `
+    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
+      <div class="story-grid story-grid-stacked">
+        <div class="story-intro">
+          ${(summaryParagraphs.length ? summaryParagraphs : [`Coverage around ${nodeName} is still developing.`])
+            .map(paragraph => `<p>${escapeHtml(paragraph)}</p>`)
+            .join('')}
+        </div>
+        <aside class="story-side">
+          <div class="story-highlight">
+            <div class="story-highlight-label">Why it matters</div>
+            <div class="story-highlight-text">${escapeHtml(brief.whyItMatters)}</div>
+          </div>
+        </aside>
+      </div>
+      <div class="story-coverage story-coverage-stacked">
+        <div class="story-column">
+          <div class="sb-subsection-title">Featured coverage</div>
+          <div class="story-section-note">The strongest related reporting to anchor this node in the wider story.</div>
+          <div id="node-key-coverage"></div>
+        </div>
+        ${coverage.length > 4 ? `
+          <div class="story-column story-column-secondary" aria-label="Deeper reading">
+            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="story-section-note">Additional reporting for more texture around this strand.</div>
+            <div id="node-deeper-reading"></div>
+          </div>
+        ` : ''}
+      </div>
+      <div class="story-source-footnote">
+        <div class="sb-subsection-title">Source trail</div>
+        <div class="story-source-links" id="node-source-links"></div>
+      </div>
+    </div>
+  `;
+
+  renderEditorialCoverage('node-key-coverage', coverage.slice(0, 4), { limit: 4 });
+  if (coverage.length > 4) {
+    renderEditorialCoverage('node-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4 });
+  }
+  renderSourceLinks(
+    'node-source-links',
+    getRelevantSourceLinks(coverage, 6),
+    `No source trail is available for ${nodeName} yet.`
+  );
 }
 
 async function ensureTimelineSidebarReady(topicKey) {
@@ -4045,76 +4486,57 @@ async function selectMapMarker(marker) {
   const topic = TOPICS[currentTopic];
   const s = document.getElementById('sb-scroll');
   if (!theme || !topic || !s) return;
+  const topicKey = currentTopic;
+  const markerId = getMapMarkerId(marker);
+  const requestId = ++activeMapDetailRequest;
 
   hoveredNodeId = null;
-  selectedMapMarkerId = getMapMarkerId(marker);
+  selectedMapMarkerId = markerId;
   updateMapMarkerSelection(selectedMapMarkerId);
 
-  renderSidebarTop(currentTopic, {
-    contextLabel: 'Selected marker',
-    sourceLabel: 'Map',
-    title: marker.label,
-    summary: `The sidebar is showing coverage connected to ${marker.label} because that map marker is selected.`,
-    metaItems: [
-      `Topic: ${topic.name}`,
-      'Type: Location coverage'
-    ]
+  renderMapDetailSidebarShell(topicKey, marker, {
+    sectionTitle: 'Place brief',
+    sectionCopy: `Building the newest place-based read for ${marker.label || 'this marker'}.`,
+    bodyHtml: `<div class="art-loading"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Loading location coverage...</div>`
   });
   scrollSidebarToTop();
+  syncMobileDrawerFromSidebar(true);
 
-  s.innerHTML = `
-    <div class="sb-section" id="sb-map-section">
-      <div class="sb-section-title">Location brief</div>
-      <div class="sb-section-copy">This location is active on the map, and the articles below are the ones tied to that marker.</div>
-      <div class="news-card" style="border-left:3px solid ${theme.color}">
-      <div class="nc-head" style="background:${theme.bg}">
-        ${badgeHTML(currentTopic)}
-        <div class="nc-headline">${marker.label}</div>
-      </div>
-      <div class="nc-body">
-        <div class="nc-summary">Articles connected to this location.</div>
-      </div>
-    </div>
-    </div>
-  `;
-
-  const live = document.createElement('div');
-  live.className = 'live-section';
-  live.innerHTML = `
-    <div class="live-lbl">
-      <span class="ldot" style="background:${theme.color}"></span>
-      ${ARTICLE_SECTION_LABEL}
-    </div>
-    <div class="art-loading" id="map-articles-loading">
-      <span class="mini-spin" style="border-top-color:${theme.color}"></span>
-      Fetching from NewsAPI…
-    </div>
-  `;
-  s.appendChild(live);
-
-  const result = await fetchNews(marker.query || marker.label, `map-${currentTopic}-${marker.label}`, {
-    topicKey: currentTopic,
+  const result = await fetchNews(marker.query || marker.label, `map-${topicKey}-${marker.label}`, {
+    topicKey,
     kind: 'map',
     pageSize: 6,
     sortBy: 'relevancy'
   });
 
-  const loading = document.getElementById('map-articles-loading');
-  if (loading) loading.remove();
+  if (
+    requestId !== activeMapDetailRequest ||
+    topicKey !== currentTopic ||
+    currentView !== 'map' ||
+    selectedMapMarkerId !== markerId
+  ) {
+    return;
+  }
+
+  const detailWrap = document.getElementById('sb-map-details');
 
   if (!result || result.error) {
-    live.innerHTML += `<div class="err-box"><strong>Could not load articles</strong>${result?.error || 'Unknown error'}</div>`;
+    if (detailWrap) {
+      detailWrap.innerHTML = `<div class="err-box"><strong>Could not load location coverage</strong>${escapeHtml(result?.error || 'Unknown error')}</div>`;
+    }
     syncMobileDrawerFromSidebar(true);
     return;
   }
 
   if (result.length === 0) {
-    live.innerHTML += `<div class="art-loading">No recent coverage found.</div>`;
+    if (detailWrap) {
+      detailWrap.innerHTML = `<div class="art-loading">No recent coverage found for this marker yet.</div>`;
+    }
     syncMobileDrawerFromSidebar(true);
     return;
   }
 
-  appendArticleItems(live, result);
+  renderMapLocationPanel(topicKey, marker, result);
   syncMobileDrawerFromSidebar(true);
 }
 async function selectNode(id) {
@@ -4123,6 +4545,8 @@ async function selectNode(id) {
   selectedNode = id;
   hoveredNodeId = id;
   selectedMapMarkerId = null;
+  activeTimelineDetailRequest += 1;
+  activeMapDetailRequest += 1;
 
   const topic = TOPICS[currentTopic];
   const theme = THEMES[currentTopic];
@@ -4138,74 +4562,46 @@ async function selectNode(id) {
   const s = document.getElementById('sb-scroll');
   if (!s) return;
 
-  const st=topic.staticData&&topic.staticData[id];
-  const nodeCategory = getCatLabel(getCat(n));
-
-  renderSidebarTop(currentTopic, {
-    contextLabel: 'Selected node',
-    sourceLabel: 'Graph',
-    title: n.label,
-    summary: `The sidebar is showing the ${n.label} cluster because that node is selected in the graph.`,
-    metaItems: [
-      `Topic: ${topic.name}`,
-      `Category: ${nodeCategory}`
-    ]
+  const st = topic.staticData && topic.staticData[id];
+  renderNodeStorySidebarShell(currentTopic, n, {
+    sectionTitle: 'Node brief',
+    sectionCopy: `Building a focused editorial read on ${n.label}.`,
+    bodyHtml: `<div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI...</div>`
   });
   scrollSidebarToTop();
+  syncMobileDrawerFromSidebar(true);
 
-  // Build nc-head border color
-  const borderStyle=`border-left:3px solid ${theme.color}`;
-
-  s.innerHTML = st ? `
-    <div class="sb-section" id="sb-node-section">
-      <div class="sb-section-title">Node brief</div>
-      <div class="sb-section-copy">This is the selected cluster inside the graph, with key facts first and live coverage underneath.</div>
-      <div class="news-card" style="${borderStyle}">
-        <div class="nc-head" style="background:${theme.bg}">
-          ${badgeHTML(currentTopic)}
-          <div class="nc-headline">${st.headline}</div>
-        </div>
-        <div class="nc-body">
-          <div class="nc-summary">${st.summary}</div>
-          <div class="nc-divider"></div>
-          <div class="nc-facts-lbl">
-            <svg width="10" height="10" viewBox="0 0 10 10"><${theme.shape==='circle'?`circle cx="5" cy="5" r="4"`:theme.shape==='square'?`rect x="1" y="1" width="8" height="8" rx="1"`:theme.shape==='triangle'?`polygon points="5,1 1,9 9,9"`:'circle cx="5" cy="5" r="4"'} fill="${theme.color}"/></svg>
-            Key facts
-          </div>
-          ${st.facts.map(f=>`<div class="fact">${f}</div>`).join('')}
-        </div>
-      </div>
-    </div>` : '';
-
-  // Live articles
-  const live=document.createElement('div'); live.className='live-section';
-  live.innerHTML=`<div class="live-lbl"><span class="ldot" style="background:${theme.color}"></span>${ARTICLE_SECTION_LABEL}</div><div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI…</div>`;
-  s.appendChild(live);
-
-  const q=topic.queries[id]||n.label;
-  const result=await fetchNews(q,id,{
+  const q = topic.queries[id] || n.label;
+  const result = await fetchNews(q, id, {
     topicKey: currentTopic,
     kind: 'node',
     pageSize: 6,
     sortBy: 'relevancy'
   });
-    if (requestId !== activeTopicRequest || topic.key !== currentTopic) return;
-  const sp=document.getElementById(`asp-${id}`);
-  if(sp) sp.remove();
+  if (requestId !== activeTopicRequest || topic.key !== currentTopic) return;
 
-  if(!result||result.error){
-    live.innerHTML+=`<div class="err-box"><strong>Could not load articles</strong>${result?.error||'Unknown error — is the server running?'}</div>`;
-  } else if(result.length===0){
-    live.innerHTML+=`<div class="art-loading">No recent coverage found.</div>`;
+  const detailWrap = document.getElementById('sb-node-details');
+
+  if (!result || result.error) {
+    if (detailWrap) {
+      detailWrap.innerHTML = `<div class="err-box"><strong>Could not load node coverage</strong>${escapeHtml(result?.error || 'Unknown error - is the server running?')}</div>`;
+    }
+  } else if (result.length === 0) {
+    if (detailWrap) {
+      detailWrap.innerHTML = `<div class="art-loading">No recent coverage found for this node yet.</div>`;
+    }
   } else {
-    appendArticleItems(live, result, getCat(n));
+    renderNodeStoryPanel(currentTopic, n, result, st);
   }
-    if (isMobile) {
+
+  if (isMobile) {
     syncMobileDrawerFromSidebar(true);
   }
- 
+
+  return;
 }
- function closeDrawer() {
+
+function closeDrawer() {
   document.getElementById('mobile-drawer').classList.remove('open');
 }
 
@@ -4449,29 +4845,25 @@ function getTimelineNodeStyle(theme = {}) {
   return 'border-radius:999px;';
 }
 
-function buildEditorialArticleMarkup(article, variant = 'list', fallbackCategory = '') {
-  const artCat = categorize((article.title || '') + ' ' + (article.description || '')) || fallbackCategory;
-  const artColor = getCatColor(artCat);
-  const artBg = getCatBg(artCat);
-  const artLabel = getCatLabel(artCat);
+function buildEditorialArticleMarkup(article, variant = 'list') {
   const sourceName = getArticleSourceName(article);
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
   const description = cleanText(article.description || '');
+  const metaParts = [sourceName, timestamp].filter(Boolean);
   const tag = articleUrl ? 'a' : 'article';
   const hrefAttrs = articleUrl ? ` href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer"` : '';
 
   return `
     <${tag} class="editorial-article editorial-article-${variant}"${hrefAttrs}>
-      <div class="editorial-article-meta">
-        <span class="editorial-article-tag" style="background:${artBg};color:${artColor};">${escapeHtml(artLabel)}</span>
-        <span class="editorial-article-source">${escapeHtml(sourceName)}</span>
-        ${timestamp ? `<span class="editorial-article-time">${escapeHtml(timestamp)}</span>` : ''}
-      </div>
+      ${metaParts.length
+        ? `<div class="editorial-article-meta">${metaParts.map(part => `<span>${escapeHtml(part)}</span>`).join('')}</div>`
+        : ''}
       <div class="editorial-article-title">${escapeHtml(article.title || 'Untitled article')}</div>
       ${variant === 'feature' && description
         ? `<div class="editorial-article-copy">${escapeHtml(description)}</div>`
         : ''}
+      ${articleUrl ? '<div class="editorial-article-action">Read article</div>' : ''}
     </${tag}>
   `;
 }
@@ -4491,54 +4883,64 @@ function renderEditorialCoverage(containerId, articles, options = {}) {
   const listItems = shouldFeature ? items.slice(1) : items;
 
   wrap.innerHTML = `
-    ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature', options.fallbackCategory || '') : ''}
+    ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature') : ''}
     ${listItems.length
-      ? `<div class="editorial-article-list">${listItems.map(article => buildEditorialArticleMarkup(article, 'list', options.fallbackCategory || '')).join('')}</div>`
+      ? `<div class="editorial-article-list">${listItems.map(article => buildEditorialArticleMarkup(article, 'list')).join('')}</div>`
       : ''}
   `;
 }
 
-function createArticleItem(article, fallbackCategory = '') {
-  const artCat = categorize((article.title || '') + ' ' + (article.description || '')) || fallbackCategory;
-  const artColor = getCatColor(artCat);
-  const artBg = getCatBg(artCat);
-  const artLabel = getCatLabel(artCat);
-  const sourceName = getArticleSourceName(article);
+function getArticleDescription(article = {}, maxLength = 180) {
+  const description = cleanText(article.description || '');
+  if (!description || description.length <= maxLength) return description;
+
+  const trimmed = description.slice(0, maxLength).trim();
+  const lastSpace = trimmed.lastIndexOf(' ');
+  return `${trimmed.slice(0, lastSpace > 80 ? lastSpace : trimmed.length).trim()}...`;
+}
+
+function createArticleItem(article, options = {}) {
+  const variant = options.variant === 'feature' ? 'feature' : 'compact';
+  const sourceName = options.showSource === false ? '' : getArticleSourceName(article);
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
+  const description = variant === 'feature' ? getArticleDescription(article) : '';
+  const metaParts = [sourceName, timestamp].filter(Boolean);
 
-  const el = document.createElement('div');
-  el.className = 'article-item';
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-      <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Syne',sans-serif;letter-spacing:0.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:${artBg};color:${artColor}">
-        <span style="width:6px;height:6px;border-radius:50%;background:${artColor};flex-shrink:0"></span>
-        ${escapeHtml(artLabel)}
-      </span>
-      ${articleUrl
-        ? `<a class="art-src" href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName)}</a>`
-        : `<div class="art-src">${escapeHtml(sourceName)}</div>`}
-    </div>
-    ${articleUrl
-      ? `<a class="art-title" href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(article.title || 'Untitled article')}</a>`
-      : `<div class="art-title">${escapeHtml(article.title || 'Untitled article')}</div>`}
-    <div class="art-time">${escapeHtml(timestamp)}</div>
-  `;
-
+  const el = document.createElement(articleUrl ? 'a' : 'article');
+  el.className = `article-item article-${variant}`;
   if (articleUrl) {
-    el.onclick = () => window.open(articleUrl, '_blank', 'noopener');
-    el.querySelectorAll('a').forEach(anchor => {
-      anchor.addEventListener('click', e => e.stopPropagation());
-    });
+    el.href = articleUrl;
+    el.target = '_blank';
+    el.rel = 'noopener noreferrer';
   }
+  el.innerHTML = `
+    ${metaParts.length
+      ? `<div class="art-meta">${metaParts.map(part => `<span>${escapeHtml(part)}</span>`).join('')}</div>`
+      : ''}
+    <div class="art-title">${escapeHtml(article.title || 'Untitled article')}</div>
+    ${description ? `<div class="art-summary">${escapeHtml(description)}</div>` : ''}
+    ${articleUrl ? '<div class="art-action">Read article</div>' : ''}
+  `;
 
   return el;
 }
 
-function appendArticleItems(container, articles, fallbackCategory = '') {
-  sortArticlesByPublishedDate(articles).forEach(article => {
-    container.appendChild(createArticleItem(article, fallbackCategory));
+function appendArticleItems(container, articles) {
+  const items = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
+  const feed = document.createElement('div');
+  feed.className = 'article-feed';
+
+  items.forEach((article, index) => {
+    const currentSource = getArticleSourceName(article);
+    const previousSource = index > 0 ? getArticleSourceName(items[index - 1]) : '';
+    feed.appendChild(createArticleItem(article, {
+      variant: index === 0 ? 'feature' : 'compact',
+      showSource: index === 0 || currentSource !== previousSource
+    }));
   });
+
+  container.appendChild(feed);
 }
 
 function getTopicIntro(topicKey) {
@@ -4833,7 +5235,6 @@ function renderTimelineLegacyCards(topic, theme) {
     </div>
     <div class="timeline-meta-bar">
       <div class="timeline-meta-note">Range ${yearStart} to ${yearStart + 3} · ${events.length} happenings visible · Scroll on desktop or tap the level buttons to change focus.</div>
-      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Happening')}` : 'Select a happening'}</div>
     </div>
     <div class="timeline-rail-shell">
       <div class="timeline-markers">${markerHtml}</div>
@@ -4881,8 +5282,6 @@ function renderTimeline(topic, theme) {
   const currentText = activeEvent
     ? `${activeIndex + 1} of ${events.length} · ${activeEvent.dateLabel || activeEvent.label || 'Selected'}`
     : 'Select a checkpoint';
-  const isMobileTimeline = window.innerWidth <= 700;
-
   if (!events.length) {
     stage.innerHTML = `
       <div class="timeline-empty">
@@ -4901,28 +5300,29 @@ function renderTimeline(topic, theme) {
     const summaryCopy = ev.whyItMatters || (isDetailView
       ? 'Open this happening to read the clearest connected coverage right now.'
       : 'Open this checkpoint to read the clearest connected coverage from that month.');
+    const cardHtml = `
+      <button class="timeline-entry-card" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
+        <div class="timeline-entry-meta">
+          <div class="timeline-entry-badge">${escapeHtml(badgeLabel)}</div>
+        </div>
+        <div class="timeline-entry-title">${escapeHtml(ev.label || 'Happening')}</div>
+        <div class="timeline-entry-copy">${escapeHtml(summaryCopy)}</div>
+      </button>
+    `;
 
     return `
-      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}">
-        <button class="timeline-entry-card" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
-          <div class="timeline-entry-meta">
-            <div class="timeline-entry-badge">${escapeHtml(badgeLabel)}</div>
-            ${ev.id === activeTimelineEventId ? '<div class="timeline-entry-state">Selected</div>' : ''}
-          </div>
-          <div class="timeline-entry-title">${escapeHtml(ev.label || 'Happening')}</div>
-          <div class="timeline-entry-copy">${escapeHtml(summaryCopy)}</div>
-        </button>
+      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}" style="--story-accent:${theme.color};">
+        <div class="timeline-entry-side left">${side === 'left' ? cardHtml : ''}</div>
         <button class="timeline-entry-spine" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')" aria-label="Open ${escapeHtml(ev.label || 'timeline item')}">
           <div class="timeline-entry-date">${escapeHtml(ev.dateLabel || 'Now')}</div>
           <div class="timeline-entry-node" style="background:${theme.color};${getTimelineNodeStyle(theme)}"></div>
         </button>
+        <div class="timeline-entry-side right">${side === 'right' ? cardHtml : ''}</div>
       </article>
     `;
   }).join('');
 
-  const flowStyle = isMobileTimeline
-    ? ''
-    : ` style="--timeline-entry-count:${events.length};min-height:calc(var(--timeline-entry-count) * var(--timeline-row-height));grid-template-rows:repeat(${events.length}, var(--timeline-row-height));"`;
+  const flowStyle = ` style="grid-template-rows:repeat(${events.length}, var(--timeline-row-height));"`;
 
   stage.innerHTML = `
     <div class="timeline-stage-top">
@@ -4938,7 +5338,6 @@ function renderTimeline(topic, theme) {
     </div>
     <div class="timeline-meta-bar">
       <div class="timeline-meta-note">${escapeHtml(metaText)}</div>
-      <div class="timeline-current">${activeEvent ? `Selected: ${escapeHtml(activeEvent.label || 'Checkpoint')} · ${escapeHtml(currentText)}` : 'Select a checkpoint'}</div>
     </div>
     <div class="timeline-rail-shell">
       <div class="timeline-flow"${flowStyle}>${flowHtml}</div>
@@ -5346,7 +5745,7 @@ function renderMap(topic, theme) {
     .map(marker => ({
       ...marker,
       id: getMapMarkerId(marker),
-      ...resolveMapMarkerPosition(marker)
+      ...resolveMapMarkerPosition(marker, topic.key)
     }))
     .filter(marker => Number.isFinite(marker.x) && Number.isFinite(marker.y));
 
@@ -5395,10 +5794,13 @@ function renderMap(topic, theme) {
     markerGlyph.setAttribute('stroke-width', '1.5');
 
     const isMobile = window.innerWidth <= 700;
+    const viewBox = getMapViewBox(svg);
+    const labelShouldFlip = topic.key === 'climate' && viewBox && (m.x + 160 > viewBox.x + viewBox.width);
     const lbl = document.createElementNS(ns, 'text');
     lbl.classList.add('map-marker-label');
-    lbl.setAttribute('x', String(m.size + (isMobile ? 4 : 6)));
+    lbl.setAttribute('x', String(labelShouldFlip ? -(m.size + (isMobile ? 4 : 6)) : m.size + (isMobile ? 4 : 6)));
     lbl.setAttribute('y', '3.5');
+    lbl.setAttribute('text-anchor', labelShouldFlip ? 'end' : 'start');
     lbl.setAttribute('font-size', isMobile ? '8' : '9');
     lbl.setAttribute('font-family', "'Syne',sans-serif");
     lbl.setAttribute('font-weight', '700');
@@ -5446,7 +5848,105 @@ function getTransformedBBox(el) {
   };
 }
 
-function resolveMapMarkerPosition(marker) {
+function getMapViewBox(svg) {
+  const parts = (svg.getAttribute('viewBox') || '').split(/\s+/).map(Number);
+  if (parts.length !== 4 || parts.some(part => !Number.isFinite(part))) return null;
+  return {
+    x: parts[0],
+    y: parts[1],
+    width: parts[2],
+    height: parts[3]
+  };
+}
+
+const WORLD_NATURAL_EARTH = {
+  scale: 158,
+  translateX: 544,
+  translateY: 270,
+  groupX: 40,
+  groupY: 30,
+  groupScale: 0.9
+};
+
+const UKRAINE_LINEAR_MAP = {
+  anchorLat: 50.4501,
+  anchorLng: 30.5234,
+  anchorX: 445,
+  anchorY: 163,
+  xPerLng: 38.6,
+  yPerLat: 40.5,
+  groupX: 40,
+  groupY: 30,
+  groupScale: 0.9
+};
+
+function applyMapGroupTransform(point, config) {
+  return {
+    x: config.groupX + point.x * config.groupScale,
+    y: config.groupY + point.y * config.groupScale
+  };
+}
+
+function naturalEarthPoint(lat, lng) {
+  const lambda = lng * Math.PI / 180;
+  const phi = lat * Math.PI / 180;
+  const phi2 = phi * phi;
+  const x = lambda * (
+    0.8707 + phi2 * (-0.131979 + phi2 * (-0.013791 + phi2 * (0.003971 + phi2 * -0.001529)))
+  );
+  const y = phi * (
+    1.007226 + phi2 * (0.015085 + phi2 * (-0.044475 + phi2 * (0.028874 + phi2 * -0.005916)))
+  );
+
+  return {
+    x: WORLD_NATURAL_EARTH.translateX + WORLD_NATURAL_EARTH.scale * x,
+    y: WORLD_NATURAL_EARTH.translateY - WORLD_NATURAL_EARTH.scale * y
+  };
+}
+
+function projectWorldMarker(lat, lng) {
+  return applyMapGroupTransform(naturalEarthPoint(lat, lng), WORLD_NATURAL_EARTH);
+}
+
+function projectUkraineMarker(lat, lng) {
+  return applyMapGroupTransform({
+    x: UKRAINE_LINEAR_MAP.anchorX + (lng - UKRAINE_LINEAR_MAP.anchorLng) * UKRAINE_LINEAR_MAP.xPerLng,
+    y: UKRAINE_LINEAR_MAP.anchorY - (lat - UKRAINE_LINEAR_MAP.anchorLat) * UKRAINE_LINEAR_MAP.yPerLat
+  }, UKRAINE_LINEAR_MAP);
+}
+
+function getMarkerLatLng(marker) {
+  if (Array.isArray(marker.coords) && marker.coords.length >= 2) {
+    const [lat, lng] = marker.coords.map(Number);
+    return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+  }
+
+  const lat = Number(marker.lat);
+  const lng = Number(marker.lng ?? marker.lon ?? marker.longitude);
+  return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+}
+
+function projectMapMarker(marker, topicKey) {
+  const latLng = getMarkerLatLng(marker);
+  if (!latLng) return null;
+
+  if (topicKey === 'climate') {
+    return projectWorldMarker(latLng.lat, latLng.lng);
+  }
+
+  if (topicKey === 'ukraine') {
+    return projectUkraineMarker(latLng.lat, latLng.lng);
+  }
+
+  return null;
+}
+
+function resolveMapMarkerPosition(marker, topicKey) {
+  const projectedPoint = projectMapMarker(marker, topicKey);
+  if (projectedPoint) {
+    return projectedPoint;
+  }
+
   if (!marker.regionId && !marker.regionIds) {
     return { x: marker.x, y: marker.y };
   }
@@ -5532,6 +6032,7 @@ function setupMapClicks(markers) {
     }
 
     selectedMapMarkerId = null;
+    activeMapDetailRequest += 1;
     updateMapMarkerSelection(null);
     if (currentTopic) {
       renderMapSidebarShell(currentTopic);
