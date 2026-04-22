@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const GUARDIAN_API_KEY = process.env.GUARDIAN_API_KEY || 'test';
 const PRIMARY_PROVIDER_MIN_ARTICLES = 5;
+const USE_NEWS_API = false;
 
 app.use(express.json());
 
@@ -339,34 +340,98 @@ async function fetchGuardianArticles({
   return prioritizeArticles(articles, providerQuery || query, limit);
 }
 
-function buildFallbackTopicSummary(mode = 'short', articles = []) {
-  const picked = articles.slice(0, mode === 'long' ? 5 : 3);
-  const details = picked
-    .map(article => cleanArticleText(article.description || article.title))
-    .filter(Boolean);
-  const sources = uniqueSourceNames(picked);
+function getBriefingFocus(topicKey = '') {
+  const focus = {
+    politics: 'institutions, elections, policy choices, and public reaction',
+    ukraine: 'battlefield conditions, diplomacy, military support, and civilian impact',
+    climate: 'policy decisions, emissions pressure, energy choices, and visible climate impacts'
+  };
+  return focus[topicKey] || 'the main actors, decisions, consequences, and public response';
+}
+
+function getTopicDisplayName(topicKey = '') {
+  const names = {
+    politics: 'US Politics',
+    ukraine: 'Ukraine Conflict',
+    climate: 'Climate'
+  };
+  return names[topicKey] || 'This topic';
+}
+
+function cleanBriefingPoint(article = {}) {
+  const raw = cleanArticleText(article.title || article.description || '');
+  if (!raw) return '';
+
+  return raw
+    .replace(/\s+[-|]\s+[^-|]{2,48}$/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\.+$/g, '')
+    .slice(0, 150)
+    .trim();
+}
+
+function uniqueBriefingPoints(articles = [], limit = 4) {
+  const seen = new Set();
+  const points = [];
+
+  for (const article of articles) {
+    const point = cleanBriefingPoint(article);
+    const key = point.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 80);
+    if (!point || seen.has(key)) continue;
+
+    seen.add(key);
+    points.push(point);
+    if (points.length >= limit) break;
+  }
+
+  return points;
+}
+
+function joinBriefingPoints(points = []) {
+  if (points.length <= 1) return points[0] || '';
+  if (points.length === 2) return `${points[0]} and ${points[1]}`;
+  return `${points.slice(0, -1).join(', ')}, and ${points[points.length - 1]}`;
+}
+
+function buildFallbackTopicSummary(mode = 'short', articles = [], topicKey = '') {
+  const picked = articles.slice(0, mode === 'long' ? 6 : 5);
+  const points = uniqueBriefingPoints(picked, mode === 'long' ? 5 : 3);
+  const sources = uniqueSourceNames(picked).slice(0, mode === 'long' ? 4 : 3);
   const sourceLinks = collectSourceLinks(picked);
+  const topicName = getTopicDisplayName(topicKey);
+  const focus = getBriefingFocus(topicKey);
 
   if (mode === 'long') {
+    const firstParagraph = points[0]
+      ? `${topicName} is currently anchored by ${points[0]}. This is the lead item in the latest coverage, and it gives the topic its immediate direction.`
+      : `${topicName} is currently moving through several connected developments. The latest coverage gives a broad view rather than one single settled storyline.`;
+    const middlePoints = points.slice(1, 4);
+    const secondParagraph = middlePoints.length
+      ? `The surrounding coverage adds context around ${joinBriefingPoints(middlePoints)}. Read together, those updates show how the story connects across ${focus}.`
+      : `The surrounding coverage is useful because it connects the immediate news to ${focus}.`;
+    const thirdParagraph = sources.length
+      ? `This brief draws on reporting from ${joinBriefingPoints(sources)}. The source trail below is there so you can open the original articles and check the details directly.`
+      : 'The source trail below is there so you can open the original articles and check the details directly.';
+
     return {
-      longSummary: [
-        details.slice(0, 2).join(' ') || 'Recent coverage shows several connected developments moving at once.',
-        details.slice(2, 5).join(' ') || 'The reporting suggests the situation is still evolving and being interpreted across multiple angles.',
-        sources.length
-          ? `This overview is based on recent reporting from ${sources.join(', ')}.`
-          : 'This overview is based on recent reporting from multiple sources.'
-      ].join('\n\n'),
+      longSummary: `${firstParagraph}\n\n${secondParagraph}\n\n${thirdParagraph}`,
       sources: sourceLinks
     };
   }
 
+  const lead = points[0]
+    ? `${topicName} is currently led by one clear development: ${points[0]}.`
+    : `${topicName} is moving through several connected developments.`;
+  const second = points.length > 1
+    ? `Related coverage also points to ${joinBriefingPoints(points.slice(1))}.`
+    : `The story is best read through ${focus}.`;
+  const third = `Together, the articles frame the topic through ${focus}.`;
+  const sourceNote = sources.length
+    ? `Sources in this brief include ${joinBriefingPoints(sources)}.`
+    : 'The brief is based on the latest articles available in this view.';
+
   return {
-    shortSummary: [
-      details.join(' ') || 'Recent coverage points to a fast-moving topic with several linked developments.',
-      sources.length
-        ? `Based on reporting from ${sources.join(', ')}.`
-        : 'Based on reporting from multiple sources.'
-    ].join(' ')
+    shortSummary: `${lead} ${second} ${third} ${sourceNote}`
   };
 }
 
@@ -480,11 +545,12 @@ function buildFallbackEventOverview(topicName, eventLabel, articles = [], eventT
 
 app.get('/api/news', async (req, res) => {
   const { q } = req.query;
-  const apiKey = process.env.NEWS_API_KEY;
+  const apiKey = USE_NEWS_API ? process.env.NEWS_API_KEY : '';
   const topicKey = cleanArticleText(req.query.topicKey || '');
   const kind = cleanArticleText(req.query.kind || '');
   const provider = cleanArticleText(req.query.provider || '');
-  const forceGuardian = provider === 'guardian' || kind === 'month';
+  const strictGuardianProvider = provider === 'guardian' || !USE_NEWS_API;
+  const forceGuardian = strictGuardianProvider || kind === 'month';
 
   if (!q) {
     return res.status(400).json({ error: 'Missing query parameter ?q=' });
@@ -524,7 +590,17 @@ app.get('/api/news', async (req, res) => {
           fallbackReason: 'forced_guardian_provider'
         });
       } catch (guardianErr) {
-        console.warn(`[api/news] Forced Guardian request failed for "${safeQuery}". Trying NewsAPI instead.`, guardianErr.message);
+        console.warn(
+          strictGuardianProvider
+            ? `[api/news] Forced Guardian request failed for "${safeQuery}".`
+            : `[api/news] Forced Guardian request failed for "${safeQuery}". Trying NewsAPI instead.`,
+          guardianErr.message
+        );
+        if (strictGuardianProvider) {
+          return res.status(500).json({
+            error: guardianErr.message || 'Guardian request failed'
+          });
+        }
         if (!apiKey) {
           return res.status(500).json({ error: guardianErr.message || 'Historical archive lookup failed' });
         }
@@ -617,14 +693,14 @@ app.get('/api/hello', (req, res) => {
 });
 app.post('/api/summary', async (req, res) => {
   try {
-    const { mode = 'short', articles = [] } = req.body;
+    const { mode = 'short', articles = [], topicKey = '' } = req.body;
 
     if (!Array.isArray(articles) || articles.length === 0) {
       return res.status(400).json({ error: 'No articles provided' });
     }
 
     if (!USE_OPENAI_FEATURES || !client) {
-      return res.json(buildFallbackTopicSummary(mode, articles));
+      return res.json(buildFallbackTopicSummary(mode, articles, topicKey));
     }
 
     const picked = articles.slice(0, 5);
@@ -639,15 +715,19 @@ URL: ${a.url || ''}
 
     const prompt =
       mode === 'long'
-        ? `You are writing a clear news overview for an interactive news interface.
+        ? `You are writing a clear news briefing for an interactive news interface.
 Summarize this topic in 2 short paragraphs.
+Start with the main development, then explain the related developments and why they matter together.
+Avoid vague phrases like "fast-moving topic" unless the articles directly support them.
 Only use the article information below.
 Do not invent facts.
 
 ${articleText}`
-        : `You are writing a short news summary for an interactive news interface.
-Summarize what is happening right now in maximum 5 sentences.
+        : `You are writing a short news briefing for an interactive news interface.
+Summarize what is happening right now in 3 to 4 sentences.
+Start with the main development, then connect 1 or 2 related developments.
 Be clear, simple, and factual.
+Avoid repeating article titles verbatim unless needed for clarity.
 Only use the article information below.
 Do not invent facts.
 

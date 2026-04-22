@@ -1122,7 +1122,7 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 }
 
 .sb-more-btn {
-  margin-top: 12px;
+  margin-top: 0;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--ink);
@@ -1354,7 +1354,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   gap: 8px;
 }
 .article-item {
-  display: block;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   color: inherit;
   text-decoration: none;
   padding: 13px 14px;
@@ -1412,11 +1414,21 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   color: var(--ink2);
   max-width: 42ch;
 }
+.art-kicker,
+.editorial-article-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  margin-bottom: 8px;
+}
 .art-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 8px;
+  min-width: 0;
+  margin-bottom: 0;
   font-family: var(--serif);
   font-size: 11px;
   font-weight: 600;
@@ -1428,6 +1440,22 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   content: "/";
   margin-right: 6px;
   color: rgba(26,24,20,0.28);
+}
+.art-source,
+.editorial-article-source {
+  flex: 0 1 auto;
+  max-width: 52%;
+  overflow: hidden;
+  color: var(--ink3);
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-align: right;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 .art-loading { font-size: 12px; color: var(--ink3); padding: 8px 0; font-style: italic; display: flex; gap: 7px; align-items: center; }
 .mini-spin { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border2); animation: spin 0.75s linear infinite; flex-shrink: 0; }
@@ -1892,7 +1920,7 @@ border-color: rgba(24,26,40,0.12);
 
 .sb-overview-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
@@ -2094,7 +2122,8 @@ border-color: rgba(24,26,40,0.12);
 
 .editorial-article {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   color: inherit;
   text-decoration: none;
   border: 1px solid rgba(26,24,20,0.09);
@@ -2136,7 +2165,8 @@ border-color: rgba(24,26,40,0.12);
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 8px;
+  min-width: 0;
+  margin-bottom: 0;
 }
 
 .editorial-article-meta span {
@@ -2176,7 +2206,9 @@ border-color: rgba(24,26,40,0.12);
 .art-action {
   display: inline-flex;
   align-items: center;
-  margin-top: 10px;
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 12px;
   font-family: var(--serif);
   font-size: 11px;
   font-weight: 700;
@@ -2185,10 +2217,11 @@ border-color: rgba(24,26,40,0.12);
 
 .editorial-article-action::after,
 .art-action::after {
-  content: ">";
+  content: "\2192";
   margin-left: 6px;
-  font-size: 10px;
-  transform: translateY(-1px);
+  font-size: 13px;
+  line-height: 1;
+  transform: translateY(-0.5px);
 }
 
 .editorial-article[href]:hover .editorial-article-action,
@@ -4437,30 +4470,33 @@ display: none;
 }
 #explore .sb-more-btn {
   min-width: 148px;
-  padding: 13px 22px;
+  padding: 10px 18px;
   border-radius: 999px;
   font-weight: 700;
-  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
 }
 #explore .sb-more-btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--story-accent, rgba(24,26,40,0.18));
-  background: var(--story-accent, #111827);
-  color: #FFFFFF;
-  box-shadow: 0 12px 28px rgba(24,26,40,0.12);
+  border-color: rgba(24,26,40,0.18);
+  background: #FFFFFF;
+  color: #111827;
 }
 #explore .sb-more-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 5px 14px rgba(24,26,40,0.10);
+  background: #F3F4F6;
 }
 #explore .editorial-article-meta,
 #explore .art-meta {
   gap: 7px;
-  margin-bottom: 6px;
+  margin-bottom: 0;
   align-items: center;
 }
+#explore .editorial-article-kicker,
+#explore .art-kicker {
+  margin-bottom: 6px;
+}
 #explore .editorial-article-meta span,
-#explore .art-meta span {
+#explore .art-meta span,
+#explore .editorial-article-source,
+#explore .art-source {
   color: #9CA3AF;
   font-size: 11px;
   font-weight: 700;
@@ -4506,7 +4542,6 @@ display: none;
   color: #9CA3AF;
   font-size: 12px;
   line-height: 1.2;
-.main-grid { height: calc(100vh - 44px); grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 900px) {
   #explore .main-grid {
@@ -6627,7 +6662,6 @@ function renderShortOverview(topicKey, shortSummary, articles, requestId) {
       <div class="sb-overview-top">
         <div>
           <div class="sb-section-title" style="margin-bottom:0;">Briefing</div>
-          <div class="sb-section-copy">A fast editorial read on the main arc before you move into the timeline.</div>
         </div>
         <button class="sb-more-btn" id="sb-more-btn">Expand brief</button>
       </div>
@@ -6748,14 +6782,28 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     return;
   }
 
-  const summary = await fetchSummary(topicKey, articles, 'short');
+  const briefingArticles = await fetchNews(mainQuery, `${topicKey}-brief-guardian`, {
+    topicKey,
+    kind: 'main',
+    provider: 'guardian',
+    pageSize: 8,
+    sortBy: 'relevancy'
+  });
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-  if (summary.error) {
+  if (!briefingArticles || briefingArticles.error || briefingArticles.length === 0) {
     document.getElementById('sb-main-summary').textContent =
-      `Could not load AI summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
+      `Could not load Guardian briefing: ${briefingArticles?.error || 'No Guardian articles found'}`;
   } else {
-    renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
+    const summary = await fetchSummary(topicKey, briefingArticles, 'short');
+    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
+
+    if (summary.error) {
+      document.getElementById('sb-main-summary').textContent =
+        `Could not load Guardian briefing: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
+    } else {
+      renderShortOverview(topicKey, summary.shortSummary, briefingArticles, requestId);
+    }
   }
 
   renderEditorialCoverage('sb-latest-articles', articles, { limit: 6 });
@@ -7145,15 +7193,16 @@ function buildEditorialArticleMarkup(article, variant = 'list') {
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
   const description = cleanText(article.description || '');
-  const metaParts = [sourceName, timestamp].filter(Boolean);
   const tag = articleUrl ? 'a' : 'article';
   const hrefAttrs = articleUrl ? ` href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer"` : '';
 
   return `
     <${tag} class="editorial-article editorial-article-${variant}"${hrefAttrs}>
-      <div class="editorial-article-meta">
-        ${buildArticleThemeLabel(article, 'editorial-article-theme')}
-        ${metaParts.map(part => `<span>${escapeHtml(part)}</span>`).join('')}
+      <div class="editorial-article-kicker">
+        <div class="editorial-article-meta">
+          ${buildArticleThemeLabel(article, 'editorial-article-theme')}
+        </div>
+        ${sourceName ? `<div class="editorial-article-source">${escapeHtml(sourceName)}</div>` : ''}
       </div>
       <div class="editorial-article-title">${escapeHtml(article.title || 'Untitled article')}</div>
       ${timestamp ? `<div class="editorial-article-date">${escapeHtml(timestamp)}</div>` : ''}
@@ -7202,7 +7251,6 @@ function createArticleItem(article, options = {}) {
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
   const description = variant === 'feature' ? getArticleDescription(article) : '';
-  const metaParts = [sourceName].filter(Boolean);
 
   const el = document.createElement(articleUrl ? 'a' : 'article');
   el.className = `article-item article-${variant}`;
@@ -7212,9 +7260,11 @@ function createArticleItem(article, options = {}) {
     el.rel = 'noopener noreferrer';
   }
   el.innerHTML = `
-    <div class="art-meta">
-      ${buildArticleThemeLabel(article, 'art-theme')}
-      ${metaParts.map(part => `<span>${escapeHtml(part)}</span>`).join('')}
+    <div class="art-kicker">
+      <div class="art-meta">
+        ${buildArticleThemeLabel(article, 'art-theme')}
+      </div>
+      ${sourceName ? `<div class="art-source">${escapeHtml(sourceName)}</div>` : ''}
     </div>
     <div class="art-title">${escapeHtml(article.title || 'Untitled article')}</div>
     ${timestamp ? `<div class="art-date">${escapeHtml(timestamp)}</div>` : ''}
@@ -7231,11 +7281,8 @@ function appendArticleItems(container, articles) {
   feed.className = 'article-feed';
 
   items.forEach((article, index) => {
-    const currentSource = getArticleSourceName(article);
-    const previousSource = index > 0 ? getArticleSourceName(items[index - 1]) : '';
     feed.appendChild(createArticleItem(article, {
-      variant: index === 0 ? 'feature' : 'compact',
-      showSource: index === 0 || currentSource !== previousSource
+      variant: index === 0 ? 'feature' : 'compact'
     }));
   });
 
@@ -7252,53 +7299,100 @@ function getTopicIntro(topicKey) {
   return intros[topicKey] || 'This topic is developing across several connected recent stories.';
 }
 
+function getBriefingFocus(topicKey) {
+  const focus = {
+    politics: 'institutions, elections, policy choices, and public reaction',
+    ukraine: 'battlefield conditions, diplomacy, military support, and civilian impact',
+    climate: 'policy decisions, emissions pressure, energy choices, and visible climate impacts'
+  };
+  return focus[topicKey] || 'the main actors, decisions, consequences, and public response';
+}
+
+function getTopicDisplayName(topicKey) {
+  return TOPICS[topicKey]?.name || TOPICS[topicKey]?.label || 'This topic';
+}
+
+function cleanBriefingPoint(article = {}) {
+  const raw = cleanText(article.title || article.description || '');
+  if (!raw) return '';
+
+  return raw
+    .replace(/\s+[-|]\s+[^-|]{2,48}$/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\.+$/g, '')
+    .slice(0, 150)
+    .trim();
+}
+
+function uniqueBriefingPoints(articles = [], limit = 4) {
+  const seen = new Set();
+  const points = [];
+
+  for (const article of articles) {
+    const point = cleanBriefingPoint(article);
+    const key = point.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 80);
+    if (!point || seen.has(key)) continue;
+
+    seen.add(key);
+    points.push(point);
+    if (points.length >= limit) break;
+  }
+
+  return points;
+}
+
+function joinBriefingPoints(points = []) {
+  if (points.length <= 1) return points[0] || '';
+  if (points.length === 2) return `${points[0]} and ${points[1]}`;
+  return `${points.slice(0, -1).join(', ')}, and ${points[points.length - 1]}`;
+}
+
 function buildFakeShortSummary(topicKey, articles) {
-  const intro = getTopicIntro(topicKey);
-  const picked = articles.slice(0, 3);
+  const topicName = getTopicDisplayName(topicKey);
+  const picked = articles.slice(0, 5);
+  const points = uniqueBriefingPoints(picked, 3);
+  const sources = uniqueSourceNames(picked).slice(0, 3);
+  const focus = getBriefingFocus(topicKey);
 
-  const details = picked
-    .map(a => cleanText(a.description || a.title))
-    .filter(Boolean)
-    .slice(0, 3);
-
-  const sources = uniqueSourceNames(picked);
-
-  const detailText = details.length
-    ? details.map(t => t.replace(/\.+$/, '') + '.').join(' ')
-    : 'Recent coverage suggests the story is still moving quickly across several angles.';
-
-  const sourceText = sources.length
-    ? `This prototype summary is based on recent reporting from ${sources.join(', ')}.`
-    : 'This prototype summary is based on recent reporting across multiple sources.';
+  const lead = points[0]
+    ? `${topicName} is currently led by one clear development: ${points[0]}.`
+    : `${topicName} is moving through several connected developments.`;
+  const second = points.length > 1
+    ? `Related coverage also points to ${joinBriefingPoints(points.slice(1))}.`
+    : `The story is best read through ${focus}.`;
+  const third = `Together, the articles frame the topic through ${focus}.`;
+  const sourceNote = sources.length
+    ? `Sources in this brief include ${joinBriefingPoints(sources)}.`
+    : 'The brief is based on the latest articles available in this view.';
 
   return {
-    shortSummary: `${intro} ${detailText} ${sourceText}`
+    shortSummary: `${lead} ${second} ${third} ${sourceNote}`
   };
 }
 
 function buildFakeLongSummary(topicKey, articles) {
-  const intro = getTopicIntro(topicKey);
-  const picked = articles.slice(0, 5);
-
-  const details = picked
-    .map(a => cleanText(a.description || a.title))
-    .filter(Boolean);
-
-  const firstBlock = details.slice(0, 2).join(' ');
-  const secondBlock = details.slice(2, 5).join(' ');
-  const sources = uniqueSourceNames(picked);
+  const topicName = getTopicDisplayName(topicKey);
+  const picked = articles.slice(0, 6);
+  const points = uniqueBriefingPoints(picked, 5);
+  const sources = uniqueSourceNames(picked).slice(0, 4);
   const sourceLinks = getRelevantSourceLinks(picked);
+  const focus = getBriefingFocus(topicKey);
 
-  const longSummary = `
-${intro} ${firstBlock || 'Recent reporting points to multiple overlapping developments and continued movement in the story.'}
+  const firstParagraph = points[0]
+    ? `${topicName} is currently anchored by ${points[0]}. This is the lead item in the latest coverage, and it gives the topic its immediate direction.`
+    : `${topicName} is currently moving through several connected developments. The latest coverage gives a broad view rather than one single settled storyline.`;
 
-Taken together, these updates suggest the topic is not defined by one single event, but by a mix of reactions, policy implications, and wider consequences. ${secondBlock || 'The linked coverage below offers a broader picture of where the story may go next.'}
+  const middlePoints = points.slice(1, 4);
+  const secondParagraph = middlePoints.length
+    ? `The surrounding coverage adds context around ${joinBriefingPoints(middlePoints)}. Read together, those updates show how the story connects across ${focus}.`
+    : `The surrounding coverage is useful because it connects the immediate news to ${focus}.`;
 
-${sources.length ? `Across the latest articles, the reporting draws from sources such as ${sources.join(', ')}, giving a more layered picture of the situation.` : 'Across the latest articles, the reporting comes from several different sources, which helps create a broader overview.'}
-  `.trim();
+  const thirdParagraph = sources.length
+    ? `This brief draws on reporting from ${joinBriefingPoints(sources)}. The source trail below is there so you can open the original articles and check the details directly.`
+    : 'The source trail below is there so you can open the original articles and check the details directly.';
 
   return {
-    longSummary,
+    longSummary: `${firstParagraph}\n\n${secondParagraph}\n\n${thirdParagraph}`,
     sources: sourceLinks
   };
 }
