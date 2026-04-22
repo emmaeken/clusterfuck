@@ -251,7 +251,7 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 }
 
 .tc-desc {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ink2);
   line-height: 1.65;
   max-width: 34ch;
@@ -340,13 +340,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   width: 100%;
   background: rgba(253,252,250,0.72);
   backdrop-filter: blur(8px);
-  border: 1px solid var(--border);
+  border: solid var(--border);
   overflow: hidden;
 }
 
 .how-item {
   flex: 1;
-  padding: 10px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2463,7 +2462,7 @@ border-color: rgba(24,26,40,0.12);
   letter-spacing: 0;
 }
 .tc-desc {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.75;
   color: var(--muted);
   font-weight: 300;
@@ -2507,14 +2506,14 @@ border-color: rgba(24,26,40,0.12);
   margin-top: 6px;
   border-color: rgba(24,26,40,0.08);
   border-radius: 22px;
-  background: rgba(255,255,255,0.74);
+  background: rgba(255, 255, 255, 0.534);
   box-shadow: 0 18px 52px rgba(24,26,40,0.06);
 }
 .how-item {
-  padding: 16px 20px;
+  padding: 5px 20px;
 }
 .how-num {
-  color: var(--accent);
+  color:var(--ink);
   opacity: 0.36;
   font-weight: 500;
 }
@@ -3041,7 +3040,7 @@ display: none;
 }
 .tc-desc {
   max-width: 25ch;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.28;
   color: #737373;
   font-weight: 300;
@@ -3074,7 +3073,7 @@ display: none;
   margin: 0 auto 0;
   border: 0;
   border-radius: 10px 10px 0 0;
-  background: rgba(255,255,255,0.42);
+  background: rgba(255, 255, 255, 0.356);
   box-shadow: none;
   overflow: hidden;
 }
@@ -3640,7 +3639,7 @@ display: none;
 }
 .tc-desc {
   max-width: 24ch;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.36;
 }
 .tc-system {
@@ -3656,21 +3655,8 @@ display: none;
 .tc:hover .tc-arrow {
   filter: saturate(1.08);
 }
-.how-strip {
-  width: min(1050px, 100%);
-  border-radius: 18px 18px 0 0;
-}
-.how-item {
-  min-height: 66px;
-  padding: 14px 26px 15px;
-}
-.how-num {
-  opacity: 1;
-  color: rgba(24,26,40,0.13);
-}
-.how-text {
-  max-width: 19ch;
-}
+
+
 @supports not (background: color-mix(in srgb, red 10%, transparent)) {
   .tc {
     background:
@@ -3814,8 +3800,6 @@ display: none;
   padding: 29px 42px 78px;
   overflow: hidden;
   border: 0;
-  border-top: 1.7px solid var(--topic-color);
-  border-right: 1.7px solid var(--topic-color);
   border-radius: 42px;
   background: rgba(255,255,255,0.82);
   color: var(--ink);
@@ -3856,20 +3840,21 @@ display: none;
   box-shadow: none;
 }
 .tc-name {
-  max-width: 9.5ch;
+  max-width: 18ch;
   margin: 44px 0 15px;
   color: #0B0B0B;
   font-size: clamp(34px, 3vw, 39px);
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.08;
   letter-spacing: 0;
 }
 .tc-desc {
-  max-width: 25ch;
-  color: #6E6E6E;
-  font-size: 14px;
+  max-width: 28ch;
+  color: var(--ink);
+  font-size: 16px;
   font-weight: 300;
   line-height: 1.2;
+  padding-left: 5px;
 }
 .tc-meta {
   position: absolute;
@@ -3907,25 +3892,20 @@ display: none;
   margin: 0 auto 18px;
   border: 0;
   border-radius: 10px;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.548);
   box-shadow: 0 12px 34px rgba(24,26,40,0.055);
   backdrop-filter: none;
 }
 .how-strip::before {
   display: none;
 }
-.how-item {
-  min-height: 72px;
-  padding: 18px 36px 18px;
-  align-items: flex-start;
-  gap: 14px;
-}
+
 .how-item:not(:last-child) {
   border-right: 1px solid rgba(24,26,40,0.055);
 }
 .how-num {
   min-width: 28px;
-  color: rgba(24,26,40,0.18);
+  color: var(--ink2);
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
@@ -4270,7 +4250,7 @@ display: none;
   height: 44px;
   padding: 0 14px;
   gap: 14px;
-  background: rgba(255,255,255,0.96);
+  background: transparent;
   border-bottom: 0;
   box-shadow: none;
   backdrop-filter: none;
@@ -4281,7 +4261,7 @@ display: none;
   background: transparent;
   color: #111827;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 700;
   border-radius: 0;
 }
 #explore .back-btn:hover {
@@ -4290,7 +4270,7 @@ display: none;
 }
 #explore .topbar-brand,
 #explore .tb-badge {
-  display: none;
+  display: flex;
 }
 #explore .tb-title {
   flex: 1;
@@ -4303,19 +4283,20 @@ display: none;
   padding: 1px;
   border: 1px solid rgba(24,26,40,0.08);
   border-radius: 999px;
-  background: transparent;
+  background: #ffffff77;
   box-shadow: none;
+  margin-left: auto;
 }
 #explore .vbtn {
   min-width: 68px;
-  padding: 7px 14px;
+  padding: 7px 20px;
   border-radius: 999px;
   color: #374151;
   font-size: 12px;
   font-weight: 600;
 }
 #explore .vbtn:hover {
-  background: rgba(59,130,246,0.08);
+  transform: scale(1.08);
 }
 #explore .vbtn.active {
   color: #111827;
@@ -4394,7 +4375,7 @@ display: none;
 #explore .sb-main-summary,
 #explore .sb-main-summary-long p,
 #explore .sb-overview-main p {
-  color: #4B5563;
+  color: var(--ink);
   font-size: 16px;
   line-height: 1.65;
 }
@@ -4422,6 +4403,8 @@ display: none;
 }
 #explore .sb-highlight-label {
   font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
 }
 #explore .sb-highlight-text,
 #explore .story-section-note,
@@ -4654,10 +4637,7 @@ display: none;
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5L3.5 5.5L7 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Overview
     </button>
-      <div class="topbar-brand" aria-label="The News Cluster">
-      <img src="assets/logo.svg" alt="The News Cluster logo" class="site-logo site-logo-small">
-      <span>The News Cluster</span>
-    </div>
+
     <div class="tb-badge" id="tb-badge"></div>
     <div class="tb-title" id="tb-title"></div>
     <div class="view-sw">
