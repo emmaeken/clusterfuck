@@ -40,7 +40,7 @@
   --r: 10px;
   --rl: 18px;
 }
-html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-family: var(--body); font-weight: 300; overflow: hidden; }
+html, body { height: 100%; color: var(--ink); font-family: var(--body); font-weight: 300; overflow: hidden; }
 /* SCREEN LOGIC (lägg här, UTANFÖR media query) */
 .screen {
   display: none;
@@ -60,6 +60,13 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 #explore {
   height: 100vh;
   min-height: 100vh;
+  background:
+    radial-gradient(circle at 98% 12%, rgba(59,130,246,0.42), transparent 5.2%),
+    radial-gradient(circle at 98% 12%, rgba(192,132,252,0.36), transparent 12%),
+    radial-gradient(circle at 73% 23%, rgba(253,186,116,0.34), transparent 7.4%),
+    radial-gradient(circle at 6% 86%, rgba(253,186,116,0.42), transparent 18%),
+    radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
+    linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%);
 }
 
 @media (max-width: 700px) {
@@ -99,11 +106,16 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
    LANDING
 ═══════════════════════════════ */
 #landing {
-  background: var(--bg);
   position: relative;
   overflow: hidden;
   min-height: 100vh;
   padding: 18px 24px 24px;
+  background: radial-gradient(circle at 98% 12%, rgba(59,130,246,0.42), transparent 5.2%),
+    radial-gradient(circle at 98% 12%, rgba(192,132,252,0.36), transparent 12%),
+    radial-gradient(circle at 73% 23%, rgba(253,186,116,0.34), transparent 7.4%),
+    radial-gradient(circle at 6% 86%, rgba(253,186,116,0.42), transparent 18%),
+    radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
+    linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%);
 }
 .bg-geo {
   position: absolute;
@@ -140,7 +152,7 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 }
 
 .land-wordmark {
-  font-family: var(--serif);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: clamp(42px, 7.2vw, 96px);
   font-weight: 800;
   letter-spacing: -0.06em;
@@ -329,13 +341,12 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
   background: rgba(253,252,250,0.72);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border);
-  border-radius: 18px;
   overflow: hidden;
 }
 
 .how-item {
   flex: 1;
-  padding: 14px 18px;
+  padding: 10px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -346,8 +357,9 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 }
 
 .how-num {
-  font-family: var(--serif);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 22px;
+  color: var(--ink);
   font-weight: 800;
   opacity: 0.15;
   line-height: 1;
@@ -355,7 +367,7 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 
 .how-text {
   font-size: 12px;
-  color: var(--ink2);
+  color: var(--ink);
   line-height: 1.45;
 }
 
@@ -364,7 +376,6 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
   color: var(--ink);
   font-weight: 600;
   font-size: 12px;
-  margin-bottom: 2px;
 }
 
 @media (max-width: 700px) {
@@ -454,7 +465,12 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 /* ═══════════════════════════════
    EXPLORE
 ═══════════════════════════════ */
-#explore { background: var(--bg); }
+#explore { background: radial-gradient(circle at 98% 12%, rgba(59,130,246,0.42), transparent 5.2%),
+    radial-gradient(circle at 98% 12%, rgba(192,132,252,0.36), transparent 12%),
+    radial-gradient(circle at 73% 23%, rgba(253,186,116,0.34), transparent 7.4%),
+    radial-gradient(circle at 6% 86%, rgba(253,186,116,0.42), transparent 18%),
+    radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
+    linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%); }
 
 /* TOPBAR */
 .topbar {
@@ -506,13 +522,16 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
   width: 100%;
   height: 100%;
 }
+#gc.hidden {
+  display: none;
+}
 
 .map-wrap {
   position: absolute;
   inset: 0;
   display: none;
   overflow: hidden;
-  background: #D8E8F0;
+  background: transparent;
   touch-action: auto;
   padding: 0;
   align-items: center;
@@ -529,10 +548,7 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
   inset: 0;
   display: none;
   overflow: hidden;
-  background:
-  radial-gradient(circle at top right, rgba(59,130,246,0.08), transparent 28%),
-    radial-gradient(circle at bottom left, rgba(14,165,233,0.06), transparent 32%),
-    linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+  background: transparent;
 }
 
 .timeline-wrap.on {
@@ -925,11 +941,13 @@ html, body { height: 100%; background: var(--bg-soft); color: var(--ink); font-f
 }
 
 .map-marker-pulse {
-  opacity: 0.12;
+  opacity: 0.18;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .map-marker-glyph {
-  opacity: 0.88;
+  opacity: 0.96;
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -2503,16 +2521,20 @@ border-color: rgba(24,26,40,0.12);
 #explore {
   position: relative;
   background:
-    radial-gradient(circle at 18% 10%, rgba(253,186,116,0.16), transparent 26%),
-    radial-gradient(circle at 74% 5%, rgba(192,132,252,0.08), transparent 24%),
-    linear-gradient(180deg, #FFFFFF 0%, var(--bg-soft) 100%);
+    radial-gradient(circle at 98% 12%, rgba(59,130,246,0.42), transparent 5.2%),
+    radial-gradient(circle at 98% 12%, rgba(192,132,252,0.36), transparent 12%),
+    radial-gradient(circle at 73% 23%, rgba(253,186,116,0.34), transparent 7.4%),
+    radial-gradient(circle at 6% 86%, rgba(253,186,116,0.42), transparent 18%),
+    radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
+    linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%);
 }
 .topbar {
   height: 62px;
   gap: 14px;
   padding: 0 20px;
-  background: rgba(255,255,255,0.84);
-  border-bottom: 1px solid rgba(24,26,40,0.08);
+  background: transparent;
+  border-bottom: none;
+  backdrop-filter: blur(8px); /* optional soft effect */
   box-shadow: 0 12px 36px rgba(24,26,40,0.04);
   backdrop-filter: blur(18px);
 }
@@ -2579,16 +2601,10 @@ border-color: rgba(24,26,40,0.12);
 }
 .canvas-wrap {
   isolation: isolate;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(253,186,116,0.14), transparent 28%),
-    radial-gradient(circle at 42% 48%, rgba(192,132,252,0.09), transparent 34%),
-    linear-gradient(180deg, #FFFFFF 0%, #F5F8FC 100%);
+  background:transparent
 }
 .canvas-wrap::before {
-  inset: 7%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(249,115,22,0.10), rgba(59,130,246,0.055) 34%, transparent 62%);
-  filter: blur(28px);
+display: none;
 }
 #gc,
 .map-wrap,
@@ -2703,12 +2719,7 @@ border-color: rgba(24,26,40,0.12);
   border-color: rgba(59,130,246,0.22);
   box-shadow: 0 18px 42px rgba(24,26,40,0.08);
 }
-.timeline-wrap {
-  background:
-    radial-gradient(circle at 18% 12%, rgba(59,130,246,0.12), transparent 26%),
-    radial-gradient(circle at 80% 18%, rgba(14,165,233,0.08), transparent 28%),
-    linear-gradient(180deg, #FFFFFF 0%, #F6F9FD 100%);
-}
+
 .tiimeline-stage {
   padding: 34px 38px 30px;
 }
@@ -2790,38 +2801,39 @@ border-color: rgba(24,26,40,0.12);
   box-shadow: 0 0 0 9px rgba(255,255,255,0.98), 0 0 0 11px rgba(59,130,246,0.08), 0 0 20px var(--story-accent, rgba(59,130,246,0.24));
 }
 .map-wrap {
-  background:
-    radial-gradient(circle at 70% 16%, rgba(59,130,246,0.13), transparent 30%),
-    radial-gradient(circle at 28% 82%, rgba(253,186,116,0.10), transparent 28%),
-    linear-gradient(180deg, #F8FCFF 0%, #EEF7FC 100%);
+  background: transparent;
 }
 #map-svg {
-  filter: drop-shadow(0 22px 44px rgba(59,130,246,0.08));
+  filter: drop-shadow(0 16px 28px rgba(30, 88, 145, 0.07));
+}
+#map-svg > rect:first-child {
+  fill: transparent !important;
 }
 #map-svg path:not(.map-marker-glyph),
 #map-svg .land {
-  fill: rgba(255,255,255,0.68) !important;
-  stroke: rgba(59,130,246,0.16) !important;
-  stroke-width: 0.75;
+  fill: rgba(255,255,255,0.74) !important;
+  stroke: rgba(125,150,178,0.22) !important;
+  stroke-width: 0.72;
+  vector-effect: non-scaling-stroke;
 }
 .map-marker-pulse {
-  opacity: 0.18;
-  filter: blur(0.2px);
+  opacity: 0.24;
+  filter: blur(4px);
 }
 .map-marker-glyph {
-  opacity: 0.96;
-  filter: drop-shadow(0 0 10px currentColor);
+  opacity: 0.98;
+  filter: drop-shadow(0 0 10px rgba(37, 113, 255, 0.52));
 }
 .map-marker-label {
-  fill: rgba(24,26,40,0.64);
-  font-weight: 500;
+  fill: rgba(36,48,69,0.72);
+  font-weight: 600;
 }
 .map-marker:hover .map-marker-pulse,
 .map-marker.active .map-marker-pulse {
-  opacity: 0.32;
+  opacity: 0.36;
 }
 .map-marker.active .map-marker-glyph {
-  stroke-width: 2.2;
+  stroke-width: 1.6;
 }
 .badge {
   border: 1px solid currentColor;
@@ -4253,9 +4265,7 @@ border-color: rgba(24,26,40,0.12);
   }
 }
 /* Cluster page reference refinement */
-#explore {
-  background: #FFFFFF;
-}
+
 #explore .topbar {
   height: 44px;
   padding: 0 14px;
@@ -4269,14 +4279,14 @@ border-color: rgba(24,26,40,0.12);
   padding: 0;
   border: 0;
   background: transparent;
-  color: #2563EB;
+  color: #111827;
   font-size: 13px;
   font-weight: 500;
   border-radius: 0;
 }
 #explore .back-btn:hover {
   background: transparent;
-  color: #1D4ED8;
+  color: #000000;
 }
 #explore .topbar-brand,
 #explore .tb-badge {
@@ -4293,7 +4303,7 @@ border-color: rgba(24,26,40,0.12);
   padding: 1px;
   border: 1px solid rgba(24,26,40,0.08);
   border-radius: 999px;
-  background: #F8FAFC;
+  background: transparent;
   box-shadow: none;
 }
 #explore .vbtn {
@@ -4308,23 +4318,14 @@ border-color: rgba(24,26,40,0.12);
   background: rgba(59,130,246,0.08);
 }
 #explore .vbtn.active {
-  color: #2563EB;
+  color: #111827;
   background: #FFFFFF;
   box-shadow: 0 1px 4px rgba(24,26,40,0.08);
 }
 #explore .main-grid {
   height: calc(100vh - 44px);
   grid-template-columns: minmax(0, 68%) minmax(360px, 32%);
-  background: #FFFFFF;
-}
-#explore .canvas-wrap {
-  background: #FFFFFF;
-}
-#explore .canvas-wrap::before {
-  display: none;
-}
-#explore .canvas-hint {
-  display: none;
+
 }
 #explore .sidebar {
   align-self: start;
@@ -4338,7 +4339,7 @@ border-color: rgba(24,26,40,0.12);
   backdrop-filter: none;
 }
 #explore .sb-top {
-  padding: 22px 24px 18px;
+  padding: 30px 32px 28px;
   border-bottom: 1px solid rgba(24,26,40,0.06);
   background: #FFFFFF;
 }
@@ -4370,17 +4371,17 @@ border-color: rgba(24,26,40,0.12);
   font-weight: 600;
 }
 #explore .sb-topic-summary {
-  margin-top: 14px;
+  margin-top: 18px;
   color: #4B5563;
   font-size: 15px;
   line-height: 1.55;
 }
 #explore .sb-scroll {
-  padding: 24px 24px 32px;
+  padding: 36px 32px 48px;
 }
 #explore .sb-section {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+  margin-bottom: 34px;
+  padding-bottom: 34px;
   border-bottom: 1px solid rgba(24,26,40,0.06);
 }
 #explore .sb-section-title {
@@ -4398,9 +4399,26 @@ border-color: rgba(24,26,40,0.12);
   line-height: 1.65;
 }
 #explore .sb-section-copy {
+  margin-top: 10px;
+  margin-bottom: 15px;
   color: #6B7280;
   font-size: 15px;
   line-height: 1.5;
+}
+#explore .sb-overview-layout {
+  gap: 10px;
+}
+#explore .sb-overview-top {
+  gap: 10px;
+  margin-bottom: 8px;
+}
+#explore .sb-overview-stack {
+  gap: 26px;
+}
+#explore .sb-main-summary {
+  margin: 8px 0 30px;
+  padding-left: 0;
+  padding-right: 0;
 }
 #explore .sb-highlight-label {
   font-size: 13px;
@@ -4421,6 +4439,11 @@ border-color: rgba(24,26,40,0.12);
   background: #FFFFFF;
   box-shadow: none;
 }
+#explore .sb-highlight-box {
+  margin: 30px 0 28px;
+  padding-left: 18px;
+  border-left-color: var(--story-accent, rgba(24,26,40,0.22));
+}
 #explore .chip,
 #explore .sb-more-btn,
 #explore .story-source-links a {
@@ -4428,6 +4451,24 @@ border-color: rgba(24,26,40,0.12);
   background: #F8FAFC;
   color: #4B5563;
   font-size: 13px;
+}
+#explore .sb-more-btn {
+  min-width: 148px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+#explore .sb-more-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--story-accent, rgba(24,26,40,0.18));
+  background: var(--story-accent, #111827);
+  color: #FFFFFF;
+  box-shadow: 0 12px 28px rgba(24,26,40,0.12);
+}
+#explore .sb-more-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 14px rgba(24,26,40,0.10);
 }
 #explore .editorial-article-meta,
 #explore .art-meta {
@@ -4464,7 +4505,7 @@ border-color: rgba(24,26,40,0.12);
 #explore .editorial-article-title,
 #explore .art-title {
   color: #111827;
-  font-weight: 650;
+  font-weight: 450;
 }
 #explore .editorial-article-feature .editorial-article-title,
 #explore .article-feature .art-title {
@@ -4969,7 +5010,7 @@ tlEvents: [
 mapMarkers: [
   { x: 232, y: 244, label:'California', size:9, query:'California US politics governor policy' },
   { x: 555, y: 194, label:'Chicago', size:7, query:'Chicago US politics' },
-  { x: 645, y: 308, label:'Atlanta', size:6, query:'Atlanta Georgia US politics elections' },
+  { x: 645, y: 322, label:'Atlanta', size:6, query:'Atlanta Georgia US politics elections' },
   { x: 727, y: 184, label:'New York', size:8, query:'New York US politics elections' },
   { x: 693, y: 250, label:'Washington D.C.', size:11, query:'Washington DC US politics congress white house' }
 ]
@@ -5102,7 +5143,7 @@ let shouldRevealTimelineSelection = false;
 const USE_FAKE_AI_SUMMARY = true;
 const DEFAULT_MAP_VIEWBOX = '0 0 800 480';
 const MAP_VIEWBOXES = {
-  politics: '0 0 800 480',
+  politics: '180 45 670 392',
   ukraine: '110 45 740 400',
   climate: '55 55 900 410'
 };
@@ -5269,6 +5310,13 @@ async function switchView(v) {
   if (v !== 'map') {
     activeMapDetailRequest += 1;
   }
+  const gc = document.getElementById('gc');
+
+if (v === 'graph') {
+  gc.classList.remove('hidden');
+} else {
+  gc.classList.add('hidden');
+}
   document.getElementById('vbtn-graph').classList.toggle('active', v === 'graph');
   document.getElementById('vbtn-timeline').classList.toggle('active', v === 'timeline');
   document.getElementById('vbtn-map').classList.toggle('active', v === 'map');
@@ -6198,7 +6246,7 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
   });
 
   document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section" id="sb-overview-section">
+    <div class="sb-section" id="sb-overview-section" style="--story-accent:${THEMES[topicKey].color};">
       <div class="sb-section-title">Topic briefing</div>
       <div class="sb-section-copy">${escapeHtml(options.overviewCopy || 'Loading the main overview and strongest recent reporting.')}</div>
       <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(options.summaryText || 'Loading summary...')}</div>
@@ -8002,8 +8050,10 @@ function renderMap(topic, theme) {
   if (!svg) return;
   const ns = 'http://www.w3.org/2000/svg';
   const { color, shape } = theme;
+  const markerColor = topic.key === 'politics' ? '#2573FF' : color;
 
   svg.innerHTML = MAP_BACKGROUNDS[topic.key];
+  svg.dataset.mapTopic = topic.key;
   svg.setAttribute('viewBox', MAP_VIEWBOXES[topic.key] || DEFAULT_MAP_VIEWBOX);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   resetMapViewportState();
@@ -8030,8 +8080,8 @@ function renderMap(topic, theme) {
     pulse.classList.add('map-marker-pulse');
     pulse.setAttribute('cx', '0');
     pulse.setAttribute('cy', '0');
-    pulse.setAttribute('r', String(m.size + 6));
-    pulse.setAttribute('fill', color);
+    pulse.setAttribute('r', String(m.size + (topic.key === 'politics' ? 11 : 6)));
+    pulse.setAttribute('fill', markerColor);
 
     const hit = document.createElementNS(ns, 'circle');
     hit.classList.add('map-marker-hit');
@@ -8060,21 +8110,23 @@ function renderMap(topic, theme) {
     }
 
     markerGlyph.classList.add('map-marker-glyph');
-    markerGlyph.setAttribute('fill', color);
-    markerGlyph.setAttribute('stroke', 'white');
-    markerGlyph.setAttribute('stroke-width', '1.5');
+    markerGlyph.setAttribute('fill', markerColor);
+    markerGlyph.setAttribute('stroke', '#FFFFFF');
+    markerGlyph.setAttribute('stroke-opacity', topic.key === 'politics' ? '0.82' : '1');
+    markerGlyph.setAttribute('stroke-width', topic.key === 'politics' ? '1' : '1.5');
 
     const isMobile = window.innerWidth <= 700;
     const viewBox = getMapViewBox(svg);
     const labelShouldFlip = topic.key === 'climate' && viewBox && (m.x + 160 > viewBox.x + viewBox.width);
     const lbl = document.createElementNS(ns, 'text');
     lbl.classList.add('map-marker-label');
-    lbl.setAttribute('x', String(labelShouldFlip ? -(m.size + (isMobile ? 4 : 6)) : m.size + (isMobile ? 4 : 6)));
+    const labelGap = topic.key === 'politics' ? (isMobile ? 12 : 17) : (isMobile ? 4 : 6);
+    lbl.setAttribute('x', String(labelShouldFlip ? -(m.size + labelGap) : m.size + labelGap));
     lbl.setAttribute('y', '3.5');
     lbl.setAttribute('text-anchor', labelShouldFlip ? 'end' : 'start');
-    lbl.setAttribute('font-size', isMobile ? '8' : '9');
+    lbl.setAttribute('font-size', topic.key === 'politics' ? (isMobile ? '10' : '11.5') : (isMobile ? '8' : '9'));
     lbl.setAttribute('font-family', "'Syne',sans-serif");
-    lbl.setAttribute('font-weight', '700');
+    lbl.setAttribute('font-weight', topic.key === 'politics' ? '600' : '700');
     lbl.textContent = m.label;
 
     markerGroup.appendChild(pulse);
