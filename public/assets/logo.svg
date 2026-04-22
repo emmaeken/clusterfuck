@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 150" role="img" aria-label="The News Cluster logo">
+  <defs>
+    <filter id="soft-orange" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+  <circle cx="46" cy="32" r="16" fill="#F97316" opacity=".9" filter="url(#soft-orange)"/>
+  <text x="86" y="48" fill="#050505" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="48" font-weight="700" letter-spacing="7">THE</text>
+  <text x="0" y="118" fill="#050505" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="56" font-weight="700" letter-spacing="5">NEWS CLUSTER</text>
+</svg>
