@@ -7,8 +7,7 @@ const OpenAI = require('openai');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GUARDIAN_API_KEY = process.env.GUARDIAN_API_KEY || 'test';
-const PRIMARY_PROVIDER_MIN_ARTICLES = 5;
-const USE_NEWS_API = false;
+const USE_NEWS_API = process.env.USE_NEWS_API !== 'false';
 
 app.use(express.json());
 
@@ -250,7 +249,8 @@ function normalizeNewsApiArticle(article = {}) {
     source: {
       name: cleanArticleText(article.source?.name || '') || 'Unknown source'
     },
-    publishedAt: cleanArticleText(article.publishedAt || '')
+    publishedAt: cleanArticleText(article.publishedAt || ''),
+    provider: 'newsapi'
   };
 }
 
@@ -265,7 +265,8 @@ function normalizeGuardianArticle(item = {}) {
     source: {
       name: sectionName ? `The Guardian | ${sectionName}` : 'The Guardian'
     },
-    publishedAt: cleanArticleText(item.webPublicationDate || '')
+    publishedAt: cleanArticleText(item.webPublicationDate || ''),
+    provider: 'guardian'
   };
 }
 
@@ -273,6 +274,81 @@ function buildFallbackReason(code = '', detail = '') {
   const safeCode = cleanArticleText(code).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'unknown';
   const safeDetail = cleanArticleText(detail).replace(/\s+/g, ' ').slice(0, 160);
   return safeDetail ? `${safeCode}:${safeDetail}` : safeCode;
+}
+
+function pickNextUniqueArticle(queue = [], seenUrls = new Set(), seenTitles = new Set()) {
+  while (queue.length) {
+    const article = queue.shift();
+    const url = cleanArticleText(article.url || '');
+    const title = cleanArticleText(article.title || '');
+    const titleKey = title.toLowerCase();
+
+    if (!url || !title || seenUrls.has(url) || seenTitles.has(titleKey)) continue;
+
+    seenUrls.add(url);
+    seenTitles.add(titleKey);
+    return article;
+  }
+
+  return null;
+}
+
+function mergeProviderArticles(providerBuckets = {}, query = '', limit = 8) {
+  const providerNames = Object.keys(providerBuckets).filter(name => {
+    return Array.isArray(providerBuckets[name]) && providerBuckets[name].length > 0;
+  });
+
+  if (!providerNames.length) return [];
+
+  const providerQueues = Object.fromEntries(
+    providerNames.map(name => [
+      name,
+      prioritizeArticles(providerBuckets[name], query, providerBuckets[name].length)
+    ])
+  );
+
+  const providerOrder = [...providerNames].sort((a, b) => {
+    const byDate = getPublishedAtValue(providerQueues[b][0]) - getPublishedAtValue(providerQueues[a][0]);
+    if (byDate !== 0) return byDate;
+    return providerQueues[b].length - providerQueues[a].length;
+  });
+
+  const selected = [];
+  const seenUrls = new Set();
+  const seenTitles = new Set();
+
+  while (selected.length < limit) {
+    let addedThisRound = false;
+
+    for (const providerName of providerOrder) {
+      const article = pickNextUniqueArticle(
+        providerQueues[providerName],
+        seenUrls,
+        seenTitles
+      );
+
+      if (!article) continue;
+
+      selected.push(article);
+      addedThisRound = true;
+
+      if (selected.length >= limit) break;
+    }
+
+    if (!addedThisRound) break;
+  }
+
+  return selected.slice(0, limit);
+}
+
+function countArticlesByProvider(articles = []) {
+  return articles.reduce((counts, article) => {
+    const providerName = cleanArticleText(article.provider || '').toLowerCase();
+    if (!providerName) return counts;
+
+    counts[providerName] = (counts[providerName] || 0) + 1;
+    return counts;
+  }, {});
 }
 
 async function fetchNewsApiArticles({
@@ -569,12 +645,14 @@ function buildFallbackEventOverview(topicName, eventLabel, articles = [], eventT
 
 app.get('/api/news', async (req, res) => {
   const { q } = req.query;
-  const apiKey = USE_NEWS_API ? process.env.NEWS_API_KEY : '';
+  const hasNewsApiKey = Boolean(process.env.NEWS_API_KEY);
+  const canUseNewsApi = USE_NEWS_API && hasNewsApiKey;
   const topicKey = cleanArticleText(req.query.topicKey || '');
   const kind = cleanArticleText(req.query.kind || '');
   const provider = cleanArticleText(req.query.provider || '');
-  const strictGuardianProvider = provider === 'guardian' || !USE_NEWS_API;
-  const forceGuardian = strictGuardianProvider || kind === 'month';
+  const strictGuardianProvider = provider === 'guardian';
+  const strictNewsApiProvider = provider === 'newsapi';
+  const forceGuardian = kind === 'month' && !strictNewsApiProvider;
 
   if (!q) {
     return res.status(400).json({ error: 'Missing query parameter ?q=' });
@@ -591,122 +669,113 @@ app.get('/api/news', async (req, res) => {
       ? Math.min(Math.max(requestedPageSize, 1), 12)
       : 5;
     const fetchPageSize = Math.min(Math.max(limit * 3, 12), 36);
-    const fallbackThreshold = Math.min(PRIMARY_PROVIDER_MIN_ARTICLES, limit);
     const safeQuery = cleanArticleText(q);
+    const fetchOptions = {
+      query: q,
+      topicKey,
+      from,
+      to,
+      limit,
+      fetchPageSize,
+      sortBy,
+      kind
+    };
 
-    if (forceGuardian) {
+    if (strictGuardianProvider || forceGuardian) {
       try {
-        const articles = await fetchGuardianArticles({
-          query: q,
-          topicKey,
-          from,
-          to,
-          limit,
-          fetchPageSize,
-          sortBy,
-          kind
-        });
+        const articles = await fetchGuardianArticles(fetchOptions);
 
-        console.info(`[api/news] The Guardian served "${safeQuery}" with ${articles.length} articles (forced provider).`);
+        console.info(
+          `[api/news] The Guardian served "${safeQuery}" with ${articles.length} articles${forceGuardian && !strictGuardianProvider ? ' (forced provider).' : '.'}`
+        );
         return res.json({
           articles,
           provider: 'guardian',
+          providerBreakdown: countArticlesByProvider(articles),
           fallbackReason: 'forced_guardian_provider'
         });
       } catch (guardianErr) {
-        console.warn(
-          strictGuardianProvider
-            ? `[api/news] Forced Guardian request failed for "${safeQuery}".`
-            : `[api/news] Forced Guardian request failed for "${safeQuery}". Trying NewsAPI instead.`,
-          guardianErr.message
-        );
-        if (strictGuardianProvider) {
-          return res.status(500).json({
-            error: guardianErr.message || 'Guardian request failed'
-          });
-        }
-        if (!apiKey) {
-          return res.status(500).json({ error: guardianErr.message || 'Historical archive lookup failed' });
-        }
-      }
-    }
-
-    let newsApiArticles = [];
-    let fallbackReason = '';
-
-    if (apiKey) {
-      try {
-        newsApiArticles = await fetchNewsApiArticles({
-          query: q,
-          topicKey,
-          from,
-          to,
-          limit,
-          fetchPageSize,
-          sortBy,
-          kind
+        console.warn(`[api/news] Guardian request failed for "${safeQuery}".`, guardianErr.message);
+        return res.status(500).json({
+          error: guardianErr.message || 'Guardian request failed'
         });
-
-        if (newsApiArticles.length >= fallbackThreshold) {
-          console.info(`[api/news] NewsAPI served "${safeQuery}" with ${newsApiArticles.length} articles.`);
-          return res.json({
-            articles: newsApiArticles,
-            provider: 'newsapi'
-          });
-        }
-
-        fallbackReason = buildFallbackReason(
-          'newsapi_too_few_articles',
-          `NewsAPI returned ${newsApiArticles.length} articles, threshold is ${fallbackThreshold}`
-        );
-        console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
-      } catch (newsApiErr) {
-        fallbackReason = buildFallbackReason('newsapi_failed', newsApiErr.message);
-        console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
       }
-    } else {
-      fallbackReason = buildFallbackReason('newsapi_key_missing');
-      console.warn(`[api/news] ${fallbackReason}. Trying The Guardian for "${safeQuery}".`);
     }
 
-    try {
-      const guardianArticles = await fetchGuardianArticles({
-        query: q,
-        topicKey,
-        from,
-        to,
-        limit,
-        fetchPageSize,
-        sortBy,
-        kind
-      });
+    if (strictNewsApiProvider) {
+      if (!canUseNewsApi) {
+        return res.status(500).json({
+          error: buildFallbackReason(hasNewsApiKey ? 'newsapi_disabled' : 'newsapi_key_missing')
+        });
+      }
 
-      console.info(`[api/news] The Guardian served "${safeQuery}" with ${guardianArticles.length} articles.`);
+      const articles = await fetchNewsApiArticles(fetchOptions);
+      console.info(`[api/news] NewsAPI served "${safeQuery}" with ${articles.length} articles (forced provider).`);
       return res.json({
-        articles: guardianArticles,
-        provider: 'guardian',
+        articles,
+        provider: 'newsapi',
+        providerBreakdown: countArticlesByProvider(articles)
+      });
+    }
+
+    const providerTasks = [
+      {
+        name: 'guardian',
+        task: fetchGuardianArticles(fetchOptions)
+      }
+    ];
+    const fallbackReasons = [];
+
+    if (canUseNewsApi) {
+      providerTasks.unshift({
+        name: 'newsapi',
+        task: fetchNewsApiArticles(fetchOptions)
+      });
+    } else {
+      fallbackReasons.push(
+        buildFallbackReason(hasNewsApiKey ? 'newsapi_disabled' : 'newsapi_key_missing')
+      );
+    }
+
+    const results = await Promise.allSettled(providerTasks.map(providerTask => providerTask.task));
+    const providerBuckets = {};
+
+    results.forEach((result, index) => {
+      const providerName = providerTasks[index].name;
+
+      if (result.status === 'fulfilled') {
+        providerBuckets[providerName] = result.value;
+        return;
+      }
+
+      fallbackReasons.push(
+        buildFallbackReason(`${providerName}_failed`, result.reason?.message || 'request failed')
+      );
+    });
+
+    const articles = mergeProviderArticles(providerBuckets, q, limit);
+    const providerBreakdown = countArticlesByProvider(articles);
+    const providersUsed = Object.keys(providerBreakdown);
+    const responseProvider = providersUsed.length > 1
+      ? 'mixed'
+      : providersUsed[0] || Object.keys(providerBuckets)[0] || 'unknown';
+    const fallbackReason = fallbackReasons.filter(Boolean).join(' | ');
+
+    if (articles.length > 0 || Object.keys(providerBuckets).length > 0) {
+      console.info(
+        `[api/news] ${responseProvider === 'mixed' ? 'Mixed provider feed' : responseProvider} served "${safeQuery}" with ${articles.length} articles.`
+      );
+      return res.json({
+        articles,
+        provider: responseProvider,
+        providerBreakdown,
         fallbackReason
       });
-    } catch (guardianErr) {
-      console.error(`[api/news] Guardian fallback failed for "${safeQuery}".`, guardianErr.message);
-
-      if (newsApiArticles.length > 0) {
-        return res.json({
-          articles: newsApiArticles,
-          provider: 'newsapi',
-          fallbackReason,
-          warning: `Guardian fallback failed: ${guardianErr.message}. Returned partial NewsAPI results instead.`
-        });
-      }
-
-      const combinedMessage = [fallbackReason, guardianErr.message]
-        .filter(Boolean)
-        .join(' | ');
-
-      return res.status(500).json({
-        error: combinedMessage || 'Both NewsAPI and The Guardian API failed'
-      });
     }
+
+    return res.status(500).json({
+      error: fallbackReason || 'Both NewsAPI and The Guardian API failed'
+    });
   } catch (err) {
     console.error('Proxy fetch error:', err);
     res.status(500).json({ error: 'Failed to fetch articles: ' + err.message });

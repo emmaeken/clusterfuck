@@ -1272,13 +1272,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 }
 
 .sb-subsection-title {
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink);
-  margin: 18px 0 8px;
-  font-family: var(--serif);
-  font-weight: 800;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.2;
 }
 
 .sb-mini-note {
@@ -2528,7 +2527,6 @@ border-color: rgba(24,26,40,0.12);
 .editorial-article-meta span,
 .canvas-hint {
   letter-spacing: 0.08em;
-  font-weight: 500;
 }
 .tc-arrow {
   width: 42px;
@@ -2721,6 +2719,14 @@ display: none;
   font-size: 18px;
   font-weight: 500;
   letter-spacing: 0;
+}
+.sb-coverage-heading {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
 }
 .sb-main-summary,
 .sb-main-summary-long p,
@@ -3877,19 +3883,26 @@ display: none;
 .tc .badge {
   width: fit-content;
   margin-bottom: 0 !important;
-  padding: 0;
-  gap: 10px;
-  border: 0;
-  background: transparent;
-  color: var(--topic-color);
-  font-size: 12px;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 9px;
+  border: 1px solid var(--theme-border, rgba(24,26,40,0.08));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-bg, rgba(24,26,40,0.06)) 88%, white 12%);
+  color: var(--theme-color, var(--topic-color));
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
 }
 .tc .badge-shape {
-  width: 20px;
-  height: 20px;
-  box-shadow: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--theme-color, currentColor);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-color, currentColor) 14%, white 86%);
 }
 .tc-name {
   max-width: 18ch;
@@ -6221,20 +6234,20 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
       </div>
       <div class="story-coverage">
         <div class="story-column">
-          <div class="sb-subsection-title">Key coverage</div>
+          <div class="sb-subsection-title sb-coverage-heading">Key coverage</div>
           <div class="story-section-note">Start with the strongest context and reporting tied directly to this development.</div>
           <div id="story-key-coverage"></div>
         </div>
         ${latest.length ? `
           <div class="story-column story-column-secondary" aria-label="Deeper reading">
-            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="sb-subsection-title sb-coverage-heading">Deeper reading</div>
             <div class="story-section-note">Follow-on coverage and newer reporting around the same strand.</div>
             <div id="story-deeper-reading"></div>
           </div>
         ` : ''}
       </div>
       <div class="story-source-footnote">
-        <div class="sb-subsection-title">Source trail</div>
+        <div class="sb-subsection-title sb-coverage-heading">Source trail</div>
         <div class="story-source-links" id="story-source-links"></div>
       </div>
     </div>
@@ -6416,13 +6429,13 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
       </div>
       <div class="story-coverage story-coverage-stacked">
         <div class="story-column">
-          <div class="sb-subsection-title">Key coverage</div>
+          <div class="sb-subsection-title sb-coverage-heading">Key coverage</div>
           <div class="story-section-note">The strongest reporting to anchor this month in the broader story.</div>
           <div id="story-key-coverage"></div>
         </div>
         ${monthly.length > 4 ? `
           <div class="story-column story-column-secondary" aria-label="Deeper reading">
-            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="sb-subsection-title sb-coverage-heading">Deeper reading</div>
             <div class="story-section-note">Additional reporting if you want more texture around this point in time.</div>
             <div id="story-deeper-reading"></div>
           </div>
@@ -6576,7 +6589,7 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
       <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(options.summaryText || 'Loading summary...')}</div>
     </div>
     <div class="sb-section">
-      <div class="sb-section-title">Current coverage</div>
+      <div class="sb-section-title sb-coverage-heading">Current coverage</div>
       <div class="sb-section-copy">A curated starting point from the strongest recent reporting across the topic.</div>
       <div id="sb-latest-articles"></div>
     </div>
@@ -6713,13 +6726,13 @@ function renderMapLocationPanel(topicKey, marker, articles) {
       </div>
       <div class="story-coverage story-coverage-stacked">
         <div class="story-column">
-          <div class="sb-subsection-title">Key coverage</div>
+          <div class="sb-subsection-title sb-coverage-heading">Key coverage</div>
           <div class="story-section-note">Start with the strongest reporting that anchors this location in the wider story.</div>
           <div id="map-key-coverage"></div>
         </div>
         ${coverage.length > 4 ? `
           <div class="story-column story-column-secondary" aria-label="Deeper reading">
-            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="sb-subsection-title sb-coverage-heading">Deeper reading</div>
             <div class="story-section-note">More reporting for extra texture around this place.</div>
             <div id="map-deeper-reading"></div>
           </div>
@@ -6837,13 +6850,13 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
       </div>
       <div class="story-coverage story-coverage-stacked">
         <div class="story-column">
-          <div class="sb-subsection-title">Featured coverage</div>
+          <div class="sb-subsection-title sb-coverage-heading">Featured coverage</div>
           <div class="story-section-note">The strongest related reporting to anchor this node in the wider story.</div>
           <div id="node-key-coverage"></div>
         </div>
         ${coverage.length > 4 ? `
           <div class="story-column story-column-secondary" aria-label="Deeper reading">
-            <div class="sb-subsection-title">Deeper reading</div>
+            <div class="sb-subsection-title sb-coverage-heading">Deeper reading</div>
             <div class="story-section-note">Additional reporting for more texture around this strand.</div>
             <div id="node-deeper-reading"></div>
           </div>
@@ -7091,28 +7104,14 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     return;
   }
 
-  const briefingArticles = await fetchNews(mainQuery, `${topicKey}-brief-guardian`, {
-    topicKey,
-    kind: 'main',
-    provider: 'guardian',
-    pageSize: 8,
-    sortBy: 'relevancy'
-  });
+  const summary = await fetchSummary(topicKey, articles, 'short');
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
 
-  if (!briefingArticles || briefingArticles.error || briefingArticles.length === 0) {
+  if (summary.error) {
     document.getElementById('sb-main-summary').textContent =
-      `Could not load Guardian briefing: ${briefingArticles?.error || 'No Guardian articles found'}`;
+      `Could not load summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
   } else {
-    const summary = await fetchSummary(topicKey, briefingArticles, 'short');
-    if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
-    if (summary.error) {
-      document.getElementById('sb-main-summary').textContent =
-        `Could not load Guardian briefing: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
-    } else {
-      renderShortOverview(topicKey, summary.shortSummary, briefingArticles, requestId);
-    }
+    renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
   }
 
   renderEditorialCoverage('sb-latest-articles', articles, { limit: 6, themeKey: topicKey });
@@ -7220,7 +7219,7 @@ async function selectNode(id) {
   renderNodeStorySidebarShell(currentTopic, n, {
     sectionTitle: 'Node brief',
     sectionCopy: `Building a focused editorial read on ${n.label}.`,
-    bodyHtml: `<div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${nodeTheme.color}"></span>Fetching from NewsAPI...</div>`
+    bodyHtml: `<div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${nodeTheme.color}"></span>Fetching from NewsAPI and The Guardian...</div>`
   });
   scrollSidebarToTop();
   syncMobileDrawerFromSidebar(true);
@@ -7303,21 +7302,40 @@ async function fetchNews(query, nodeId, options = {}) {
     cache[requestKey] = data.articles || [];
     cacheMeta[requestKey] = {
       provider: data.provider || 'unknown',
+      providerBreakdown: data.providerBreakdown || {},
       fallbackReason: data.fallbackReason || '',
       warning: data.warning || '',
       articleCount: Array.isArray(data.articles) ? data.articles.length : 0
     };
 
-    const providerLabel = data.provider === 'guardian' ? 'The Guardian API' : 'NewsAPI';
+    const providerLabel = data.provider === 'mixed'
+      ? 'NewsAPI + The Guardian API'
+      : data.provider === 'guardian'
+        ? 'The Guardian API'
+        : 'NewsAPI';
+    const providerMixLabel = Object.entries(data.providerBreakdown || {})
+      .filter(([, count]) => count > 0)
+      .map(([providerName, count]) => {
+        const label = providerName === 'guardian'
+          ? 'Guardian'
+          : providerName === 'newsapi'
+            ? 'NewsAPI'
+            : providerName;
+        return `${label}: ${count}`;
+      })
+      .join(', ');
     const fallbackSuffix = data.fallbackReason
       ? ` Fallback reason: ${data.fallbackReason}.`
+      : '';
+    const mixSuffix = providerMixLabel
+      ? ` Mix: ${providerMixLabel}.`
       : '';
     const warningSuffix = data.warning
       ? ` Warning: ${data.warning}`
       : '';
 
     console.info(
-      `[news] ${nodeId} loaded ${cacheMeta[requestKey].articleCount} articles from ${providerLabel} for "${query}".${fallbackSuffix}${warningSuffix}`
+      `[news] ${nodeId} loaded ${cacheMeta[requestKey].articleCount} articles from ${providerLabel} for "${query}".${mixSuffix}${fallbackSuffix}${warningSuffix}`
     );
 
     if (data.provider === 'guardian') {
@@ -7325,6 +7343,8 @@ async function fetchNews(query, nodeId, options = {}) {
         ? 'forced Guardian source'
         : 'Guardian fallback source';
       console.warn(`[news] ${nodeId} is using the ${guardianMode}.`);
+    } else if (data.provider === 'mixed') {
+      console.info(`[news] ${nodeId} is using a mixed Guardian + NewsAPI feed.`);
     }
 
     if (data.warning) {
