@@ -27,6 +27,18 @@ function cleanArticleText(text = '') {
     .trim();
 }
 
+function toPlainSearchQuery(text = '') {
+  return cleanArticleText(text)
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[()]/g, ' ')
+    .replace(/\b(?:AND|OR|NOT)\b/gi, ' ')
+    .replace(/["']/g, ' ')
+    .replace(/[^a-z0-9\s-]+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function slugify(text = '') {
   return String(text)
     .toLowerCase()
@@ -208,7 +220,11 @@ function getEffectiveQuery(rawQuery = '', topicKey = '', kind = '', provider = '
   const profile = getTopicSearchProfile(topicKey);
   const wantsStructuredTopicQuery = ['main', 'month'].includes(kind);
 
-  if (!profile || !wantsStructuredTopicQuery) return cleanedQuery;
+  if (!wantsStructuredTopicQuery) {
+    return toPlainSearchQuery(cleanedQuery) || cleanedQuery;
+  }
+
+  if (!profile) return cleanedQuery;
 
   return provider === 'guardian'
     ? profile.guardianQuery
@@ -441,19 +457,26 @@ function buildFallbackTimelineEvents(topicKey, topicName, articles = []) {
   return picked.map((article, index) => {
     const rawLabel = cleanArticleText(article.title || article.description || `${topicName} update`);
     const label = rawLabel.split(/[:\-|]/)[0].slice(0, 42) || `${topicName} update ${index + 1}`;
+    const safeLabelQuery = toPlainSearchQuery(label);
+    const safeTopicQuery = toPlainSearchQuery(topicName);
+    const backgroundQuery = [safeLabelQuery, safeTopicQuery, 'overview']
+      .filter(Boolean)
+      .join(' ');
+    const latestQuery = [safeLabelQuery, safeTopicQuery, 'latest']
+      .filter(Boolean)
+      .join(' ');
     const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
     const dateLabel = publishedAt && !isNaN(publishedAt)
       ? publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : 'Now';
-    const baseQuery = cleanArticleText(label);
 
     return {
       id: `${topicKey}-${slugify(label)}`,
       label,
       dateLabel,
       importance: index === 0 ? 'high' : 'medium',
-      backgroundQuery: `${baseQuery} ${topicName} overview`,
-      latestQuery: `${baseQuery} latest news`,
+      backgroundQuery: backgroundQuery || safeTopicQuery || topicKey,
+      latestQuery: latestQuery || safeTopicQuery || topicKey,
       whyItMatters: cleanArticleText(article.description || article.title).slice(0, 180) || `A major live development inside ${topicName}.`
     };
   });
@@ -471,11 +494,12 @@ function getBroadTopicEvents(topicKey, topicName, mainQuery = '') {
     1
   ));
   const cleanedQuery = cleanArticleText(mainQuery || topicName || topicKey);
+  const monthOffsets = [1, 0, ...Array.from({ length: 10 }, (_, index) => -(index + 1))];
 
-  return Array.from({ length: 12 }, (_, index) => {
+  return monthOffsets.map((monthOffset, index) => {
     const monthStart = new Date(Date.UTC(
       startOfCurrentMonth.getUTCFullYear(),
-      startOfCurrentMonth.getUTCMonth() - (index + 1),
+      startOfCurrentMonth.getUTCMonth() + monthOffset,
       1
     ));
     const monthEnd = new Date(Date.UTC(

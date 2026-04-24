@@ -16,16 +16,16 @@
   --muted: #6F6E6E;
   --accent-soft: #FDBA74;
   --accent: #F97316;
-  --blue: #3B82F6;
+  --blue: #2563EB;
   --green: #22C55E;
-  --red: #EF4444;
+  --red: #E84855;
   --lavender: #C084FC;
   --blue2: #93C5FD;
   --green2: #86EFAC;
   --red2: #FCA5A5;
-  --blueBg: rgba(59,130,246,0.1);
+  --blueBg: rgba(37,99,235,0.1);
   --greenBg: rgba(34,197,94,0.1);
-  --redBg: rgba(239,68,68,0.1);
+  --redBg: rgba(232,72,85,0.1);
   --bg: var(--bg-soft);
   --bg2: #EEF4FA;
   --bg3: #E4EBF3;
@@ -33,6 +33,7 @@
   --ink3: #A0A3AC;
   --border: rgba(24,26,40,0.09);
   --border2: rgba(24,26,40,0.16);
+  --article-outline: rgba(24,26,40,0.08);
   --serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --body: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --shadow-soft: 0 24px 70px rgba(24,26,40,0.08);
@@ -91,16 +92,16 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif); font-size: 10px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   padding: 3px 8px 3px 6px; border-radius: 4px;
+  background: var(--theme-bg, rgba(24,26,40,0.06));
+  color: var(--theme-color, var(--ink));
+  border: 1px solid var(--theme-border, rgba(24,26,40,0.08));
 }
-.badge-shape { width: 8px; height: 8px; flex-shrink: 0; }
+.badge-shape { width: 8px; height: 8px; flex-shrink: 0; background: currentColor; }
 .badge-shape.sq { border-radius: 1px; }
 .badge-shape.tr { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
-.badge.politics { background: var(--blueBg); color: var(--blue); }
-.badge.conflict { background: var(--redBg);  color: var(--red);  }
-.badge.climate  { background: var(--greenBg);color: var(--green);}
-.badge.politics .badge-shape { background: var(--blue); border-radius: 50%; }
-.badge.conflict .badge-shape { background: var(--red);  border-radius: 1px; }
-.badge.climate  .badge-shape { background: var(--green); clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
+.badge[data-shape="circle"] .badge-shape { border-radius: 50%; }
+.badge[data-shape="square"] .badge-shape { border-radius: 1px; }
+.badge[data-shape="triangle"] .badge-shape { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
 
 /* ═══════════════════════════════
    LANDING
@@ -1271,13 +1272,13 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 }
 
 .sb-subsection-title {
-  font-size: 13px;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--ink);
   margin: 18px 0 8px;
   font-family: var(--serif);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .sb-mini-note {
@@ -1354,17 +1355,22 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   gap: 8px;
 }
 .article-item {
+  --article-accent: var(--theme-color, rgba(24,26,40,0.28));
+  --article-accent-soft: var(--theme-bg, rgba(24,26,40,0.06));
   position: relative;
   display: flex;
   flex-direction: column;
   color: inherit;
   text-decoration: none;
   padding: 13px 14px;
-  border: 1px solid rgba(26,24,20,0.09);
+  border: 1px solid var(--article-outline);
   border-radius: 8px;
   background: rgba(255,255,255,0.62);
   cursor: default;
   transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+.article-item::before {
+  content: none;
 }
 
 .article-item[href] {
@@ -1380,8 +1386,7 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 }
 .article-item[href]:hover,
 .article-item[href]:focus-visible {
-  border-color: rgba(26,24,20,0.2);
-  background: rgba(255,255,255,0.92);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9)), var(--article-accent-soft);
   box-shadow: 0 10px 24px rgba(26,24,20,0.07);
   transform: translateY(-1px);
 }
@@ -1406,6 +1411,7 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
   color: var(--ink);
+  text-decoration-color: var(--article-accent);
 }
 .art-summary {
   margin-top: 9px;
@@ -1831,10 +1837,14 @@ transform: none;
 .timeline-entry-badge {
   display: inline-flex;
   align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--story-accent-border, rgba(24,26,40,0.1));
+  background: var(--story-accent-soft, rgba(24,26,40,0.05));
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--ink3);
+  color: var(--story-accent, var(--ink3));
   font-family: var(--serif);
   font-weight: 700;
   white-space: nowrap;
@@ -1880,18 +1890,18 @@ border-color: rgba(24,26,40,0.12);
 }
 
 .timeline-entry.active .timeline-entry-card {
-border-color: rgba(24,26,40,0.12);
+  border-color: var(--story-accent-border, rgba(249,115,22,0.24));
   background: rgba(255,255,255,0.82);
   box-shadow: 0 18px 48px rgba(24,26,40,0.065);
 }
 
 .timeline-entry.active .timeline-entry-card::after {
-  background: rgba(59,130,246,0.38);
+  background: var(--story-accent-glow, rgba(59,130,246,0.28));
 }
 
 .timeline-entry.active .timeline-entry-node {
   --timeline-node-scale: 1.12;
-  box-shadow: 0 0 0 8px rgba(248,246,241,0.98), 0 0 0 10px rgba(59,130,246,0.08);
+  box-shadow: 0 0 0 8px rgba(248,246,241,0.98), 0 0 0 10px var(--story-accent-ring, rgba(59,130,246,0.08));
 }
 
 .timeline-entry-card:focus-visible,
@@ -2121,15 +2131,20 @@ border-color: rgba(24,26,40,0.12);
 }
 
 .editorial-article {
+  --article-accent: var(--theme-color, rgba(24,26,40,0.28));
+  --article-accent-soft: var(--theme-bg, rgba(24,26,40,0.06));
   position: relative;
   display: flex;
   flex-direction: column;
   color: inherit;
   text-decoration: none;
-  border: 1px solid rgba(26,24,20,0.09);
+  border: 1px solid var(--article-outline);
   border-radius: 8px;
   background: rgba(255,255,255,0.62);
   transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+.editorial-article::before {
+  content: none;
 }
 
 .editorial-article[href] {
@@ -2138,8 +2153,7 @@ border-color: rgba(24,26,40,0.12);
 
 .editorial-article[href]:hover,
 .editorial-article[href]:focus-visible {
-  border-color: rgba(26,24,20,0.2);
-  background: rgba(255,255,255,0.92);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9)), var(--article-accent-soft);
   box-shadow: 0 10px 24px rgba(26,24,20,0.07);
   transform: translateY(-1px);
 }
@@ -2157,7 +2171,7 @@ border-color: rgba(24,26,40,0.12);
 }
 
 .editorial-article-list .editorial-article {
-  padding: 12px 13px 13px;
+  padding: 20px;
 }
 
 .editorial-article-meta {
@@ -2189,6 +2203,7 @@ border-color: rgba(24,26,40,0.12);
   font-size: 19px;
   line-height: 1.2;
   color: var(--ink);
+  text-decoration-color: var(--article-accent);
 }
 
 .editorial-article-list .editorial-article-title {
@@ -2738,7 +2753,7 @@ display: none;
 .editorial-article,
 .story-source-links a,
 .article-item {
-  border-color: rgba(24,26,40,0.08);
+  border-color: var(--article-outline);
   border-radius: 14px;
   background: rgba(255,255,255,0.72);
 }
@@ -2748,7 +2763,7 @@ display: none;
 .story-source-links a:focus-visible,
 .article-item[href]:hover,
 .article-item[href]:focus-visible {
-  border-color: rgba(59,130,246,0.22);
+  border-color: rgba(24,26,40,0.12);
   box-shadow: 0 18px 42px rgba(24,26,40,0.08);
 }
 
@@ -2756,7 +2771,7 @@ display: none;
   padding: 34px 38px 30px;
 }
 .timeline-headline {
-  max-width: 14ch;
+  max-width: 20ch;
   font-size: clamp(30px, 4.2vw, 52px);
   font-weight: 750;
   letter-spacing: 0;
@@ -2825,12 +2840,12 @@ display: none;
   box-shadow: 0 0 0 7px rgba(255,255,255,0.94), 0 0 30px var(--story-accent, rgba(59,130,246,0.35));
 }
 .timeline-entry.active .timeline-entry-card {
-  border-color: rgba(59,130,246,0.22);
+  border-color: var(--story-accent-border, rgba(59,130,246,0.22));
   background: rgba(255,255,255,0.78);
   box-shadow: 0 18px 48px rgba(24,26,40,0.075);
 }
 .timeline-entry.active .timeline-entry-node {
-  box-shadow: 0 0 0 9px rgba(255,255,255,0.98), 0 0 0 11px rgba(59,130,246,0.08), 0 0 20px var(--story-accent, rgba(59,130,246,0.24));
+  box-shadow: 0 0 0 9px rgba(255,255,255,0.98), 0 0 0 11px var(--story-accent-ring, rgba(59,130,246,0.08)), 0 0 20px var(--story-accent-glow, rgba(59,130,246,0.24));
 }
 .map-wrap {
   background: transparent;
@@ -2868,17 +2883,10 @@ display: none;
   stroke-width: 1.6;
 }
 .badge {
-  border: 1px solid currentColor;
-  border-color: rgba(24,26,40,0.06);
+  border: 1px solid var(--theme-border, rgba(24,26,40,0.08));
   border-radius: 999px;
   font-weight: 500;
 }
-.badge.politics { background: var(--blueBg); color: var(--blue); }
-.badge.conflict { background: var(--redBg); color: var(--red); }
-.badge.climate { background: var(--greenBg); color: var(--green); }
-.badge.politics { border-color: rgba(59,130,246,0.18); }
-.badge.conflict { border-color: rgba(239,68,68,0.18); }
-.badge.climate { border-color: rgba(34,197,94,0.18); }
 .timeline-entry-card:focus-visible,
 .timeline-entry-spine:focus-visible,
 .timeline-scale-btn:focus-visible,
@@ -3094,9 +3102,20 @@ display: none;
   font-size: 18px;
   box-shadow: 0 9px 22px rgba(24,26,40,0.10);
 }
-.tc.politics .tc-arrow { background: var(--blue); box-shadow: 0 10px 22px rgba(59,130,246,0.26); }
-.tc.conflict .tc-arrow { background: var(--red); box-shadow: 0 10px 22px rgba(239,68,68,0.22); }
-.tc.climate .tc-arrow { background: var(--green); box-shadow: 0 10px 22px rgba(34,197,94,0.22); }
+.tc[data-topic-theme] .tc-top-bar {
+  background: var(--topic-theme-color, var(--accent));
+}
+.tc[data-topic-theme]::before,
+.tc[data-topic-theme] .tc-orb {
+  background: radial-gradient(circle at center, var(--topic-theme-color, var(--accent)) 0%, transparent 70%);
+}
+.tc[data-topic-theme] .tc-arrow {
+  background: var(--topic-theme-color, var(--accent));
+  box-shadow: 0 10px 22px var(--topic-theme-shadow, rgba(24,26,40,0.16));
+}
+.tc[data-topic-theme]:hover {
+  border-color: var(--topic-theme-border, rgba(249,115,22,0.22));
+}
 .tc:hover .tc-arrow {
   transform: translateX(4px);
 }
@@ -4450,10 +4469,16 @@ display: none;
 #explore .story-info-box,
 #explore .editorial-article,
 #explore .article-item {
-  border-color: rgba(24,26,40,0.07);
+  border-color: var(--article-outline);
   border-radius: 10px;
   background: #FFFFFF;
   box-shadow: none;
+}
+#explore .editorial-article[href]:hover,
+#explore .editorial-article[href]:focus-visible,
+#explore .article-item[href]:hover,
+#explore .article-item[href]:focus-visible {
+  border-color: rgba(24,26,40,0.12);
 }
 #explore .sb-highlight-box {
   margin: 30px 0 28px;
@@ -4512,6 +4537,10 @@ display: none;
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--theme-bg, rgba(24,26,40,0.06));
+  border: 1px solid var(--theme-border, rgba(24,26,40,0.08));
 }
 #explore .editorial-article-theme-dot,
 #explore .art-theme-dot {
@@ -4520,6 +4549,7 @@ display: none;
   border-radius: 999px;
   background: var(--theme-color);
   flex: 0 0 6px;
+  box-shadow: 0 0 0 4px var(--theme-soft, rgba(24,26,40,0.08));
 }
 #explore .editorial-article-title,
 #explore .art-title {
@@ -4594,10 +4624,10 @@ display: none;
     <div class="topic-row">
 
       <!-- POLITICS -->
-      <div class="tc politics" onclick="openTopic('politics')">
+      <div class="tc politics" data-topic-theme="politics" onclick="openTopic('politics')">
         <div class="tc-top-bar"></div>
-        <div class="badge politics" style="margin-bottom:10px">
-          <div class="badge-shape" style="border-radius:50%;background:var(--blue)"></div>
+        <div class="badge politics" data-theme-key="politics" data-shape="circle" style="margin-bottom:10px">
+          <div class="badge-shape"></div>
           POLITICS
         </div>
         <div class="tc-name">US Politics</div>
@@ -4609,10 +4639,10 @@ display: none;
       </div>
 
       <!-- CONFLICT -->
-      <div class="tc conflict" onclick="openTopic('ukraine')">
+      <div class="tc conflict" data-topic-theme="conflict" onclick="openTopic('ukraine')">
         <div class="tc-top-bar"></div>
-        <div class="badge conflict" style="margin-bottom:10px">
-          <div class="badge-shape sq" style="background:var(--red)"></div>
+        <div class="badge conflict" data-theme-key="conflict" data-shape="circle" style="margin-bottom:10px">
+          <div class="badge-shape"></div>
           CONFLICT
         </div>
         <div class="tc-name">Ukraine Conflict</div>
@@ -4624,10 +4654,10 @@ display: none;
       </div>
 
       <!-- CLIMATE -->
-      <div class="tc climate" onclick="openTopic('climate')">
+      <div class="tc climate" data-topic-theme="climate" onclick="openTopic('climate')">
         <div class="tc-top-bar"></div>
-        <div class="badge climate" style="margin-bottom:10px">
-          <div class="badge-shape tr" style="background:var(--green)"></div>
+        <div class="badge climate" data-theme-key="climate" data-shape="circle" style="margin-bottom:10px">
+          <div class="badge-shape"></div>
           CLIMATE
         </div>
         <div class="tc-name">Climate</div>
@@ -4724,39 +4754,6 @@ display: none;
 /* ══════════════════════
    CATEGORY COLOR SYSTEM
 ══════════════════════ */
-const CATEGORIES = {
-  people:       { label:'People',        color:'#8B5CF6', bg:'rgba(139,92,246,0.1)'  },
-  international:{ label:'International', color:'#38BDF8', bg:'rgba(56,189,248,0.1)'  },
-  climate:      { label:'Climate',       color:'#22C55E', bg:'rgba(34,197,94,0.1)'   },
-  politics:     { label:'Politics',      color:'#3B82F6', bg:'rgba(59,130,246,0.1)'  },
-  welfare:      { label:'Welfare',       color:'#EAB308', bg:'rgba(234,179,8,0.1)'   },
-  domestic:     { label:'Domestic',      color:'#EC4899', bg:'rgba(236,72,153,0.1)'  },
-  conflict:     { label:'Conflict',      color:'#EF4444', bg:'rgba(239,68,68,0.1)'   },
-  economy:      { label:'Economy',       color:'#6B7280', bg:'rgba(107,114,128,0.1)' },
-};
-
-const CATEGORY_KEYWORDS = {
-  people:       ['person','people','leader','president','minister','senator','candidate','official','celebrity','activist','who','biography'],
-  international:['international','global','foreign','nato','united nations','treaty','alliance','diplomatic','embassy','bilateral','geopolitic'],
-  climate:      ['climate','emission','carbon','fossil','renewable','solar','wind','flood','drought','wildfire','ocean','reef','biodiversity','cop','temperature','hurricane','storm'],
-  conflict:     ['war','conflict','battle','frontline','military','weapon','missile','attack','invasion','troops','ceasefire','bomb','soldier','fighting','casualties','siege','offensive'],
-  welfare:      ['welfare','health','hospital','social','poverty','housing','homeless','education','school','pension','benefit','inequality','disability','mental health','care'],
-  economy:      ['economy','economic','inflation','gdp','market','trade','stock','bank','finance','debt','budget','tax','recession','unemployment','jobs','growth','investment'],
-  domestic:     ['domestic','local','national','internal','state','county','city','municipal','regional','community'],
-  politics:     ['election','vote','congress','parliament','senate','policy','legislation','bill','democrat','republican','party','government','white house','cabinet','supreme court','law'],
-};
-
-function categorize(text) {
-  if (!text) return 'politics';
-  const lower = text.toLowerCase();
-  let best = 'politics', bestScore = 0;
-  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
-    const score = keywords.filter(k => lower.includes(k)).length;
-    if (score > bestScore) { bestScore = score; best = cat; }
-  }
-  return best;
-}
-
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
   const g = parseInt(hex.slice(3,5),16);
@@ -4778,28 +4775,246 @@ function blendColors(hex1, hex2, t=0.5) {
   return `rgb(${r},${g},${b})`;
 }
 
-function getCat(node) {
-  return node.category || categorize(node.label);
+const themeColors = {
+  conflict: "#E84855",        // Konflikt - red/pink
+  politics: "#2563EB",        // Politik - blue
+  people: "#7C3AED",          // Personer - purple
+  international: "#22D3EE",   // Utrikes - cyan
+  nature_climate: "#22C55E",  // Natur/klimat - green
+  welfare: "#EAB308",         // Välfärd - yellow
+  domestic: "#DB2777",        // Inrikes - magenta
+  economy: "#374151"          // Ekonomi - dark grey
+};
+
+const MAIN_CLUSTER_SHAPE = 'circle';
+
+const THEME_SHAPES = {
+  conflict: 'circle',
+  politics: 'circle',
+  people: 'circle',
+  international: 'circle',
+  nature_climate: 'circle',
+  welfare: 'circle',
+  domestic: 'circle',
+  economy: 'circle'
+};
+
+const CATEGORY_META = {
+  people: {
+    label: 'People',
+    themeColorKey: 'people',
+    keywords: ['person','people','leader','president','minister','senator','candidate','official','celebrity','activist','who','biography']
+  },
+  international: {
+    label: 'International',
+    themeColorKey: 'international',
+    keywords: ['international','global','foreign','nato','united nations','treaty','alliance','diplomatic','embassy','bilateral','geopolitic']
+  },
+  climate: {
+    label: 'Nature/Climate',
+    themeColorKey: 'nature_climate',
+    keywords: ['climate','emission','carbon','fossil','renewable','solar','wind','flood','drought','wildfire','ocean','reef','biodiversity','cop','temperature','hurricane','storm']
+  },
+  politics: {
+    label: 'Politics',
+    themeColorKey: 'politics',
+    keywords: ['election','vote','congress','parliament','senate','policy','legislation','bill','democrat','republican','party','government','white house','cabinet','supreme court','law']
+  },
+  welfare: {
+    label: 'Welfare',
+    themeColorKey: 'welfare',
+    keywords: ['welfare','health','hospital','social','poverty','housing','homeless','education','school','pension','benefit','inequality','disability','mental health','care']
+  },
+  domestic: {
+    label: 'Domestic',
+    themeColorKey: 'domestic',
+    keywords: ['domestic','local','national','internal','state','county','city','municipal','regional','community']
+  },
+  conflict: {
+    label: 'Conflict',
+    themeColorKey: 'conflict',
+    keywords: ['war','conflict','battle','frontline','military','weapon','missile','attack','invasion','troops','ceasefire','bomb','soldier','fighting','casualties','siege','offensive']
+  },
+  economy: {
+    label: 'Economy',
+    themeColorKey: 'economy',
+    keywords: ['economy','economic','inflation','gdp','market','trade','stock','bank','finance','debt','budget','tax','recession','unemployment','jobs','growth','investment']
+  }
+};
+
+const CATEGORY_ALIASES = {
+  conflict: 'conflict',
+  ukraine: 'conflict',
+  konflikt: 'conflict',
+  politics: 'politics',
+  politik: 'politics',
+  people: 'people',
+  person: 'people',
+  persons: 'people',
+  personer: 'people',
+  international: 'international',
+  development: 'international',
+  utrikes: 'international',
+  climate: 'climate',
+  nature: 'climate',
+  nature_climate: 'climate',
+  natureclimate: 'climate',
+  natur: 'climate',
+  naturklimat: 'climate',
+  welfare: 'welfare',
+  welfarestate: 'welfare',
+  world: 'international',
+  global: 'international',
+  valfard: 'welfare',
+  domestic: 'domestic',
+  inrikes: 'domestic',
+  economy: 'economy',
+  ekonomi: 'economy'
+};
+
+const CATEGORY_KEYWORDS = Object.fromEntries(
+  Object.entries(CATEGORY_META).map(([key, meta]) => [key, meta.keywords])
+);
+
+function normalizeLookupKey(value = '') {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '');
 }
-function getCatColor(cat) { return (CATEGORIES[cat]||CATEGORIES.politics).color; }
-function getCatBg(cat)    { return (CATEGORIES[cat]||CATEGORIES.politics).bg; }
-function getCatLabel(cat) { return (CATEGORIES[cat]||CATEGORIES.politics).label; }
+
+function resolveThemeValue(...values) {
+  for (const value of values) {
+    if (!value) continue;
+    const resolved = resolveCategoryKey(value);
+    if (resolved) return resolved;
+  }
+  return 'politics';
+}
+
+function resolveCategoryKey(categoryKey = '') {
+  if (CATEGORY_META[categoryKey]) return categoryKey;
+  const normalized = normalizeLookupKey(categoryKey);
+  return CATEGORY_ALIASES[normalized] || 'politics';
+}
+
+function categorize(text) {
+  if (!text) return 'politics';
+  const lower = text.toLowerCase();
+  let best = 'politics';
+  let bestScore = 0;
+  for (const [cat, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    const score = keywords.filter(keyword => lower.includes(keyword)).length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = cat;
+    }
+  }
+  return best;
+}
+
+function getThemeToken(categoryKey = 'politics', overrides = {}) {
+  const resolvedCategory = resolveCategoryKey(categoryKey);
+  const meta = CATEGORY_META[resolvedCategory] || CATEGORY_META.politics;
+  const colorKey = meta.themeColorKey || 'politics';
+  const color = themeColors[colorKey] || themeColors.politics;
+
+  return {
+    key: resolvedCategory,
+    colorKey,
+    label: overrides.label || meta.label,
+    color,
+    bg: rgbaFromHex(color, 0.12),
+    border: rgbaFromHex(color, 0.22),
+    glow: rgbaFromHex(color, 0.26),
+    soft: rgbaFromHex(color, 0.08),
+    ring: rgbaFromHex(color, 0.1),
+    stroke: blendColors(color, '#0F172A', 0.2),
+    highlight: blendColors(color, '#FFFFFF', 0.34),
+    shape: overrides.shape || THEME_SHAPES[colorKey] || 'circle'
+  };
+}
+
+function getThemeInlineVars(theme = {}) {
+  return `--theme-color:${theme.color};--theme-bg:${theme.bg};--theme-border:${theme.border};--theme-soft:${theme.soft};`;
+}
+
+function getAccentInlineVars(theme = {}) {
+  return `${getThemeInlineVars(theme)}--story-accent:${theme.color};--story-accent-soft:${theme.bg};--story-accent-border:${theme.border};--story-accent-ring:${theme.ring};--story-accent-glow:${theme.glow};`;
+}
+
+function getShapeStyle(shape, color) {
+  if (shape === 'square') {
+    return `border-radius:1px;background:${color}`;
+  }
+  if (shape === 'triangle') {
+    return `clip-path:polygon(50% 0%,0% 100%,100% 100%);border-radius:0;background:${color}`;
+  }
+  return `border-radius:50%;background:${color}`;
+}
+
+function getCat(node) {
+  return resolveThemeValue(node.theme, node.category, categorize(node.label));
+}
+function getCatTheme(cat) { return getThemeToken(cat); }
+function getCatColor(cat) { return getCatTheme(cat).color; }
+function getCatBg(cat)    { return getCatTheme(cat).bg; }
+function getCatLabel(cat) { return getCatTheme(cat).label; }
+function getNodeTheme(node = {}) {
+  return getThemeToken(getCat(node), {
+    shape: node.tier === 'main' ? MAIN_CLUSTER_SHAPE : undefined
+  });
+}
 
 
-function getArticleCategory(article = {}) {
+function inferPeopleCategory(article = {}) {
+  const title = cleanText(article.title || '');
+  if (!title) return '';
+
+  const peopleLeadPattern = /^([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})\s+(wins|win|says|said|joins|joined|leads|led|beats|beat|becomes|became|dies|died|faces|faced|accused|claims|claimed|defeats|defeated|returns|returned|launches|launched|reveals|revealed|opens|opened|takes|took)\b/;
+  if (peopleLeadPattern.test(title)) return 'people';
+
+  const properNameCount = (title.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b/g) || []).length;
+  if (properNameCount > 0 && !/\b(country|state|government|congress|court|senate|economy|climate|war)\b/i.test(title)) {
+    return 'people';
+  }
+
+  return '';
+}
+
+function inferArticleCategory(article = {}) {
+  const peopleCategory = inferPeopleCategory(article);
+  if (peopleCategory) return peopleCategory;
+
   return categorize(`${article.title || ''} ${article.description || ''} ${getArticleSourceName(article)}`);
 }
-function buildArticleThemeLabel(article = {}, className = 'article-theme') {
-  const cat = getArticleCategory(article);
-  const color = getCatColor(cat);
-  return `<span class="${className}" style="--theme-color:${color};color:${color};"><span class="${className}-dot"></span>${escapeHtml(getCatLabel(cat))}</span>`;
+
+function getArticleCategory(article = {}, fallbackTheme = '') {
+  return resolveThemeValue(
+    article.theme,
+    article.themeKey,
+    article.category,
+    inferArticleCategory(article),
+    fallbackTheme
+  );
+}
+function buildArticleThemeLabel(article = {}, className = 'article-theme', themeOverride = '') {
+  const theme = getThemeToken(getArticleCategory(article, themeOverride));
+  return `<span class="${className}" style="${getThemeInlineVars(theme)}color:${theme.color};"><span class="${className}-dot"></span>${escapeHtml(theme.label)}</span>`;
+}
+
+function getArticleTheme(article = {}, themeOverride = '') {
+  return getThemeToken(getArticleCategory(article, themeOverride));
 }
 
 
 const THEMES = {
- politics: { color:'#3B82F6', light:'#93C5FD', bg:'rgba(59,130,246,0.10)', shape:'circle', label:'Politics', type:'politics' },
-  ukraine:  { color:'#EF4444', light:'#FCA5A5', bg:'rgba(239,68,68,0.10)', shape:'square', label:'Conflict', type:'conflict' },
-  climate:  { color:'#22C55E', light:'#86EFAC', bg:'rgba(34,197,94,0.10)', shape:'triangle', label:'Climate', type:'climate' },
+  politics: { ...getThemeToken('politics', { label: 'Politics', shape: MAIN_CLUSTER_SHAPE }), type: 'politics' },
+  ukraine:  { ...getThemeToken('conflict', { label: 'Conflict', shape: MAIN_CLUSTER_SHAPE }), type: 'conflict' },
+  climate:  { ...getThemeToken('climate', { label: 'Climate', shape: MAIN_CLUSTER_SHAPE }), type: 'climate' },
 }; 
 const RELATION_STYLES = {
    core:          { alpha: 0.28, width: 1.25, dash: [] },
@@ -4810,106 +5025,37 @@ const RELATION_STYLES = {
   solution:      { alpha: 0.22, width: 1.05, dash: [] },
   territory:     { alpha: 0.18, width: 0.95, dash: [] }
 };
-const NODE_COLOR_STYLES = {
-  politics: {
- core:  { fill: '#3B82F6', stroke: '#2563EB', label: '#181A28' },
-    inst:  { fill: '#60A5FA', stroke: '#3B82F6', label: '#181A28' },
-    actor: { fill: '#93C5FD', stroke: '#60A5FA', label: '#181A28' },
-    ctx:   { fill: '#BFDBFE', stroke: '#93C5FD', label: '#181A28' },
-    impact:{ fill: '#DBEAFE', stroke: '#BFDBFE', label: '#181A28' },
-    policy:{ fill: '#FDBA74', stroke: '#F97316', label: '#181A28' }
-  },
-
-  ukraine: {
- core:  { fill: '#EF4444', stroke: '#DC2626', label: '#181A28' },
-    inst:  { fill: '#F87171', stroke: '#EF4444', label: '#181A28' },
-    actor: { fill: '#FCA5A5', stroke: '#F87171', label: '#181A28' },
-    ctx:   { fill: '#FECACA', stroke: '#FCA5A5', label: '#181A28' },
-    impact:{ fill: '#FEE2E2', stroke: '#FECACA', label: '#181A28' },
-    policy:{ fill: '#FDBA74', stroke: '#F97316', label: '#181A28' },
-    territory:{ fill: '#FCA5A5', stroke: '#F87171', label: '#181A28' }
-  },
-
-  climate: {
-  core:   { fill: '#22C55E', stroke: '#16A34A', label: '#181A28' },
-    inst:   { fill: '#4ADE80', stroke: '#22C55E', label: '#181A28' },
-    soln:   { fill: '#86EFAC', stroke: '#4ADE80', label: '#181A28' },
-    impact: { fill: '#BBF7D0', stroke: '#86EFAC', label: '#181A28' },
-    policy: { fill: '#FDBA74', stroke: '#F97316', label: '#181A28' },
-    ctx:    { fill: '#DCFCE7', stroke: '#BBF7D0', label: '#181A28' }
-  }
-};
-/* Icons as SVG path data for canvas drawing */
-const ICONS = {
-  politics: (ctx, x, y, s) => {
-    // Capitol building silhouette
-    ctx.beginPath();
-    ctx.rect(x-s*.4, y-s*.1, s*.8, s*.5);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(x, y-s*.6); ctx.lineTo(x+s*.5, y-s*.1); ctx.lineTo(x-s*.5, y-s*.1);
-    ctx.fill();
-  },
-  ukraine: (ctx, x, y, s) => {
-    // Star burst / explosion
-    const pts = 8;
-    ctx.beginPath();
-    for (let i=0;i<pts*2;i++) {
-      const angle = (i*Math.PI)/pts - Math.PI/2;
-      const r = i%2===0 ? s*.5 : s*.22;
-      const px = x+r*Math.cos(angle), py = y+r*Math.sin(angle);
-      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
-    }
-    ctx.closePath(); ctx.fill();
-  },
-  climate: (ctx, x, y, s) => {
-    // Globe + wave
-    ctx.beginPath();
-    ctx.arc(x, y-s*.1, s*.38, 0, Math.PI*2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x-s*.5, y+s*.3);
-    for(let i=0;i<=1;i+=0.1) {
-      ctx.lineTo(x-s*.5+i*s, y+s*.3+Math.sin(i*Math.PI*2)*s*.1);
-    }
-    ctx.stroke();
-  }
-};
-
-/* Shape drawing functions for canvas */
-function drawShape(ctx, shape, x, y, size) {
-  ctx.beginPath();
-  if (shape === 'circle') {
-    ctx.arc(x, y, size, 0, Math.PI*2);
-  } else if (shape === 'square') {
-    ctx.rect(x-size, y-size, size*2, size*2);
-  } else if (shape === 'triangle') {
-    ctx.moveTo(x, y-size*1.1);
-    ctx.lineTo(x-size, y+size*.8);
-    ctx.lineTo(x+size, y+size*.8);
-    ctx.closePath();
-  }
-}
-
 /* Badge HTML generator */
 function badgeHTML(topicKey) {
   const t = THEMES[topicKey];
-  const shapeStyle = t.shape === 'circle'
-    ? `border-radius:50%;background:${t.color}`
-    : t.shape === 'square'
-    ? `border-radius:1px;background:${t.color}`
-    : `clip-path:polygon(50% 0%,0% 100%,100% 100%);background:${t.color}`;
-  return `<span class="badge ${t.type}" style="background:${t.bg};color:${t.color}"><span class="badge-shape" style="${shapeStyle}"></span>${t.label}</span>`;
+  return `<span class="badge" data-shape="${t.shape}" style="${getThemeInlineVars(t)}color:${t.color};"><span class="badge-shape" style="${getShapeStyle(t.shape, t.color)}"></span>${t.label}</span>`;
 }
 
 function sidebarTopicMarkHTML(topicKey) {
   const t = THEMES[topicKey];
-  const shapeStyle = t.shape === 'circle'
-    ? `border-radius:50%;background:${t.color}`
-    : t.shape === 'square'
-    ? `border-radius:1px;background:${t.color}`
-    : `clip-path:polygon(50% 0%,0% 100%,100% 100%);background:${t.color}`;
-  return `<span class="sb-topic-mark" style="background:${t.bg};color:${t.color}" aria-hidden="true"><span class="badge-shape" style="${shapeStyle}"></span></span>`;
+  return `<span class="sb-topic-mark" style="${getThemeInlineVars(t)}background:${t.bg};color:${t.color}" aria-hidden="true"><span class="badge-shape" style="${getShapeStyle(t.shape, t.color)}"></span></span>`;
+}
+
+function hydrateStaticThemeElements() {
+  document.querySelectorAll('.badge[data-theme-key]').forEach(badgeEl => {
+    const theme = getThemeToken(badgeEl.dataset.themeKey || 'politics');
+    badgeEl.style.setProperty('--theme-color', theme.color);
+    badgeEl.style.setProperty('--theme-bg', theme.bg);
+    badgeEl.style.setProperty('--theme-border', theme.border);
+    badgeEl.style.color = theme.color;
+    badgeEl.dataset.shape = badgeEl.dataset.shape || theme.shape;
+    const shapeEl = badgeEl.querySelector('.badge-shape');
+    if (shapeEl) {
+      shapeEl.setAttribute('style', getShapeStyle(badgeEl.dataset.shape, theme.color));
+    }
+  });
+
+  document.querySelectorAll('.tc[data-topic-theme]').forEach(cardEl => {
+    const theme = getThemeToken(cardEl.dataset.topicTheme || 'politics');
+    cardEl.style.setProperty('--topic-theme-color', theme.color);
+    cardEl.style.setProperty('--topic-theme-shadow', rgbaFromHex(theme.color, 0.24));
+    cardEl.style.setProperty('--topic-theme-border', theme.border);
+  });
 }
 
 function toUiKey(text = '') {
@@ -5207,7 +5353,7 @@ function openTopic(key) {
   document.getElementById('timeline-wrap').classList.remove('on');
   setCanvasHint('Click a node to focus the sidebar', true);
 
-updateScrubShape(key, theme.color);
+updateScrubShape(theme.shape, theme.color);
 
 // clear old visuals first
 const canvas = document.getElementById('gc');
@@ -5385,23 +5531,48 @@ function renderSidebarDefault(topic) {
   s.innerHTML='<p class="sb-empty">Click any node to load recent coverage and context for that perspective.</p>';
   const row=document.createElement('div'); row.className='chip-row';
   topic.nodes.filter(n => n.tier !== 'main').slice(0,6).forEach(n=>{
-    const c=document.createElement('div'); c.className='chip'; c.textContent=n.label;
+    const nodeTheme = getNodeTheme(n);
+    const c=document.createElement('div');
+    c.className='chip';
+    c.textContent=n.label;
+    c.style.background = nodeTheme.bg;
+    c.style.borderColor = nodeTheme.border;
+    c.style.color = nodeTheme.color;
     c.onclick=()=>selectNode(n.id); row.appendChild(c);
   });
   s.appendChild(row);
 }
 
-function updateScrubShape(key, color) {
+function updateScrubShape(shape, color) {
   const circ=document.getElementById('tl-scrub-circ');
   const rect=document.getElementById('tl-scrub-rect');
   const tri=document.getElementById('tl-scrub-tri');
   const prog=document.getElementById('tl-prog');
   if (!circ || !rect || !tri || !prog) return;
   [circ,rect,tri].forEach(el=>{el.setAttribute('display','none');el.setAttribute('fill',color);});
-  if (key==='politics') circ.setAttribute('display','block');
-  else if (key==='ukraine') rect.setAttribute('display','block');
-  else tri.setAttribute('display','block');
+  if (shape === 'square') rect.setAttribute('display','block');
+  else if (shape === 'triangle') tri.setAttribute('display','block');
+  else circ.setAttribute('display','block');
   prog.setAttribute('stroke',color);
+}
+
+function traceGraphNodeShape(ctx, x, y, radius, shape = 'circle') {
+  if (shape === 'square') {
+    const half = radius * 0.92;
+    ctx.beginPath();
+    ctx.rect(x - half, y - half, half * 2, half * 2);
+    return;
+  }
+  if (shape === 'triangle') {
+    ctx.beginPath();
+    ctx.moveTo(x, y - radius * 1.08);
+    ctx.lineTo(x - radius * 0.98, y + radius * 0.78);
+    ctx.lineTo(x + radius * 0.98, y + radius * 0.78);
+    ctx.closePath();
+    return;
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
 }
 
 /* ══════════════════════
@@ -5500,8 +5671,8 @@ function loop(key) {
     const style = RELATION_STYLES[edge.rel] || RELATION_STYLES.context;
     const al = Math.min(na.alpha, nb.alpha) * style.alpha;
 
-    const colorA = na.tier === 'main' ? theme.color : getCatColor(getCat(na));
-    const colorB = nb.tier === 'main' ? theme.color : getCatColor(getCat(nb));
+    const colorA = getNodeTheme(na).color;
+    const colorB = getNodeTheme(nb).color;
 
     const mixed = blendColors(colorA, colorB, 0.52);
 
@@ -5526,9 +5697,11 @@ ctx.shadowBlur = 0;
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
 
-    const nodeCat = getCat(n);
-    const nodeFill  = n.tier === 'main' ? theme.color : getCatColor(nodeCat);
+    const nodeTheme = getNodeTheme(n);
+    const nodeFill  = nodeTheme.color;
+    const nodeStroke = nodeTheme.stroke;
     const nodeLabel = n.tier === 'main' ? '#FDFCFA' : '#FDFCFA';
+    const nodeShape = nodeTheme.shape || 'circle';
 
     ctx.save();
 
@@ -5560,12 +5733,11 @@ ctx.shadowBlur = 0;
     }
     if (n.tier === 'main') {
       ctx.save();
-      ctx.globalAlpha = n.alpha * 0.18;
-      ctx.fillStyle = rgbaFromHex(nodeFill, 0.20);
-      ctx.shadowColor = rgbaFromHex(nodeFill, 0.38);
-      ctx.shadowBlur = 30;
-      ctx.beginPath();
-      ctx.arc(n.px, n.py, r + 22, 0, Math.PI * 2);
+      ctx.globalAlpha = n.alpha * 0.22;
+      ctx.fillStyle = rgbaFromHex(nodeFill, 0.22);
+      ctx.shadowColor = rgbaFromHex(nodeFill, 0.42);
+      ctx.shadowBlur = 34;
+      traceGraphNodeShape(ctx, n.px, n.py, r + 22, nodeShape);
       ctx.fill();
       ctx.restore();
     }
@@ -5574,8 +5746,7 @@ ctx.shadowBlur = 0;
     if(sel || hov){
       ctx.save();
       ctx.globalAlpha = n.alpha * (sel ? 0.18 : 0.1);
-       ctx.beginPath();
-      ctx.arc(n.px, n.py, r + (sel ? 19 : 10), 0, Math.PI * 2);
+      traceGraphNodeShape(ctx, n.px, n.py, r + (sel ? 19 : 10), nodeShape);
       ctx.fillStyle = nodeFill;
       ctx.fill();
       ctx.restore();
@@ -5587,28 +5758,19 @@ ctx.shadowBlur = 0;
     grad.addColorStop(0.72, nodeFill);
     grad.addColorStop(1, blendColors(nodeFill, '#0F172A', n.tier === 'main' ? 0.12 : 0.05));
     ctx.fillStyle = grad;
-ctx.strokeStyle = n.tier === 'main'
-      ? 'rgba(255,255,255,0.88)'
-      : sel ? rgbaFromHex(theme.light, 0.96) : hov ? rgbaFromHex(nodeFill, 0.80) : 'rgba(255,255,255,0.88)';
-    ctx.lineWidth = n.tier === 'main' ? 2.2 : sel ? 2.4 : 1.4;
-    ctx.shadowColor = n.tier === 'main' ? rgbaFromHex(nodeFill, 0.28) : 'rgba(24,26,40,0.12)';
+    ctx.shadowColor = n.tier === 'main' ? rgbaFromHex(nodeFill, 0.28) : nodeTheme.glow;
     ctx.shadowBlur = n.tier === 'main' ? 26 : 11;
-    ctx.beginPath();
-    ctx.arc(n.px, n.py, r, 0, Math.PI * 2);
+    traceGraphNodeShape(ctx, n.px, n.py, r, nodeShape);
     ctx.fill();
-    ctx.stroke();
     ctx.shadowBlur = 0;
+    ctx.lineWidth = n.tier === 'main' ? 2.4 : 1.4;
+    ctx.strokeStyle = n.tier === 'main' ? rgbaFromHex(nodeFill, 0.55) : nodeStroke;
+    ctx.stroke();
 
-    // Icon inside core nodes
-    if(n.tier === 'core' && n.scale > 0.7){
-      ctx.save();
-      ctx.fillStyle   = 'rgba(255,255,255,0.7)';
-      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-      ctx.lineWidth   = 1.2;
-      ctx.globalAlpha = n.alpha * 0.8;
-      const iconFn = ICONS[currentTopic];
-      if(iconFn) iconFn(ctx, n.px, n.py, r*0.55);
-      ctx.restore();
+    if (n.tier !== 'main') {
+      traceGraphNodeShape(ctx, n.px, n.py, Math.max(5, r * 0.34), nodeShape);
+      ctx.fillStyle = rgbaFromHex(nodeFill, 0.26);
+      ctx.fill();
     }
 
     // Label
@@ -5618,7 +5780,7 @@ ctx.strokeStyle = n.tier === 'main'
 
     if(n.tier === 'main'){
       ctx.textBaseline = 'middle';
-      ctx.font = "700 16px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+      ctx.font = "600 16px 'Helvetica Neue', Helvetica, Arial, sans-serif";
       const words = n.label.split(' ');
       if(words.length > 1){
         ctx.fillText(words[0], n.px, n.py - 8);
@@ -5628,7 +5790,7 @@ ctx.strokeStyle = n.tier === 'main'
       }
     } else {
       ctx.textBaseline = 'alphabetic';
-      ctx.font = `${n.tier==='core'?600:500} 12px 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+      ctx.font = "600 12px 'Helvetica Neue', Helvetica, Arial, sans-serif";
       ctx.fillStyle = '#1A1814';
       const labelY = n.py + r + 17;
       ctx.fillText(n.label, n.px, labelY);
@@ -5679,7 +5841,7 @@ function renderSidebarTimeline(topicKey, events) {
 
   wrap.innerHTML = events.map(ev => `
     <button class="sb-tl-item ${ev.active ? 'active' : ''}" onclick="selectTimelineEvent('${topicKey}', '${ev.id}')">
-      <span class="sb-tl-date">${ev.dateLabel || 'Now'}</span>
+      <span class="sb-tl-date">${escapeHtml(getTimelineEventDisplayDate(ev, { includeYear: false }))}</span>
       <span class="sb-tl-rail">
         <span class="sb-tl-dot ${ev.importance === 'high' ? 'hi' : ''}" style="background:${THEMES[topicKey].color}"></span>
       </span>
@@ -5704,6 +5866,37 @@ function setTimelineActiveEvent(topicKey, eventId) {
 
   activeTimelineEventId = eventId;
   return getCurrentTimelineEvents(topicKey);
+}
+
+function syncTimelineEventDateFromArticles(topicKey, eventId, articles = []) {
+  const data = timelineEventCache[topicKey];
+  if (!data || !eventId) return false;
+
+  const featuredArticle = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles))[0];
+  const syncedDateLabel = formatPublishedDate(featuredArticle);
+  const syncedPublishedAt = cleanText(featuredArticle?.publishedAt || '');
+  if (!syncedDateLabel || !syncedPublishedAt) return false;
+
+  let didChange = false;
+
+  ['overviewEvents', 'detailEvents'].forEach(groupName => {
+    const events = data[groupName] || [];
+    const nextEvents = events.map(event => {
+      if (event.id !== eventId) return event;
+      if (event.dateLabel === syncedDateLabel && event.publishedAt === syncedPublishedAt) return event;
+      didChange = true;
+      return {
+        ...event,
+        dateLabel: syncedDateLabel,
+        publishedAt: syncedPublishedAt,
+        date: syncedPublishedAt
+      };
+    });
+
+    data[groupName] = sortTimelineEventsByDate(nextEvents, 'desc');
+  });
+
+  return didChange;
 }
 
 function getTimelineEventDateValue(event = {}) {
@@ -5756,6 +5949,92 @@ function sortTimelineEventsByDate(events = [], direction = 'desc') {
     .map(item => item.event);
 }
 
+function getTimelineEventDisplayDate(event = {}, options = {}) {
+  const includeYear = options.includeYear !== false;
+  if (event.eventType === 'month') {
+    const monthLabel = cleanText(event.dateLabel || event.label || '');
+    const monthMatch = monthLabel.match(/^([a-z]{3,9})(?:\s+\d{4})?$/i);
+    if (monthMatch) {
+      return includeYear && /\d{4}/.test(monthLabel)
+        ? monthLabel
+        : monthMatch[1];
+    }
+  }
+
+  const directDate = event.publishedAt || event.date || event.toDate || event.fromDate;
+  const parsedDirectDate = directDate ? new Date(directDate) : null;
+  if (parsedDirectDate && !isNaN(parsedDirectDate)) {
+    return parsedDirectDate.toLocaleDateString('en-US', includeYear
+      ? { month: 'short', day: 'numeric', year: 'numeric' }
+      : { month: 'short', day: 'numeric' });
+  }
+
+  const rawLabel = cleanText(event.dateLabel || '');
+  if (!rawLabel) return includeYear ? 'Now' : 'Now';
+
+  const parsedLabelDate = new Date(rawLabel);
+  if (!isNaN(parsedLabelDate)) {
+    return parsedLabelDate.toLocaleDateString('en-US', includeYear
+      ? { month: 'short', day: 'numeric', year: 'numeric' }
+      : { month: 'short', day: 'numeric' });
+  }
+
+  const monthMatch = rawLabel.match(/^([a-z]{3,9})\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?$/i);
+  if (monthMatch) {
+    const monthIndex = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+      .indexOf(monthMatch[1].slice(0, 3).toLowerCase());
+    const year = monthMatch[3] ? Number(monthMatch[3]) : new Date().getFullYear();
+    const day = Number(monthMatch[2]);
+    if (monthIndex >= 0 && day >= 1 && day <= 31) {
+      return new Date(year, monthIndex, day).toLocaleDateString('en-US', includeYear
+        ? { month: 'short', day: 'numeric', year: 'numeric' }
+        : { month: 'short', day: 'numeric' });
+    }
+  }
+
+  return rawLabel;
+}
+
+function dedupeTimelineEvents(events = []) {
+  const byKey = new Map();
+
+  (events || []).forEach((event, index) => {
+    const labelKey = cleanText(event.label || '').toLowerCase();
+    const queryKey = cleanText(event.backgroundQuery || event.latestQuery || '').toLowerCase();
+    const key = labelKey || queryKey || cleanText(event.id || `event-${index}`).toLowerCase();
+    const existing = byKey.get(key);
+
+    if (!existing) {
+      byKey.set(key, { ...event, _originalIndex: index });
+      return;
+    }
+
+    const existingScore = getTimelineEventDateValue(existing) + (existing.importance === 'high' ? 1 : 0);
+    const nextScore = getTimelineEventDateValue(event) + (event.importance === 'high' ? 1 : 0);
+
+    if (nextScore > existingScore) {
+      byKey.set(key, {
+        ...existing,
+        ...event,
+        active: existing.active || event.active,
+        importance: existing.importance === 'high' || event.importance === 'high' ? 'high' : 'medium',
+        _originalIndex: Math.min(existing._originalIndex ?? index, index)
+      });
+      return;
+    }
+
+    byKey.set(key, {
+      ...existing,
+      active: existing.active || event.active,
+      importance: existing.importance === 'high' || event.importance === 'high' ? 'high' : 'medium'
+    });
+  });
+
+  return [...byKey.values()]
+    .sort((a, b) => (a._originalIndex ?? 0) - (b._originalIndex ?? 0))
+    .map(({ _originalIndex, ...event }) => event);
+}
+
 async function fetchTimelineEvents(topicKey, articles) {
   const cachedTimeline = timelineEventCache[topicKey];
   const hasCachedTimelineEvents =
@@ -5791,14 +6070,14 @@ async function fetchTimelineEvents(topicKey, articles) {
       return { error: data.error || 'Timeline request failed' };
     }
 
-    const normalizeEvents = (events = []) => events.map((event, index) => ({
+    const normalizeEvents = (events = []) => dedupeTimelineEvents(events.map((event, index) => ({
       ...event,
       id: event.id || `${topicKey}-event-${index + 1}`,
       dateLabel: event.dateLabel || 'Now',
       importance: event.importance === 'high' ? 'high' : 'medium',
       eventType: event.eventType || 'story',
       active: false
-    }));
+    })));
 
     timelineEventCache[topicKey] = {
       overviewEvents: sortTimelineEventsByDate(normalizeEvents(data.overviewEvents || data.events || []), 'desc'),
@@ -5828,6 +6107,24 @@ function getCurrentTimelineEvents(topicKey) {
   return sortTimelineEventsByDate(overviewEvents, 'desc');
 }
 
+function getPreferredTimelineEventId(topicKey) {
+  const visibleEvents = getCurrentTimelineEvents(topicKey);
+  if (!visibleEvents.length) return null;
+
+  if (timelineViewLevel === 'overview') {
+    const now = new Date();
+    const currentMonthId = `${topicKey}-month-${new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      1
+    )).toISOString().slice(0, 7)}`;
+    const currentMonthEvent = visibleEvents.find(ev => ev.id === currentMonthId);
+    if (currentMonthEvent) return currentMonthEvent.id;
+  }
+
+  return visibleEvents[0]?.id || null;
+}
+
 function getTimelineLevelLabel() {
   return timelineViewLevel === 'detail'
     ? 'Live happenings'
@@ -5840,7 +6137,7 @@ async function setTimelineViewLevel(level) {
 
   const visibleEvents = getCurrentTimelineEvents(currentTopic);
   if (!visibleEvents.some(ev => ev.id === activeTimelineEventId)) {
-    activeTimelineEventId = visibleEvents[0]?.id || null;
+    activeTimelineEventId = getPreferredTimelineEventId(currentTopic);
   }
 
   shouldRevealTimelineSelection = true;
@@ -5909,7 +6206,7 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
   const deck = event.whyItMatters || splitSummarySentences(summaryText)[0] || 'A key development inside this topic.';
 
   wrap.innerHTML = `
-    <div class="story-panel" style="--story-accent:${theme.color};">
+    <div class="story-panel" style="${getAccentInlineVars(theme)}">
       <div class="story-head" style="border-left-color:${theme.color};">
         <div class="story-deck">${escapeHtml(deck)}</div>
       </div>
@@ -5943,9 +6240,9 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
     </div>
   `;
 
-  renderEditorialCoverage('story-key-coverage', background.slice(0, 4), { limit: 4 });
+  renderEditorialCoverage('story-key-coverage', background.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (latest.length) {
-    renderEditorialCoverage('story-deeper-reading', latest.slice(0, 4), { featured: false, limit: 4 });
+    renderEditorialCoverage('story-deeper-reading', latest.slice(0, 4), { featured: false, limit: 4, themeKey: topicKey });
   }
   renderSourceLinks(
     'story-source-links',
@@ -6105,7 +6402,7 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
   const takeaway = `Monthly overview of the biggest shifts in ${topicName} during ${event.label || 'this month'}.`;
 
   wrap.innerHTML = `
-    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
+    <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -6138,9 +6435,9 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
     </div>
   `;
 
-  renderEditorialCoverage('story-key-coverage', monthly.slice(0, 4), { limit: 4 });
+  renderEditorialCoverage('story-key-coverage', monthly.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (monthly.length > 4) {
-    renderEditorialCoverage('story-deeper-reading', monthly.slice(4, 8), { featured: false, limit: 4 });
+    renderEditorialCoverage('story-deeper-reading', monthly.slice(4, 8), { featured: false, limit: 4, themeKey: topicKey });
   }
   renderSourceLinks(
     'story-source-links',
@@ -6231,19 +6528,31 @@ async function selectTimelineEvent(topicKey, eventId) {
     return;
   }
 
-  const overviewResponse = await fetchEventOverview(topicKey, event.label, backgroundArticles);
+  const normalizedBackgroundArticles = Array.isArray(backgroundArticles) ? backgroundArticles : [];
+  const normalizedLatestArticles = Array.isArray(latestArticles) ? latestArticles : [];
+  const didSyncTimelineDate = syncTimelineEventDateFromArticles(topicKey, event.id, normalizedBackgroundArticles);
+  if (didSyncTimelineDate) {
+    renderTimeline(TOPICS[topicKey], THEMES[topicKey]);
+  }
+
+  const syncedEvent = [
+    ...(timelineEventCache[topicKey]?.overviewEvents || []),
+    ...(timelineEventCache[topicKey]?.detailEvents || [])
+  ].find(ev => ev.id === event.id) || event;
+
+  const overviewResponse = await fetchEventOverview(topicKey, syncedEvent.label, normalizedBackgroundArticles);
   if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
 
   const overviewText = overviewResponse.error
-    ? `Coverage around ${event.label} is still evolving across several reports.`
+    ? `Coverage around ${syncedEvent.label} is still evolving across several reports.`
     : overviewResponse.overview;
 
   renderTimelineEventPanel(
     topicKey,
-    event,
+    syncedEvent,
     overviewText,
-    Array.isArray(backgroundArticles) ? backgroundArticles : [],
-    Array.isArray(latestArticles) ? latestArticles : []
+    normalizedBackgroundArticles,
+    normalizedLatestArticles
   );
   scrollSidebarToTop();
 
@@ -6261,7 +6570,7 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
   });
 
   document.getElementById('sb-scroll').innerHTML = `
-    <div class="sb-section" id="sb-overview-section" style="--story-accent:${THEMES[topicKey].color};">
+    <div class="sb-section" id="sb-overview-section" style="${getAccentInlineVars(THEMES[topicKey])}">
       <div class="sb-section-title">Topic briefing</div>
       <div class="sb-section-copy">${escapeHtml(options.overviewCopy || 'Loading the main overview and strongest recent reporting.')}</div>
       <div class="sb-main-summary" id="sb-main-summary">${escapeHtml(options.summaryText || 'Loading summary...')}</div>
@@ -6390,7 +6699,7 @@ function renderMapLocationPanel(topicKey, marker, articles) {
 
   wrap.classList.remove('sb-empty');
   wrap.innerHTML = `
-    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
+    <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
@@ -6423,9 +6732,9 @@ function renderMapLocationPanel(topicKey, marker, articles) {
     </div>
   `;
 
-  renderEditorialCoverage('map-key-coverage', coverage.slice(0, 4), { limit: 4 });
+  renderEditorialCoverage('map-key-coverage', coverage.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (coverage.length > 4) {
-    renderEditorialCoverage('map-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4 });
+    renderEditorialCoverage('map-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4, themeKey: topicKey });
   }
   renderSourceLinks(
     'map-source-links',
@@ -6504,7 +6813,7 @@ function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
 function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
   const wrap = document.getElementById('sb-node-details');
   if (!wrap) return;
-  const theme = THEMES[topicKey];
+  const theme = getNodeTheme(node);
   const nodeName = cleanText(node?.label || 'this node');
   const coverage = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
   const brief = buildNodeStoryBrief(topicKey, node, coverage, staticData);
@@ -6512,7 +6821,7 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
 
   wrap.classList.remove('sb-empty');
   wrap.innerHTML = `
-    <div class="story-panel story-panel-minimal" style="--story-accent:${theme.color};">
+    <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${(summaryParagraphs.length ? summaryParagraphs : [`Coverage around ${nodeName} is still developing.`])
@@ -6547,9 +6856,9 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
     </div>
   `;
 
-  renderEditorialCoverage('node-key-coverage', coverage.slice(0, 4), { limit: 4 });
+  renderEditorialCoverage('node-key-coverage', coverage.slice(0, 4), { limit: 4, themeKey: getCat(node) });
   if (coverage.length > 4) {
-    renderEditorialCoverage('node-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4 });
+    renderEditorialCoverage('node-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4, themeKey: getCat(node) });
   }
   renderSourceLinks(
     'node-source-links',
@@ -6603,7 +6912,7 @@ async function ensureTimelineSidebarReady(topicKey) {
   const visibleEvents = getCurrentTimelineEvents(topicKey);
   const nextEventId = visibleEvents.some(ev => ev.id === activeTimelineEventId)
     ? activeTimelineEventId
-    : visibleEvents[0]?.id;
+    : getPreferredTimelineEventId(topicKey);
 
   if (nextEventId) {
     await selectTimelineEvent(topicKey, nextEventId);
@@ -6806,7 +7115,7 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     }
   }
 
-  renderEditorialCoverage('sb-latest-articles', articles, { limit: 6 });
+  renderEditorialCoverage('sb-latest-articles', articles, { limit: 6, themeKey: topicKey });
 
   const timelineEvents = await fetchTimelineEvents(topicKey, articles);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
@@ -6816,7 +7125,7 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
   }
 
   if (!activeTimelineEventId) {
-    activeTimelineEventId = getCurrentTimelineEvents(topicKey)[0]?.id || null;
+    activeTimelineEventId = getPreferredTimelineEventId(topicKey);
   }
   renderTimeline(topic, THEMES[topicKey]);
 }
@@ -6902,6 +7211,8 @@ async function selectNode(id) {
     return renderMainTopicOverview(currentTopic, activeTopicRequest);
   }
 
+  const nodeTheme = getNodeTheme(n);
+
   const s = document.getElementById('sb-scroll');
   if (!s) return;
 
@@ -6909,7 +7220,7 @@ async function selectNode(id) {
   renderNodeStorySidebarShell(currentTopic, n, {
     sectionTitle: 'Node brief',
     sectionCopy: `Building a focused editorial read on ${n.label}.`,
-    bodyHtml: `<div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Fetching from NewsAPI...</div>`
+    bodyHtml: `<div class="art-loading" id="asp-${id}"><span class="mini-spin" style="border-top-color:${nodeTheme.color}"></span>Fetching from NewsAPI...</div>`
   });
   scrollSidebarToTop();
   syncMobileDrawerFromSidebar(true);
@@ -7188,19 +7499,20 @@ function getTimelineNodeStyle(theme = {}) {
   return 'border-radius:999px;';
 }
 
-function buildEditorialArticleMarkup(article, variant = 'list') {
+function buildEditorialArticleMarkup(article, variant = 'list', options = {}) {
   const sourceName = getArticleSourceName(article);
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
   const description = cleanText(article.description || '');
+  const theme = getArticleTheme(article, options.themeKey);
   const tag = articleUrl ? 'a' : 'article';
   const hrefAttrs = articleUrl ? ` href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer"` : '';
 
   return `
-    <${tag} class="editorial-article editorial-article-${variant}"${hrefAttrs}>
+    <${tag} class="editorial-article editorial-article-${variant}" style="${getAccentInlineVars(theme)}"${hrefAttrs}>
       <div class="editorial-article-kicker">
         <div class="editorial-article-meta">
-          ${buildArticleThemeLabel(article, 'editorial-article-theme')}
+          ${buildArticleThemeLabel(article, 'editorial-article-theme', options.themeKey)}
         </div>
         ${sourceName ? `<div class="editorial-article-source">${escapeHtml(sourceName)}</div>` : ''}
       </div>
@@ -7229,9 +7541,9 @@ function renderEditorialCoverage(containerId, articles, options = {}) {
   const listItems = shouldFeature ? items.slice(1) : items;
 
   wrap.innerHTML = `
-    ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature') : ''}
+    ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature', options) : ''}
     ${listItems.length
-      ? `<div class="editorial-article-list">${listItems.map(article => buildEditorialArticleMarkup(article, 'list')).join('')}</div>`
+      ? `<div class="editorial-article-list">${listItems.map(article => buildEditorialArticleMarkup(article, 'list', options)).join('')}</div>`
       : ''}
   `;
 }
@@ -7251,9 +7563,11 @@ function createArticleItem(article, options = {}) {
   const articleUrl = safeUrl(article.url);
   const timestamp = formatPublishedDate(article);
   const description = variant === 'feature' ? getArticleDescription(article) : '';
+  const theme = getArticleTheme(article, options.themeKey);
 
   const el = document.createElement(articleUrl ? 'a' : 'article');
   el.className = `article-item article-${variant}`;
+  el.setAttribute('style', getAccentInlineVars(theme));
   if (articleUrl) {
     el.href = articleUrl;
     el.target = '_blank';
@@ -7262,7 +7576,7 @@ function createArticleItem(article, options = {}) {
   el.innerHTML = `
     <div class="art-kicker">
       <div class="art-meta">
-        ${buildArticleThemeLabel(article, 'art-theme')}
+        ${buildArticleThemeLabel(article, 'art-theme', options.themeKey)}
       </div>
       ${sourceName ? `<div class="art-source">${escapeHtml(sourceName)}</div>` : ''}
     </div>
@@ -7275,14 +7589,15 @@ function createArticleItem(article, options = {}) {
   return el;
 }
 
-function appendArticleItems(container, articles) {
+function appendArticleItems(container, articles, options = {}) {
   const items = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
   const feed = document.createElement('div');
   feed.className = 'article-feed';
 
   items.forEach((article, index) => {
     feed.appendChild(createArticleItem(article, {
-      variant: index === 0 ? 'feature' : 'compact'
+      variant: index === 0 ? 'feature' : 'compact',
+      themeKey: options.themeKey || ''
     }));
   });
 
@@ -7572,6 +7887,7 @@ function renderTimelineLegacyCards(topic, theme) {
   const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0] || null;
   const level = getTimelineLevelLabel();
   const isMonthView = timelineViewLevel === 'overview';
+  const displayDate = ev => getTimelineEventDisplayDate(ev, { includeYear: false });
   const yearStart = new Date().getFullYear() - 3;
   const rangeStart = events[0]?.label || '';
   const rangeEnd = events[events.length - 1]?.label || '';
@@ -7595,7 +7911,7 @@ function renderTimelineLegacyCards(topic, theme) {
     const left = events.length === 1 ? 50 : 8 + (index / (events.length - 1)) * 84;
     return `
       <button class="timeline-marker ${ev.id === activeTimelineEventId ? 'active' : ''}" style="left:${left}%;" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
-        <span class="timeline-marker-date">${escapeHtml(ev.dateLabel || 'Now')}</span>
+        <span class="timeline-marker-date">${escapeHtml(displayDate(ev))}</span>
         <span class="timeline-marker-dot" style="background:${theme.color};"></span>
         <span class="timeline-marker-label">${escapeHtml(ev.label || 'Happening')}</span>
       </button>
@@ -7605,8 +7921,8 @@ function renderTimelineLegacyCards(topic, theme) {
   const cardHtml = events.map(ev => `
     <article class="timeline-card ${ev.id === activeTimelineEventId ? 'active' : ''}" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
       <div class="timeline-card-top">
-        <div class="timeline-card-date">${escapeHtml(ev.dateLabel || 'Now')}</div>
-        <div class="timeline-card-badge" style="background:${theme.bg};color:${theme.color};">${ev.importance === 'high' ? 'Major' : 'Signal'}</div>
+        <div class="timeline-card-date">${escapeHtml(displayDate(ev))}</div>
+        <div class="timeline-card-badge" style="${getThemeInlineVars(theme)}background:${theme.bg};border:1px solid ${theme.border};color:${theme.color};">${ev.importance === 'high' ? 'Major' : 'Signal'}</div>
       </div>
       <div class="timeline-card-label">${escapeHtml(ev.label || 'Happening')}</div>
       <div class="timeline-card-copy">${escapeHtml(ev.whyItMatters || 'A key part of the story right now.')}</div>
@@ -7664,8 +7980,9 @@ function renderTimeline(topic, theme) {
   }
   const activeIndex = activeEvent ? Math.max(0, events.findIndex(ev => ev.id === activeEvent.id)) : -1;
   const level = getTimelineLevelLabel();
-  const rangeStart = events[0]?.dateLabel || events[0]?.label || '';
-  const rangeEnd = events[events.length - 1]?.dateLabel || events[events.length - 1]?.label || '';
+  const displayDate = ev => getTimelineEventDisplayDate(ev, { includeYear: !isDetailView });
+  const rangeStart = events[0] ? displayDate(events[0]) : '';
+  const rangeEnd = events[events.length - 1] ? displayDate(events[events.length - 1]) : '';
   const subText = isDetailView
     ? 'Trace the current storylines inside this topic, then open any happening for background coverage and the latest reporting.'
     : 'Follow the topic month by month, then open any checkpoint for context and connected coverage.';
@@ -7704,10 +8021,10 @@ function renderTimeline(topic, theme) {
     `;
 
     return `
-      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}" style="--story-accent:${theme.color};">
+      <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}" style="${getAccentInlineVars(theme)}">
         <div class="timeline-entry-side left">${side === 'left' ? cardHtml : ''}</div>
         <button class="timeline-entry-spine" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')" aria-label="Open ${escapeHtml(ev.label || 'timeline item')}">
-          <div class="timeline-entry-date">${escapeHtml(ev.dateLabel || 'Now')}</div>
+          <div class="timeline-entry-date">${escapeHtml(displayDate(ev))}</div>
           <div class="timeline-entry-node" style="background:${theme.color};${getTimelineNodeStyle(theme)}"></div>
         </button>
         <div class="timeline-entry-side right">${side === 'right' ? cardHtml : ''}</div>
@@ -8124,7 +8441,7 @@ function renderMap(topic, theme) {
   if (!svg) return;
   const ns = 'http://www.w3.org/2000/svg';
   const { color, shape } = theme;
-  const markerColor = topic.key === 'politics' ? '#2573FF' : color;
+  const markerColor = color;
 
   svg.innerHTML = MAP_BACKGROUNDS[topic.key];
   svg.dataset.mapTopic = topic.key;
@@ -8154,7 +8471,7 @@ function renderMap(topic, theme) {
     pulse.classList.add('map-marker-pulse');
     pulse.setAttribute('cx', '0');
     pulse.setAttribute('cy', '0');
-    pulse.setAttribute('r', String(m.size + (topic.key === 'politics' ? 11 : 6)));
+    pulse.setAttribute('r', String(m.size + (theme.shape === 'circle' ? 11 : 6)));
     pulse.setAttribute('fill', markerColor);
 
     const hit = document.createElementNS(ns, 'circle');
@@ -8186,21 +8503,21 @@ function renderMap(topic, theme) {
     markerGlyph.classList.add('map-marker-glyph');
     markerGlyph.setAttribute('fill', markerColor);
     markerGlyph.setAttribute('stroke', '#FFFFFF');
-    markerGlyph.setAttribute('stroke-opacity', topic.key === 'politics' ? '0.82' : '1');
-    markerGlyph.setAttribute('stroke-width', topic.key === 'politics' ? '1' : '1.5');
+    markerGlyph.setAttribute('stroke-opacity', theme.shape === 'circle' ? '0.82' : '1');
+    markerGlyph.setAttribute('stroke-width', theme.shape === 'circle' ? '1' : '1.5');
 
     const isMobile = window.innerWidth <= 700;
     const viewBox = getMapViewBox(svg);
     const labelShouldFlip = topic.key === 'climate' && viewBox && (m.x + 160 > viewBox.x + viewBox.width);
     const lbl = document.createElementNS(ns, 'text');
     lbl.classList.add('map-marker-label');
-    const labelGap = topic.key === 'politics' ? (isMobile ? 12 : 17) : (isMobile ? 4 : 6);
+    const labelGap = theme.shape === 'circle' ? (isMobile ? 12 : 17) : (isMobile ? 4 : 6);
     lbl.setAttribute('x', String(labelShouldFlip ? -(m.size + labelGap) : m.size + labelGap));
     lbl.setAttribute('y', '3.5');
     lbl.setAttribute('text-anchor', labelShouldFlip ? 'end' : 'start');
-    lbl.setAttribute('font-size', topic.key === 'politics' ? (isMobile ? '10' : '11.5') : (isMobile ? '8' : '9'));
+    lbl.setAttribute('font-size', theme.shape === 'circle' ? (isMobile ? '10' : '11.5') : (isMobile ? '8' : '9'));
     lbl.setAttribute('font-family', "'Syne',sans-serif");
-    lbl.setAttribute('font-weight', topic.key === 'politics' ? '600' : '700');
+    lbl.setAttribute('font-weight', theme.shape === 'circle' ? '600' : '700');
     lbl.textContent = m.label;
 
     markerGroup.appendChild(pulse);
@@ -8438,6 +8755,8 @@ function setupMapClicks(markers) {
     }
   };
 }
+
+hydrateStaticThemeElements();
 
 window.addEventListener('resize', () => {
   if (currentTopic && document.getElementById('explore').classList.contains('active')) {
