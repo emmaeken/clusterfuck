@@ -47,17 +47,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   display: none;
   min-height: 100vh;
 }
-
 .screen.active {
   display: flex;
   flex-direction: column;
 }
-
 #landing {
   align-items: center;
   justify-content: center;
 }
-
 #explore {
   height: 100vh;
   min-height: 100vh;
@@ -69,23 +66,19 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
     radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
     linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%);
 }
-
 @media (max-width: 700px) {
   body { overflow-y: auto; }
   .screen { position: relative; min-height: 100vh; }
 }
-
 /* ═══════════════════════════════
    SHARED SHAPE SYSTEM
 ═══════════════════════════════ */
 /* Circles = politics (blue) */
 /* Squares = conflict (red) */
 /* Triangles = climate (green) */
-
 .shape-circle { border-radius: 50%; }
 .shape-square { border-radius: 3px; }
 .shape-triangle { /* via clip-path */ clip-path: polygon(50% 0%, 0% 100%, 100% 100%); border-radius: 0; }
-
 /* Category badges */
 .badge {
   display: inline-flex; align-items: center; gap: 5px;
@@ -102,7 +95,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 .badge[data-shape="circle"] .badge-shape { border-radius: 50%; }
 .badge[data-shape="square"] .badge-shape { border-radius: 1px; }
 .badge[data-shape="triangle"] .badge-shape { clip-path: polygon(50% 0%,0% 100%,100% 100%); border-radius: 0; }
-
 /* ═══════════════════════════════
    LANDING
 ═══════════════════════════════ */
@@ -123,12 +115,10 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   pointer-events: none;
   opacity: 0.045;
 }
-
 .bg-geo svg {
   width: 100%;
   height: 100%;
 }
-
 .land-inner {
   position: relative;
   z-index: 2;
@@ -136,13 +126,11 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   max-width: 1280px;
   min-height: calc(100vh - 42px);
   margin: 0 auto;
-
   display: grid;
   grid-template-rows: auto 1fr auto;
   align-items: start;
   justify-items: center; /* gör att innehållet centreras bättre */
 }
-
 .land-header {
   text-align: center;
   width: 100%;
@@ -151,7 +139,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   margin: 0 auto;
   margin-bottom: 10%;
 }
-
 .land-wordmark {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: clamp(42px, 7.2vw, 96px);
@@ -161,17 +148,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   color: var(--ink);
   text-align: center;
 }
-
 .land-wordmark .word-lock,
 .land-wordmark .word-tail {
   display: inline-block;
 }
-
 .land-wordmark em {
   font-style: normal;
   opacity: 0.24;
 }
-
 .land-sub {
   font-size: 15px;
   color: var(--ink2);
@@ -179,7 +163,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-weight: 400;
   letter-spacing: 0.01em;
 }
-
 .topic-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(280px, 360px));
@@ -188,9 +171,8 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   width: 100%;
   margin: 0 auto;
 }
-
 .tc {
-  background: linear-gradient(180deg, rgba(253,252,250,0.98) 0%, rgba(253,252,250,0.92) 100%);
+  background: #ffffffb6;
   border: 1.5px solid var(--border);
   border-radius: 18px;
   padding: 26px 26px 74px;
@@ -201,7 +183,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   transition: transform 0.22s cubic-bezier(.22,.68,0,1.2), box-shadow 0.22s ease, border-color 0.18s ease;
   box-shadow: 0 8px 24px rgba(26,24,20,0.04);
 }
-
 .tc::before {
   content: "";
   position: absolute;
@@ -213,7 +194,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   filter: blur(2px);
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
-
 .tc::after {
   content: "";
   position: absolute;
@@ -223,17 +203,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   height: 1px;
   background: var(--border);
 }
-
 .tc:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 48px rgba(26,24,20,0.1);
 }
-
 .tc:hover::before {
   transform: scale(1.08);
   opacity: 0.12;
 }
-
 .tc-top-bar {
   position: absolute;
   top: 0;
@@ -241,7 +218,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   right: 0;
   height: 3px;
 }
-
 .tc-name {
   font-family: var(--serif);
   font-size: 30px;
@@ -250,14 +226,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.05;
   max-width: 9ch;
 }
-
 .tc-desc {
   font-size: 16px;
   color: var(--ink2);
   line-height: 1.65;
   max-width: 34ch;
 }
-
 .tc-meta {
   position: absolute;
   left: 26px;
@@ -267,7 +241,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   align-items: center;
   justify-content: space-between;
 }
-
 .tc-mini {
   font-size: 10px;
   text-transform: uppercase;
@@ -276,7 +249,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
 }
-
 .tc-arrow {
   width: 38px;
   height: 38px;
@@ -292,20 +264,16 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   background: rgba(253,252,250,0.9);
   transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
-
 .tc:hover .tc-arrow {
   transform: translateX(4px);
   background: var(--white);
 }
-
 .tc.politics::before { background: var(--blue); }
 .tc.conflict::before { background: var(--red); }
 .tc.climate::before  { background: var(--green); }
-
 .tc.politics .tc-top-bar { background: var(--blue); }
 .tc.conflict .tc-top-bar { background: var(--red); }
 .tc.climate .tc-top-bar  { background: var(--green); }
-
 .tc.politics .tc-name { color: var(--ink); }
 .tc.conflict .tc-name { color: var(--ink); }
 .tc.climate .tc-name  { color: var(--ink); }
@@ -318,23 +286,19 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   opacity: 0.08;
   pointer-events: none;
 }
-
 .tc.politics .tc-orb {
   background: radial-gradient(circle at center, var(--blue) 0%, transparent 68%);
   border-radius: 50%;
 }
-
 .tc.conflict .tc-orb {
   background: linear-gradient(135deg, var(--red), transparent 72%);
   border-radius: 18px;
   transform: rotate(12deg);
 }
-
 .tc.climate .tc-orb {
   background: linear-gradient(180deg, var(--green), transparent 72%);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
-
 .how-strip {
   display: flex;
   gap: 0;
@@ -344,18 +308,15 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   border: solid var(--border);
   overflow: hidden;
 }
-
 .how-item {
   flex: 1;
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .how-item:not(:last-child) {
   border-right: 1px solid var(--border);
 }
-
 .how-num {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 22px;
@@ -364,41 +325,33 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   opacity: 0.15;
   line-height: 1;
 }
-
 .how-text {
   font-size: 12px;
   color: var(--ink);
   line-height: 1.45;
 }
-
 .how-text strong {
   display: block;
   color: var(--ink);
   font-weight: 600;
   font-size: 12px;
 }
-
 @media (max-width: 700px) {
   #landing {
     padding: 20px 16px 20px 16px;
     overflow-y: auto;
   }
-
   .land-inner {
     min-height: auto;
     display: flex;
     flex-direction: column;
     gap: 18px;
   }
-
    .land-header {
     padding-top: 32px; /* ← flyttar ner rubriken */
-
     margin: 0 auto;
     text-align: center;
   }
-
-
     .land-wordmark {
     margin: 0 auto;
     text-align: center;
@@ -407,43 +360,34 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   .land-wordmark .word-tail {
     display: block;
   }
-
   .land-wordmark .word-lock {
     white-space: nowrap; /* håller ClusterFuck ihop */
   }
-
   .land-wordmark .word-tail {
     white-space: nowrap;
     margin-top: -4px;
   }
-
   .topic-row {
     grid-template-columns: 1fr;
     gap: 14px;
   }
-
-
   .land-sub {
     font-size: 13px;
     max-width: 28ch;
     margin-left: auto;
     margin-right: auto;
   }
-
   .land-main {
     display: block;
   }
-
   .topic-row {
     grid-template-columns: 1fr;
     gap: 14px;
   }
-
   .how-strip {
     flex-direction: column;
     margin-top: 6px;
   }
-
   .how-item:not(:last-child) {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -461,7 +405,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
     align-self: end;
     margin-top: 20px;
   }
-
 /* ═══════════════════════════════
    EXPLORE
 ═══════════════════════════════ */
@@ -471,7 +414,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
     radial-gradient(circle at 6% 86%, rgba(253,186,116,0.42), transparent 18%),
     radial-gradient(circle at 63% 73%, rgba(253,186,116,0.32), transparent 8.5%),
     linear-gradient(180deg, #F7F8FA 0%, #EEF2F6 100%); }
-
 /* TOPBAR */
 .topbar {
   display: flex; align-items: center; gap: 10px;
@@ -491,7 +433,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 .view-sw { display: flex; gap: 2px; background: var(--bg2); padding: 3px; border-radius: 7px; }
 .vbtn { font-size: 11px; font-family: var(--body); cursor: pointer; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--ink3); transition: background 0.15s, color 0.15s; font-weight: 500; }
 .vbtn.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-
 /* GRID */
 .main-grid { 
     flex: 1;
@@ -514,7 +455,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   overflow: hidden;
   background: var(--bg);
 }
-
 #gc {
   display: block;
   position: absolute;
@@ -525,7 +465,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 #gc.hidden {
   display: none;
 }
-
 .map-wrap {
   position: absolute;
   inset: 0;
@@ -538,11 +477,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   justify-content: center;
   z-index: 2;
 }
-
 .map-wrap.on {
   display: flex;
 }
-
 .timeline-wrap {
   position: absolute;
   inset: 0;
@@ -550,33 +487,21 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   overflow: hidden;
   background: transparent;
 }
-
 .timeline-wrap.on {
   display: block;
 }
-
 .timeline-stage {
   height: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr;
   padding: 28px 30px 24px;
 }
-
 .timeline-stage-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 18px;
-}
-
-.timeline-kicker {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink3);
-  font-family: var(--serif);
-  font-weight: 700;
 }
 
 .timeline-headline {
@@ -588,7 +513,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   letter-spacing: -0.05em;
   color: var(--ink);
 }
-
 .timeline-sub {
   max-width: 54ch;
   margin-top: 10px;
@@ -596,7 +520,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.7;
   color: var(--ink2);
 }
-
 .timeline-scale {
   display: inline-flex;
   gap: 4px;
@@ -606,7 +529,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   border-radius: 999px;
   backdrop-filter: blur(8px);
 }
-
 .timeline-scale-btn {
   border: none;
   background: transparent;
@@ -618,18 +540,15 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-weight: 700;
   cursor: pointer;
 }
-
 .timeline-scale-btn.active {
   background: var(--white);
   color: var(--ink);
   box-shadow: 0 1px 4px rgba(26,24,20,0.08);
 }
-
 .timeline-scale-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
-
 .timeline-meta-bar {
   display: flex;
   justify-content: space-between;
@@ -637,13 +556,11 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   gap: 16px;
   padding: 10px 0 14px;
 }
-
 .timeline-meta-note {
   font-size: 11px;
   color: var(--ink3);
   line-height: 1.6;
 }
-
 .timeline-rail-shell {
   position: relative;
   min-height: 0;
@@ -653,7 +570,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   box-shadow: 0 14px 44px rgba(26,24,20,0.06);
   overflow: auto;
 }
-
 .timeline-rail-shell::before {
   content: "";
   position: absolute;
@@ -663,7 +579,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   height: 2px;
   background: linear-gradient(90deg, rgba(26,24,20,0.08), rgba(26,24,20,0.22), rgba(26,24,20,0.08));
 }
-
 .timeline-empty {
   min-height: 320px;
   display: grid;
@@ -672,13 +587,11 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-size: 13px;
   color: var(--ink3);
 }
-
 .timeline-markers {
   position: relative;
   height: 150px;
   padding: 0 38px;
 }
-
 .timeline-marker {
   position: absolute;
   top: 44px;
@@ -687,7 +600,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   background: transparent;
   cursor: pointer;
 }
-
 .timeline-marker::before {
   content: "";
   position: absolute;
@@ -698,7 +610,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   transform: translateX(-50%);
   background: rgba(26,24,20,0.12);
 }
-
 .timeline-marker-dot {
   width: 14px;
   height: 14px;
@@ -707,7 +618,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   border: 2px solid transparent;
   box-shadow: 0 0 0 6px rgba(253,252,250,0.95);
 }
-
 .timeline-marker-date {
   display: block;
   margin-bottom: 10px;
@@ -719,7 +629,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-weight: 700;
   white-space: nowrap;
 }
-
 .timeline-marker-label {
   display: block;
   margin-top: 70px;
@@ -730,23 +639,19 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.2;
   color: var(--ink2);
 }
-
 .timeline-marker.active .timeline-marker-dot {
   transform: scale(1.16);
   border-color: rgba(26,24,20,0.9);
 }
-
 .timeline-marker.active .timeline-marker-label {
   color: var(--ink);
 }
-
 .timeline-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
   padding: 0 24px 24px;
 }
-
 .timeline-card {
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -755,17 +660,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   cursor: pointer;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
-
 .timeline-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 26px rgba(26,24,20,0.07);
 }
-
 .timeline-card.active {
   border-color: var(--border2);
   box-shadow: 0 12px 30px rgba(26,24,20,0.08);
 }
-
 .timeline-card-top {
   display: flex;
   align-items: center;
@@ -773,7 +675,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   gap: 10px;
   margin-bottom: 10px;
 }
-
 .timeline-card-date {
   font-size: 10px;
   text-transform: uppercase;
@@ -782,7 +683,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
 }
-
 .timeline-card-badge {
   font-size: 10px;
   border-radius: 999px;
@@ -792,7 +692,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-
 .timeline-card-label {
   font-family: var(--serif);
   font-size: 18px;
@@ -800,14 +699,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.05;
   color: var(--ink);
 }
-
 .timeline-card-copy {
   margin-top: 8px;
   font-size: 12px;
   line-height: 1.65;
   color: var(--ink2);
 }
-
 .timeline-card-action {
   margin-top: 12px;
   font-size: 10px;
@@ -817,18 +714,15 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
 }
-
 .timeline-rail-shell.month-view::before {
   display: none;
 }
-
 .timeline-month-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   padding: 22px;
 }
-
 .timeline-month-card {
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -838,25 +732,21 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   cursor: pointer;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
-
 .timeline-month-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(26,24,20,0.07);
 }
-
 .timeline-month-card.active {
   border-color: rgba(26,24,20,0.16);
   background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,246,241,0.98));
   box-shadow: 0 14px 34px rgba(26,24,20,0.08);
 }
-
 .timeline-month-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
 }
-
 .timeline-month-eyebrow {
   font-size: 10px;
   text-transform: uppercase;
@@ -865,7 +755,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
 }
-
 .timeline-month-badge {
   font-size: 10px;
   border-radius: 999px;
@@ -875,7 +764,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-
 .timeline-month-title {
   margin-top: 10px;
   font-family: var(--serif);
@@ -884,14 +772,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.02;
   color: var(--ink);
 }
-
 .timeline-month-copy {
   margin-top: 10px;
   font-size: 12px;
   line-height: 1.65;
   color: var(--ink2);
 }
-
 .timeline-month-action {
   margin-top: 14px;
   font-size: 10px;
@@ -901,81 +787,66 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-family: var(--serif);
   font-weight: 700;
 }
-
 #map-svg {
   width: 100%;
   height: 100%;
   display: block;
 }
-
 @media (max-width: 700px) {
   .canvas-wrap {
     min-height: 62vh;
   }
-
   .map-wrap {
     padding: 0;
   }
-
 #map-svg {
   width: 100%;
   height: 100%;
   display: block;
   pointer-events: auto;
 }
-
 #map-svg * {
   pointer-events: auto;
 }
 }
 .canvas-hint { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: var(--ink2); background: rgba(253,252,250,0.94); border: 1px solid var(--border); padding: 5px 10px; border-radius: 100px; pointer-events: none; font-family: var(--serif); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; box-shadow: 0 8px 20px rgba(26,24,20,0.08); }
-
 .map-marker {
   cursor: pointer;
 }
-
 .map-marker-pulse,
 .map-marker-glyph,
 .map-marker-label {
   transition: opacity 0.18s ease, transform 0.18s ease, fill 0.18s ease, stroke 0.18s ease;
 }
-
 .map-marker-pulse {
   opacity: 0.18;
   transform-box: fill-box;
   transform-origin: center;
 }
-
 .map-marker-glyph {
   opacity: 0.96;
   transform-box: fill-box;
   transform-origin: center;
 }
-
 .map-marker-label {
   fill: rgba(26,24,20,0.68);
 }
-
 .map-marker:hover .map-marker-pulse,
 .map-marker.active .map-marker-pulse {
   opacity: 0.24;
 }
-
 .map-marker:hover .map-marker-glyph {
   transform: scale(1.08);
 }
-
 .map-marker.active .map-marker-glyph {
   opacity: 1;
   transform: scale(1.12);
   stroke-width: 2.4;
 }
-
 .map-marker:hover .map-marker-label,
 .map-marker.active .map-marker-label {
   fill: rgba(26,24,20,0.96);
 }
-
 /* SIDEBAR */
 .sidebar {
   grid-column: 2;
@@ -999,11 +870,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   align-items: flex-start;
   gap: 11px;
 }
-
 .sb-heading-text {
   min-width: 0;
 }
-
 .sb-topic-mark {
   display: inline-flex;
   align-items: center;
@@ -1013,12 +882,10 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   border-radius: 8px;
   margin-top: 1px;
 }
-
 .sb-topic-mark .badge-shape {
   width: 10px;
   height: 10px;
 }
-
 #sb-overview-section .sb-main-summary {
   padding-left: 0;
   padding-right: 0;
@@ -1060,21 +927,17 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   scrollbar-color: rgba(26,24,20,0.16) transparent;
   -webkit-overflow-scrolling: touch;
 }
-
 .timeline-rail-shell {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(26,24,20,0.16) transparent;
 }
-
 .timeline-rail-shell::-webkit-scrollbar {
   width: 8px;
 }
-
 .timeline-rail-shell::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .timeline-rail-shell::-webkit-scrollbar-thumb {
   min-height: 44px;
   border-radius: 999px;
@@ -1083,15 +946,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   background-clip: padding-box;
   box-shadow: inset 0 0 0 999px rgba(26,24,20,0.14);
 }
-
 .timeline-rail-shell:hover::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 0 999px rgba(26,24,20,0.22);
 }
-
 .timeline-rail-shell::-webkit-scrollbar-thumb:active {
   box-shadow: inset 0 0 0 999px rgba(26,24,20,0.3);
 }
-
 .timeline-rail-shell::-webkit-scrollbar-button {
   display: none;
   width: 0;
@@ -1110,18 +970,15 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   padding-left: 12px;
   padding-right: 6px;
 }
-
 .sb-main-summary-long p {
   margin: 0 0 14px;
   font-size: 15px;
   line-height: 1.9;
   color: var(--ink);
 }
-
 .sb-main-summary-long p:last-child {
   margin-bottom: 0;
 }
-
 .sb-more-btn {
   margin-top: 0;
   border: 1px solid var(--border);
@@ -1134,23 +991,19 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-weight: 600;
   cursor: pointer;
 }
-
 .sb-section {
   padding-bottom: 20px;
   margin-bottom: 22px;
   border-bottom: 1px solid rgba(26,24,20,0.09);
 }
-
 .sb-section:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
-
 .sb-section-flat {
   padding-bottom: 0;
   border-bottom: none;
 }
-
 .sb-section-title {
   font-family: var(--serif);
   font-size: 18px;
@@ -1158,14 +1011,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.15;
   margin-bottom: 8px;
 }
-
 .sb-timeline-inline {
   display: flex;
   flex-direction: column;
   gap: 0;
   position: relative;
 }
-
 .sb-tl-item {
   position: relative;
   display: grid;
@@ -1180,11 +1031,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   padding: 0 0 14px 0;
   color: var(--ink);
 }
-
 .sb-tl-item:last-child {
   padding-bottom: 0;
 }
-
 .sb-tl-date {
   font-size: 10px;
   color: var(--ink3);
@@ -1194,14 +1043,12 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   font-weight: 700;
   padding-top: 2px;
 }
-
 .sb-tl-rail {
   position: relative;
   min-height: 54px;
   display: flex;
   justify-content: center;
 }
-
 .sb-tl-rail::after {
   content: "";
   position: absolute;
@@ -1212,11 +1059,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   transform: translateX(-50%);
   background: var(--border2);
 }
-
 .sb-tl-item:last-child .sb-tl-rail::after {
   display: none;
 }
-
 .sb-tl-dot {
   width: 10px;
   height: 10px;
@@ -1228,17 +1073,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   margin-top: 8px;
   box-shadow: 0 0 0 5px var(--white);
 }
-
 .sb-tl-dot.hi {
   width: 12px;
   height: 12px;
 }
-
 .sb-tl-copy {
   min-width: 0;
   padding: 2px 0 0;
 }
-
 .sb-tl-label {
   display: block;
   font-family: var(--serif);
@@ -1247,7 +1089,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.2;
   color: var(--ink);
 }
-
 .sb-tl-meta {
   display: block;
   margin-top: 4px;
@@ -1255,31 +1096,27 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.5;
   color: var(--ink2);
 }
-
 .sb-tl-item.active .sb-tl-label {
   color: var(--ink);
 }
-
 .sb-tl-item.active .sb-tl-copy {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px 12px;
 }
-
 .sb-tl-item.active .sb-tl-dot {
   transform: scale(1.08);
 }
-
 .sb-subsection-title {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
     line-height: 1.2;
 }
-
 .sb-mini-note {
   font-size: 11px;
   line-height: 1.6;
@@ -1294,17 +1131,16 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   line-height: 1.8;
   color: var(--ink2);
 }
-
 .sb-sources strong {
-  display: block;
-  margin-bottom: 8px;
-  font-family: var(--serif);
-  font-size: 12px;
-  color: var(--ink);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.2;
+    padding: 15px 10px;
 }
-
 .sb-sources a {
   display: block;
   color: var(--ink);
@@ -1316,12 +1152,10 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   background: var(--white);
   transition: background 0.15s ease, transform 0.15s ease;
 }
-
 .sb-sources a:hover {
   background: var(--bg);
   transform: translateY(-1px);
 }
-
 /* NEWS CARD in sidebar */
 .news-card { border: 1.5px solid var(--border); border-radius: var(--rl); overflow: hidden; margin-bottom: 12px; }
 .nc-head { padding: 12px 13px 10px; }
@@ -1332,7 +1166,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 .nc-facts-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 6px; font-family: var(--serif); font-weight: 700; display: flex; align-items: center; gap: 5px; }
 .fact { font-size: 12px; color: var(--ink2); line-height: 1.5; padding: 3px 0 3px 12px; position: relative; }
 .fact::before { content: '—'; position: absolute; left: 0; color: var(--ink3); font-size: 10px; top: 5px; }
-
 .live-section {
   margin-top: 24px;
   padding-top: 20px;
@@ -1371,11 +1204,9 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 .article-item::before {
   content: none;
 }
-
 .article-item[href] {
   cursor: pointer;
 }
-
 .article-item[href]:hover .art-title,
 .article-item[href]:focus-visible .art-title {
   color: var(--ink);
@@ -1469,7 +1300,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 /* TOOLTIP */
 #tt { position: fixed; background: var(--ink); color: var(--white); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-family: var(--serif); font-weight: 600; pointer-events: none; opacity: 0; transition: opacity 0.1s; white-space: nowrap; z-index: 100; letter-spacing: 0.02em; }
 #tt.show { opacity: 1; }
-
 /* ANIMATIONS */
 @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 .land-inner > * { animation: fadeUp 0.5s cubic-bezier(.22,.68,0,1.2) both; }
@@ -1481,17 +1311,14 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
 @media (max-width: 700px) {
   .topic-row { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 700px) {
   .how-strip { flex-direction: column; }
   .how-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
 }
-
 /* Mobile bottom drawer */
 .mobile-drawer {
   display: none;
 }
-
 @media (max-width: 700px) {
   .mobile-drawer {
     display: block;
@@ -1585,31 +1412,25 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
     font-size: 20px;
   }
 }
-
 /* Editorial timeline and sidebar redesign */
 .timeline-stage {
   padding: 30px 32px 26px;
 }
-
 .timeline-headline {
   max-width: 12ch;
 }
-
 .timeline-sub {
   max-width: 48ch;
 }
-
 .timeline-meta-bar {
   align-items: flex-start;
   padding: 0 0 16px;
   margin-bottom: 10px;
   border-bottom: 1px solid rgba(26,24,20,0.08);
 }
-
 .timeline-meta-note {
   max-width: 58ch;
 }
-
 .timeline-rail-shell {
   border: none;
   border-radius: 0;
@@ -1620,12 +1441,10 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   scroll-behavior: smooth;
   overflow-anchor: none;
 }
-
 .timeline-rail-shell::before,
 .timeline-rail-shell.month-view::before {
   display: none;
 }
-
 .timeline-flow {
   --timeline-row-height: 176px;
   --timeline-row-gap: 36px;
@@ -1636,7 +1455,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   grid-auto-rows: var(--timeline-row-height);
   padding: 12px 0 18px;
 }
-
 .timeline-flow::before {
   content: "";
   position: absolute;
@@ -1648,7 +1466,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   background: linear-gradient(180deg, rgba(26,24,20,0.06), rgba(26,24,20,0.2), rgba(26,24,20,0.06));
   pointer-events: none;
 }
-
 .timeline-entry {
   --timeline-spine-width: 88px;
   --timeline-card-gap: 18px;
@@ -1660,24 +1477,20 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   min-height: var(--timeline-row-height);
   max-height: var(--timeline-row-height);
 }
-
 .timeline-entry-side {
   display: flex;
   align-items: center;
   min-width: 0;
   height: 100%;
 }
-
 .timeline-entry-side.left {
   grid-column: 1;
   justify-content: flex-end;
 }
-
 .timeline-entry-side.right {
   grid-column: 3;
   justify-content: flex-start;
 }
-
 .timeline-entry-card {
   position: relative;
   width: min(100%, 380px);
@@ -1697,7 +1510,6 @@ html, body { height: 100%; color: var(--ink); font-family: var(--body); font-wei
   appearance: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
-
 .timeline-entry-card:hover,
 .timeline-entry-card:focus-visible {
 transform: none;
@@ -1705,7 +1517,6 @@ transform: none;
   background: rgba(255,255,255,0.82);
   box-shadow: 0 18px 48px rgba(24,26,40,0.065);
 }
-
 .timeline-entry-card::before {
   content: "";
   position: absolute;
@@ -1716,7 +1527,6 @@ transform: none;
   transform: translateY(-50%);
   pointer-events: none;
 }
-
 .timeline-entry-card::after {
   content: "";
   position: absolute;
@@ -1728,36 +1538,28 @@ transform: none;
   transition: background 0.18s ease, opacity 0.18s ease;
   pointer-events: none;
 }
-
 .timeline-entry-side.left .timeline-entry-card::before {
   right: calc(-1 * var(--timeline-card-gap));
 }
-
 .timeline-entry-side.left .timeline-entry-card::after {
   left: 10px;
 }
-
 .timeline-entry-side.left .timeline-entry-card {
   padding-left: 24px;
 }
-
 .timeline-entry-side.right .timeline-entry-card::before {
   left: calc(-1 * var(--timeline-card-gap));
 }
-
 .timeline-entry-side.right .timeline-entry-card::after {
   right: 10px;
 }
-
 .timeline-entry-side.right .timeline-entry-card {
   padding-right: 24px;
 }
-
 .timeline-entry-card:hover::after,
 .timeline-entry-card:focus-visible::after {
   background: rgba(26,24,20,0.22);
 }
-
 .timeline-entry-spine {
   grid-column: 2;
   position: relative;
@@ -1778,7 +1580,6 @@ transform: none;
   cursor: pointer;
   appearance: none;
 }
-
 .timeline-entry-date {
   position: absolute;
   top: 50%;
@@ -1792,17 +1593,14 @@ transform: none;
   transform: translateY(-50%);
   line-height: 1.4;
 }
-
 .timeline-entry.left .timeline-entry-date {
   left: calc(100% + 12px);
   text-align: left;
 }
-
 .timeline-entry.right .timeline-entry-date {
   right: calc(100% + 12px);
   text-align: right;
 }
-
 .timeline-entry-node {
   --timeline-node-scale: 1;
   position: absolute;
@@ -1816,15 +1614,12 @@ transform: none;
   transform: translate(-50%, -50%) scale(var(--timeline-node-scale));
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-
 .timeline-entry-spine:hover .timeline-entry-date {
   color: var(--ink2);
 }
-
 .timeline-entry-spine:hover .timeline-entry-node {
   --timeline-node-scale: 1.08;
 }
-
 .timeline-entry-meta {
   display: flex;
   align-items: center;
@@ -1832,7 +1627,6 @@ transform: none;
   gap: 10px;
   margin-bottom: 12px;
 }
-
 .timeline-entry-badge {
   display: inline-flex;
   align-items: center;
@@ -1848,7 +1642,6 @@ transform: none;
   font-weight: 700;
   white-space: nowrap;
 }
-
 .timeline-entry-title {
   font-family: var(--serif);
   font-size: clamp(18px, 1.7vw, 24px);
@@ -1856,29 +1649,24 @@ transform: none;
   line-height: 1.08;
   color: var(--ink);
 }
-
 .timeline-entry-copy {
   margin-top: 10px;
   font-size: 12px;
   line-height: 1.6;
   color: var(--ink2);
 }
-
 .timeline-entry.context .timeline-entry-card {
 width: min(100%, 380px);
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,246,241,0.9));
   box-shadow: 0 10px 24px rgba(26,24,20,0.06);
 }
-
 .timeline-entry.context .timeline-entry-title {
   font-size: clamp(18px, 1.7vw, 24px);
 }
-
 .timeline-entry.focus .timeline-entry-card {
  width: min(100%, 380px);
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,246,241,0.9));
 }
-
 .timeline-entry.context .timeline-entry-card:hover,
 .timeline-entry.context .timeline-entry-card:focus-visible,
 .timeline-entry.focus .timeline-entry-card:hover,
@@ -1887,22 +1675,18 @@ border-color: rgba(24,26,40,0.12);
   background: rgba(255,255,255,0.82);
   box-shadow: 0 18px 48px rgba(24,26,40,0.065);
 }
-
 .timeline-entry.active .timeline-entry-card {
   border-color: var(--story-accent-border, rgba(249,115,22,0.24));
   background: rgba(255,255,255,0.82);
   box-shadow: 0 18px 48px rgba(24,26,40,0.065);
 }
-
 .timeline-entry.active .timeline-entry-card::after {
   background: var(--story-accent-glow, rgba(59,130,246,0.28));
 }
-
 .timeline-entry.active .timeline-entry-node {
   --timeline-node-scale: 1.12;
   box-shadow: 0 0 0 8px rgba(248,246,241,0.98), 0 0 0 10px var(--story-accent-ring, rgba(59,130,246,0.08));
 }
-
 .timeline-entry-card:focus-visible,
 .timeline-entry-spine:focus-visible,
 .timeline-scale-btn:focus-visible,
@@ -1912,7 +1696,6 @@ border-color: rgba(24,26,40,0.12);
   outline: 2px solid rgba(26,24,20,0.7);
   outline-offset: 2px;
 }
-
 .sb-section-copy {
   margin: 4px 0 16px;
   font-size: 11px;
@@ -1920,72 +1703,60 @@ border-color: rgba(24,26,40,0.12);
   color: var(--ink3);
   max-width: 46ch;
 }
-
 .sb-overview-layout {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-
 .sb-overview-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
-
 .sb-overview-grid,
 .story-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.85fr);
   gap: 18px;
 }
-
 .story-grid-stacked {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
-
 .story-grid-stacked .story-side {
   gap: 14px;
 }
-
 .sb-overview-main {
   min-width: 0;
 }
-
 .sb-overview-stack {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .sb-overview-main .sb-main-summary {
   margin-top: 0;
   padding: 0px 0px 0px 10px;
 }
-
 .sb-overview-main p,
 .story-intro p {
   margin: 0 0 14px 10px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.8;
   color: var(--ink);
 }
-
 .sb-overview-main p:last-child,
 .story-intro p:last-child {
   margin-bottom: 0;
 }
-
 .sb-overview-aside,
 .story-side {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .sb-highlight-box,
 .story-highlight {
   margin: 14px 10px;
@@ -1995,26 +1766,22 @@ border-color: rgba(24,26,40,0.12);
   border-radius: 0;
   background: transparent;
 }
-
 .sb-highlight-label,
 .story-highlight-label {
-  font-size: 10px;
-  text-transform: uppercase;
+  font-size: 14;
   letter-spacing: 0.12em;
   color: var(--ink);
-  font-family: var(--serif);
-  font-weight: 700;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 750;
 }
-
 .sb-highlight-text,
 .story-highlight-text {
   margin-top: 8px;
-  font-family: var(--serif);
-  font-size: 12px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink);
 }
-
 .story-info-box {
   margin: 2px 10px 0;
   padding: 14px 15px;
@@ -2023,25 +1790,21 @@ border-color: rgba(24,26,40,0.12);
   border-radius: 8px;
   background: rgba(248,246,241,0.7);
 }
-
 .story-info-box .story-highlight-label {
-  color: var(--ink2);
+  color: var(--ink);
 }
-
 .sb-source-strip {
   padding-top: 2px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
 .sb-source-list-inline {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 8px;
 }
-
 .sb-source-list-inline span {
   padding: 5px 9px;
   border-radius: 999px;
@@ -2054,13 +1817,11 @@ border-color: rgba(24,26,40,0.12);
   font-family: var(--serif);
   font-weight: 700;
 }
-
 .story-panel {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .story-head {
   padding: 0 0 12px 12px;
   border: none;
@@ -2069,51 +1830,34 @@ border-color: rgba(24,26,40,0.12);
   background: transparent;
 }
 
-.story-deck {
-  margin-top: 10px;
-  max-width: 54ch;
-  font-size: 13px;
-  line-height: 1.75;
-  color: var(--ink2);
-}
-
-.story-head .story-deck {
-  margin-top: 0;
-}
-
 .story-panel-minimal {
   gap: 22px;
 }
-
 .story-panel-minimal .story-highlight {
-  border-left-color: var(--story-accent, rgba(26,24,20,0.18));
+    margin: 30px 0 28px;
+    padding: 18px;
+    border-left-color: var(--story-accent, rgba(24, 26, 40, 0.22));
 }
-
 .story-column {
   min-width: 0;
 }
-
 .story-column-secondary {
   margin-top: 2px;
   padding-top: 24px;
   border-top: 1px solid rgba(26,24,20,0.12);
 }
-
 .story-coverage {
   display: flex;
   flex-direction: column;
   gap: 26px;
   margin-top: 2px;
 }
-
 .story-coverage-stacked .story-column-secondary {
   padding-top: 24px;
 }
-
 .story-column-secondary .sb-subsection-title {
   color: var(--ink);
 }
-
 .story-section-note {
   margin: 5px 0 12px;
   font-size: 11px;
@@ -2121,14 +1865,12 @@ border-color: rgba(24,26,40,0.12);
   color: var(--ink);
   max-width: 42ch;
 }
-
 .editorial-article-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
 }
-
 .editorial-article {
   --article-accent: var(--theme-color, rgba(24,26,40,0.28));
   --article-accent-soft: var(--theme-bg, rgba(24,26,40,0.06));
@@ -2145,34 +1887,28 @@ border-color: rgba(24,26,40,0.12);
 .editorial-article::before {
   content: none;
 }
-
 .editorial-article[href] {
   cursor: pointer;
 }
-
 .editorial-article[href]:hover,
 .editorial-article[href]:focus-visible {
   background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9)), var(--article-accent-soft);
   box-shadow: 0 10px 24px rgba(26,24,20,0.07);
   transform: translateY(-1px);
 }
-
 .editorial-article[href]:hover .editorial-article-title,
 .editorial-article[href]:focus-visible .editorial-article-title {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-
 .editorial-article-feature {
   padding: 14px 14px 15px;
   margin-top: 12px;
 }
-
 .editorial-article-list .editorial-article {
   padding: 20px;
 }
-
 .editorial-article-meta {
   display: flex;
   align-items: center;
@@ -2181,7 +1917,6 @@ border-color: rgba(24,26,40,0.12);
   min-width: 0;
   margin-bottom: 0;
 }
-
 .editorial-article-meta span {
   font-size: 11px;
   letter-spacing: 0;
@@ -2189,13 +1924,11 @@ border-color: rgba(24,26,40,0.12);
   font-family: var(--serif);
   font-weight: 600;
 }
-
 .editorial-article-meta span + span::before {
   content: "/";
   margin-right: 6px;
   color: rgba(26,24,20,0.28);
 }
-
 .editorial-article-title {
   margin-top: 0;
   font-family: var(--serif);
@@ -2204,18 +1937,15 @@ border-color: rgba(24,26,40,0.12);
   color: var(--ink);
   text-decoration-color: var(--article-accent);
 }
-
 .editorial-article-list .editorial-article-title {
   font-size: 15px;
 }
-
 .editorial-article-copy {
   margin-top: 8px;
   font-size: 12px;
   line-height: 1.7;
   color: var(--ink2);
 }
-
 .editorial-article-action,
 .art-action {
   display: inline-flex;
@@ -2228,7 +1958,6 @@ border-color: rgba(24,26,40,0.12);
   font-weight: 700;
   color: var(--ink2);
 }
-
 .editorial-article-action::after,
 .art-action::after {
   content: "\2192";
@@ -2237,22 +1966,18 @@ border-color: rgba(24,26,40,0.12);
   line-height: 1;
   transform: translateY(-0.5px);
 }
-
 .editorial-article[href]:hover .editorial-article-action,
 .editorial-article[href]:focus-visible .editorial-article-action,
 .article-item[href]:hover .art-action,
 .article-item:focus-visible .art-action {
   color: var(--ink);
 }
-
 .story-source-footnote .sb-subsection-title {
   margin-top: 0;
 }
-
 .story-source-links {
   margin-top: 8px;
 }
-
 .story-source-links a {
   display: block;
   padding: 11px 12px;
@@ -2263,11 +1988,9 @@ border-color: rgba(24,26,40,0.12);
   text-decoration: none;
   transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
-
 .story-source-links a + a {
   margin-top: 8px;
 }
-
 .story-source-links a:hover,
 .story-source-links a:focus-visible {
   border-color: rgba(26,24,20,0.2);
@@ -2275,25 +1998,21 @@ border-color: rgba(24,26,40,0.12);
   box-shadow: 0 10px 24px rgba(26,24,20,0.07);
   transform: translateY(-1px);
 }
-
 @media (max-width: 700px) {
   .timeline-stage {
     padding: 20px 16px 18px;
   }
-
   .timeline-meta-bar,
   .sb-overview-top {
     flex-direction: column;
     align-items: flex-start;
   }
-
   .timeline-flow::before {
     top: calc(12px + (var(--timeline-row-height) / 2));
     bottom: calc(18px + (var(--timeline-row-height) / 2));
     left: 18px;
     transform: none;
   }
-
   .timeline-entry {
     position: relative;
     inset-inline: auto;
@@ -2304,38 +2023,32 @@ border-color: rgba(24,26,40,0.12);
     grid-template-columns: 36px minmax(0, 1fr);
     gap: 8px;
   }
-
   .timeline-entry-side.left,
   .timeline-entry-side.right {
     grid-column: 2;
     justify-content: flex-start;
   }
-
   .timeline-entry.left .timeline-entry-side.right,
   .timeline-entry.right .timeline-entry-side.left {
     display: none;
   }
-
   .timeline-entry-side.left .timeline-entry-card,
   .timeline-entry-side.right .timeline-entry-card {
     width: 100%;
     margin: 0 0 0 6px;
   }
-
   .timeline-entry-side.left .timeline-entry-card::before,
   .timeline-entry-side.right .timeline-entry-card::before {
     left: -20px;
     right: auto;
     width: 14px;
   }
-
   .timeline-entry-spine {
     grid-column: 1;
     height: var(--timeline-row-height);
     min-height: var(--timeline-row-height);
     max-height: var(--timeline-row-height);
   }
-
   .timeline-entry-date {
     position: absolute;
     top: 50%;
@@ -2345,27 +2058,22 @@ border-color: rgba(24,26,40,0.12);
     letter-spacing: 0.08em;
     white-space: normal;
   }
-
   .timeline-entry.left .timeline-entry-date,
   .timeline-entry.right .timeline-entry-date {
     right: auto;
     left: calc(100% + 8px);
     text-align: left;
   }
-
   .timeline-entry-title {
     font-size: 19px;
   }
-
   .sb-overview-grid,
   .story-grid {
     grid-template-columns: 1fr;
   }
-
   .editorial-article-title {
     font-size: 17px;
   }
-
   .editorial-article-list .editorial-article-title {
     font-size: 14px;
   }
@@ -2722,6 +2430,7 @@ display: none;
 }
 .sb-coverage-heading {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--ink);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0;
@@ -2772,7 +2481,6 @@ display: none;
   border-color: rgba(24,26,40,0.12);
   box-shadow: 0 18px 42px rgba(24,26,40,0.08);
 }
-
 .tiimeline-stage {
   padding: 34px 38px 30px;
 }
@@ -3713,8 +3421,6 @@ display: none;
 .tc:hover .tc-arrow {
   filter: saturate(1.08);
 }
-
-
 @supports not (background: color-mix(in srgb, red 10%, transparent)) {
   .tc {
     background:
@@ -3964,7 +3670,6 @@ display: none;
 .how-strip::before {
   display: none;
 }
-
 .how-item:not(:last-child) {
   border-right: 1px solid rgba(24,26,40,0.055);
 }
@@ -4310,7 +4015,6 @@ display: none;
   }
 }
 /* Cluster page reference refinement */
-
 #explore .topbar {
   height: 44px;
   padding: 0 14px;
@@ -4339,7 +4043,7 @@ display: none;
 }
 #explore .tb-title {
   flex: 1;
-  color: #111827;
+  color: transparent;
   font-size: 14px;
   font-weight: 700;
 }
@@ -4371,7 +4075,6 @@ display: none;
 #explore .main-grid {
   height: calc(100vh - 44px);
   grid-template-columns: minmax(0, 68%) minmax(360px, 32%);
-
 }
 #explore .sidebar {
   align-self: start;
@@ -4467,9 +4170,11 @@ display: none;
   padding-right: 0;
 }
 #explore .sb-highlight-label {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14;
+  letter-spacing: 0.12em;
   color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 750;
 }
 #explore .sb-highlight-text,
 #explore .story-section-note,
@@ -4495,7 +4200,7 @@ display: none;
 }
 #explore .sb-highlight-box {
   margin: 30px 0 28px;
-  padding-left: 18px;
+  padding: 18px;
   border-left-color: var(--story-accent, rgba(24,26,40,0.22));
 }
 #explore .chip,
@@ -4571,7 +4276,7 @@ display: none;
 }
 #explore .editorial-article-feature .editorial-article-title,
 #explore .article-feature .art-title {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.22;
 }
 #explore .editorial-article-list .editorial-article-title,
@@ -4607,7 +4312,6 @@ display: none;
     padding: 5px 8px;
   }
 }
-
 @media (max-width: 768px) {
   html,
   body {
@@ -4615,30 +4319,25 @@ display: none;
     max-width: 100%;
     overflow-x: hidden;
   }
-
   body {
     overflow-y: auto;
   }
-
   .screen,
   .screen.active,
   #landing,
   #explore {
     min-height: 100dvh;
   }
-
   img,
   svg,
   canvas {
     max-width: 100%;
   }
-
   #landing {
     width: 100%;
     padding: 24px 16px 20px;
     overflow-x: hidden;
   }
-
   .landing-top,
   .land-inner,
   .land-header,
@@ -4647,17 +4346,14 @@ display: none;
     width: 100%;
     max-width: 100%;
   }
-
   .landing-top,
   .brand-logo-lockup {
     display: flex;
     justify-content: center;
   }
-
   .brand-logo-lockup {
     min-height: auto;
   }
-
   .site-logo,
   .site-logo-corner,
   .site-logo-large,
@@ -4665,24 +4361,20 @@ display: none;
     width: min(100%, 420px);
     height: auto;
   }
-
   .land-inner {
     min-height: auto;
     gap: 24px;
     grid-template-rows: auto auto auto;
   }
-
   .land-header {
     margin: 0;
     padding-top: 0;
   }
-
   .land-headline {
     font-size: clamp(34px, 10vw, 48px);
     line-height: 1.02;
     text-wrap: balance;
   }
-
   .land-sub {
     width: min(100%, 32ch);
     margin-top: 8px;
@@ -4690,71 +4382,58 @@ display: none;
     font-size: 14px;
     line-height: 1.5;
   }
-
   .land-sub::before,
   .land-sub::after {
     display: none;
   }
-
   .topic-row {
     grid-template-columns: 1fr;
     gap: 14px;
   }
-
   .tc {
     width: 100%;
     min-height: auto;
     padding: 20px 20px 72px;
   }
-
   .tc-name,
   .tc-desc {
     max-width: 100%;
   }
-
   .tc-name {
     margin-top: 22px;
     font-size: 26px;
     overflow-wrap: anywhere;
   }
-
   .tc-desc {
     font-size: 15px;
     line-height: 1.5;
   }
-
   .tc-meta {
     left: 20px;
     right: 20px;
     bottom: 16px;
   }
-
   .tc-arrow {
     width: 42px;
     height: 42px;
     font-size: 20px;
   }
-
   .how-strip {
     flex-direction: column;
     border-radius: 16px;
   }
-
   .how-item {
     min-height: 56px;
     padding: 12px 16px;
   }
-
   .how-item:not(:last-child) {
     border-right: 0;
     border-bottom: 1px solid rgba(24,26,40,0.06);
   }
-
   #explore {
     height: auto;
     overflow-x: hidden;
   }
-
   #explore .topbar {
     position: sticky;
     top: 0;
@@ -4770,19 +4449,16 @@ display: none;
     border-bottom: 1px solid rgba(24,26,40,0.08);
     backdrop-filter: blur(14px);
   }
-
   #explore .back-btn {
     min-height: 42px;
     padding: 10px 12px;
     border-radius: 999px;
   }
-
   #explore .tb-badge {
     display: flex;
     flex: 0 0 auto;
     margin-right: 0;
   }
-
   #explore .tb-title {
     flex: 1 1 0;
     min-width: 0;
@@ -4790,7 +4466,6 @@ display: none;
     line-height: 1.2;
     overflow-wrap: anywhere;
   }
-
   #explore .view-sw {
     order: 4;
     width: 100%;
@@ -4801,7 +4476,6 @@ display: none;
     justify-content: stretch;
     -webkit-overflow-scrolling: touch;
   }
-
   #explore .vbtn {
     flex: 1 1 0;
     min-width: 0;
@@ -4809,24 +4483,20 @@ display: none;
     padding: 10px 12px;
     white-space: nowrap;
   }
-
   #explore .main-grid {
     height: auto;
     min-height: calc(100dvh - 120px);
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
-
   #explore .sidebar {
     display: none;
   }
-
   #explore .canvas-wrap {
     min-height: clamp(420px, 62dvh, 680px);
     height: min(68dvh, 680px);
     width: 100%;
   }
-
   .canvas-hint {
     left: 12px;
     right: 12px;
@@ -4837,27 +4507,22 @@ display: none;
     text-align: center;
     white-space: normal;
   }
-
   .map-wrap {
     padding: 10px;
   }
-
   #map-svg {
     width: 100%;
     height: 100%;
   }
-
   .timeline-wrap {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
-
   .timeline-stage {
     height: auto;
     min-height: 100%;
     padding: 18px 14px 14px;
   }
-
   .timeline-stage-top,
   .timeline-meta-bar,
   .sb-overview-top,
@@ -4866,13 +4531,11 @@ display: none;
     flex-direction: column;
     align-items: flex-start;
   }
-
   .timeline-headline {
     max-width: 100%;
     font-size: clamp(26px, 8vw, 36px);
     line-height: 1.02;
   }
-
   .timeline-sub,
   #explore .sb-topic-summary,
   #explore .sb-section-copy,
@@ -4886,45 +4549,37 @@ display: none;
     font-size: 14px;
     line-height: 1.55;
   }
-
   .timeline-scale {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-
   .timeline-scale-btn,
   .drawer-close button,
   .chip,
   .sb-more-btn {
     min-height: 40px;
   }
-
   .timeline-scale-btn {
     white-space: nowrap;
   }
-
   .timeline-rail-shell {
     width: 100%;
     border-radius: 22px;
     overflow: auto;
   }
-
   .timeline-card-grid,
   .timeline-month-grid,
   .sb-overview-grid,
   .story-grid {
     grid-template-columns: 1fr;
   }
-
   .timeline-card-grid {
     padding: 0 14px 14px;
   }
-
   .timeline-month-grid {
     padding: 14px;
   }
-
   .timeline-card,
   .timeline-month-card,
   .timeline-entry-card,
@@ -4935,13 +4590,11 @@ display: none;
     width: 100%;
     max-width: 100%;
   }
-
   .timeline-flow {
     --timeline-row-height: auto;
     --timeline-row-gap: 18px;
     padding: 12px 14px 18px 0;
   }
-
   .timeline-flow::before {
     top: 14px;
     bottom: 14px;
@@ -4949,7 +4602,6 @@ display: none;
     width: 1px;
     transform: none;
   }
-
   .timeline-entry {
     grid-template-columns: 36px minmax(0, 1fr);
     align-items: start;
@@ -4958,19 +4610,16 @@ display: none;
     height: auto;
     max-height: none;
   }
-
   .timeline-entry-side.left,
   .timeline-entry-side.right {
     grid-column: 2;
     height: auto;
     justify-content: flex-start;
   }
-
   .timeline-entry.left .timeline-entry-side.right,
   .timeline-entry.right .timeline-entry-side.left {
     display: none;
   }
-
   .timeline-entry-side.left .timeline-entry-card,
   .timeline-entry-side.right .timeline-entry-card {
     width: 100%;
@@ -4978,20 +4627,17 @@ display: none;
     margin: 0 0 0 6px;
     padding: 16px;
   }
-
   .timeline-entry-side.left .timeline-entry-card::before,
   .timeline-entry-side.right .timeline-entry-card::before {
     left: -18px;
     right: auto;
     width: 12px;
   }
-
   .timeline-entry-side.left .timeline-entry-card::after,
   .timeline-entry-side.right .timeline-entry-card::after {
     left: 10px;
     right: auto;
   }
-
   .timeline-entry-spine {
     grid-column: 1;
     width: 36px;
@@ -4999,7 +4645,6 @@ display: none;
     height: 100%;
     max-height: none;
   }
-
   .timeline-entry-date {
     position: absolute;
     top: 0;
@@ -5012,19 +4657,16 @@ display: none;
     writing-mode: vertical-rl;
     text-align: left;
   }
-
   .timeline-entry.left .timeline-entry-date,
   .timeline-entry.right .timeline-entry-date {
     left: calc(100% + 8px);
     right: auto;
     text-align: left;
   }
-
   .timeline-entry-node {
     top: 16px;
     transform: translate(-50%, 0) scale(var(--timeline-node-scale));
   }
-
   .timeline-entry-title,
   .timeline-card-label,
   .timeline-month-title,
@@ -5036,14 +4678,12 @@ display: none;
   .sb-topic-name {
     overflow-wrap: anywhere;
   }
-
   .timeline-entry-title,
   .timeline-card-label,
   .timeline-month-title {
     font-size: 18px;
     line-height: 1.18;
   }
-
   .timeline-entry-copy,
   .timeline-card-copy,
   .timeline-month-copy,
@@ -5051,55 +4691,45 @@ display: none;
     font-size: 13px;
     line-height: 1.55;
   }
-
   .art-meta,
   .editorial-article-meta {
     width: 100%;
     gap: 6px;
   }
-
   .art-source,
   .editorial-article-source {
     max-width: 100%;
     text-align: left;
     white-space: normal;
   }
-
   .mobile-drawer {
     display: block;
     max-height: min(72dvh, 680px);
     padding: 0 14px calc(20px + env(safe-area-inset-bottom));
   }
-
   .drawer-close button {
     padding: 8px 14px;
   }
-
   #drawer-content,
   #drawer-content > * {
     width: 100%;
     max-width: 100%;
   }
 }
-
 @media (max-width: 480px) {
   .land-headline {
     font-size: 32px;
   }
-
   #explore .topbar {
     padding: 10px 10px 12px;
   }
-
   #explore .canvas-wrap {
     min-height: 380px;
     height: 60dvh;
   }
-
   .timeline-headline {
     font-size: 24px;
   }
-
   .timeline-entry-side.left .timeline-entry-card,
   .timeline-entry-side.right .timeline-entry-card,
   .timeline-card,
@@ -5111,7 +4741,6 @@ display: none;
 </head>
 <body>
 <div id="tt"></div>
-
 <!-- ═══════════════════════
      LANDING
 ═══════════════════════ -->
@@ -5121,9 +4750,7 @@ display: none;
       <img src="assets/news-cluster-logo.png" alt="The News Cluster logo" class="site-logo site-logo-corner">
     </div>
   </div>
-
   <div class="land-inner">
-
     <!-- HEADER -->
     <div class="land-header">
        <h1 class="land-headline">
@@ -5132,10 +4759,8 @@ display: none;
       </h1>
       <div class="land-sub">Explore news as connected knowledge - not a scroll</div>
     </div>
-
       <!-- TOPIC CARDS -->
     <div class="topic-row">
-
       <!-- POLITICS -->
       <div class="tc politics" data-topic-theme="politics" onclick="openTopic('politics')">
         <div class="tc-top-bar"></div>
@@ -5150,7 +4775,6 @@ display: none;
           <div class="tc-arrow">&rarr;</div>
         </div>
       </div>
-
       <!-- CONFLICT -->
       <div class="tc conflict" data-topic-theme="conflict" onclick="openTopic('ukraine')">
         <div class="tc-top-bar"></div>
@@ -5165,7 +4789,6 @@ display: none;
           <div class="tc-arrow">&rarr;</div>
         </div>
       </div>
-
       <!-- CLIMATE -->
       <div class="tc climate" data-topic-theme="climate" onclick="openTopic('climate')">
         <div class="tc-top-bar"></div>
@@ -5180,9 +4803,7 @@ display: none;
           <div class="tc-arrow">&rarr;</div>
         </div>
       </div>
-
     </div>
-
     <!-- HOW IT WORKS -->
     <div class="how-strip">
       <div class="how-item">
@@ -5202,10 +4823,8 @@ display: none;
         <div class="how-text"><strong>Navigate the map</strong></div>
       </div>
     </div>
-
   </div>
 </div>
-
 <!-- ═══════════════════════
      EXPLORE
 ═══════════════════════ -->
@@ -5215,7 +4834,6 @@ display: none;
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1.5L3.5 5.5L7 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Overview
     </button>
-
     <div class="tb-badge" id="tb-badge"></div>
     <div class="tb-title" id="tb-title"></div>
     <div class="view-sw">
@@ -5224,12 +4842,10 @@ display: none;
       <button class="vbtn" id="vbtn-map" onclick="switchView('map')">Map</button>
     </div>
   </div>
-
   <div class="main-grid">
     <!-- CANVAS AREA -->
     <div class="canvas-wrap" id="canvas-wrap">
       <canvas id="gc"></canvas>
-
       <!-- MAP -->
       <div class="map-wrap" id="map-wrap">
         <svg id="map-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet">        </svg>
@@ -5239,7 +4855,6 @@ display: none;
       </div>
       <div class="canvas-hint" id="canvas-hint">Click a node to focus the sidebar</div>
     </div>
-
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sb-top" id="sb-top">
@@ -5259,7 +4874,6 @@ display: none;
     </div>
   </div>
 </div>
-
 <script>
 /* ══════════════════════
    VISUAL SYSTEM
@@ -5273,12 +4887,10 @@ function hexToRgb(hex) {
   const b = parseInt(hex.slice(5,7),16);
   return [r,g,b];
 }
-
 function rgbaFromHex(hex, alpha=1) {
   const [r,g,b] = hexToRgb(hex);
   return `rgba(${r},${g},${b},${alpha})`;
 }
-
 function blendColors(hex1, hex2, t=0.5) {
   const [r1,g1,b1] = hexToRgb(hex1);
   const [r2,g2,b2] = hexToRgb(hex2);
@@ -5287,7 +4899,6 @@ function blendColors(hex1, hex2, t=0.5) {
   const b = Math.round(b1+(b2-b1)*t);
   return `rgb(${r},${g},${b})`;
 }
-
 const themeColors = {
   conflict: "#E84855",        // Konflikt - red/pink
   politics: "#2563EB",        // Politik - blue
@@ -5298,9 +4909,7 @@ const themeColors = {
   domestic: "#DB2777",        // Inrikes - magenta
   economy: "#374151"          // Ekonomi - dark grey
 };
-
 const MAIN_CLUSTER_SHAPE = 'circle';
-
 const THEME_SHAPES = {
   conflict: 'circle',
   politics: 'circle',
@@ -5311,7 +4920,6 @@ const THEME_SHAPES = {
   domestic: 'circle',
   economy: 'circle'
 };
-
 const CATEGORY_META = {
   people: {
     label: 'People',
@@ -5354,7 +4962,6 @@ const CATEGORY_META = {
     keywords: ['economy','economic','inflation','gdp','market','trade','stock','bank','finance','debt','budget','tax','recession','unemployment','jobs','growth','investment']
   }
 };
-
 const CATEGORY_ALIASES = {
   conflict: 'conflict',
   ukraine: 'conflict',
@@ -5384,11 +4991,9 @@ const CATEGORY_ALIASES = {
   economy: 'economy',
   ekonomi: 'economy'
 };
-
 const CATEGORY_KEYWORDS = Object.fromEntries(
   Object.entries(CATEGORY_META).map(([key, meta]) => [key, meta.keywords])
 );
-
 function normalizeLookupKey(value = '') {
   return String(value || '')
     .trim()
@@ -5398,7 +5003,6 @@ function normalizeLookupKey(value = '') {
     .replace(/&/g, 'and')
     .replace(/[^a-z0-9]+/g, '');
 }
-
 function resolveThemeValue(...values) {
   for (const value of values) {
     if (!value) continue;
@@ -5407,13 +5011,11 @@ function resolveThemeValue(...values) {
   }
   return 'politics';
 }
-
 function resolveCategoryKey(categoryKey = '') {
   if (CATEGORY_META[categoryKey]) return categoryKey;
   const normalized = normalizeLookupKey(categoryKey);
   return CATEGORY_ALIASES[normalized] || 'politics';
 }
-
 function categorize(text) {
   if (!text) return 'politics';
   const lower = text.toLowerCase();
@@ -5428,13 +5030,11 @@ function categorize(text) {
   }
   return best;
 }
-
 function getThemeToken(categoryKey = 'politics', overrides = {}) {
   const resolvedCategory = resolveCategoryKey(categoryKey);
   const meta = CATEGORY_META[resolvedCategory] || CATEGORY_META.politics;
   const colorKey = meta.themeColorKey || 'politics';
   const color = themeColors[colorKey] || themeColors.politics;
-
   return {
     key: resolvedCategory,
     colorKey,
@@ -5450,15 +5050,12 @@ function getThemeToken(categoryKey = 'politics', overrides = {}) {
     shape: overrides.shape || THEME_SHAPES[colorKey] || 'circle'
   };
 }
-
 function getThemeInlineVars(theme = {}) {
   return `--theme-color:${theme.color};--theme-bg:${theme.bg};--theme-border:${theme.border};--theme-soft:${theme.soft};`;
 }
-
 function getAccentInlineVars(theme = {}) {
   return `${getThemeInlineVars(theme)}--story-accent:${theme.color};--story-accent-soft:${theme.bg};--story-accent-border:${theme.border};--story-accent-ring:${theme.ring};--story-accent-glow:${theme.glow};`;
 }
-
 function getShapeStyle(shape, color) {
   if (shape === 'square') {
     return `border-radius:1px;background:${color}`;
@@ -5468,7 +5065,6 @@ function getShapeStyle(shape, color) {
   }
   return `border-radius:50%;background:${color}`;
 }
-
 function getCat(node) {
   return resolveThemeValue(node.theme, node.category, categorize(node.label));
 }
@@ -5481,30 +5077,22 @@ function getNodeTheme(node = {}) {
     shape: node.tier === 'main' ? MAIN_CLUSTER_SHAPE : undefined
   });
 }
-
-
 function inferPeopleCategory(article = {}) {
   const title = cleanText(article.title || '');
   if (!title) return '';
-
   const peopleLeadPattern = /^([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})\s+(wins|win|says|said|joins|joined|leads|led|beats|beat|becomes|became|dies|died|faces|faced|accused|claims|claimed|defeats|defeated|returns|returned|launches|launched|reveals|revealed|opens|opened|takes|took)\b/;
   if (peopleLeadPattern.test(title)) return 'people';
-
   const properNameCount = (title.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+\b/g) || []).length;
   if (properNameCount > 0 && !/\b(country|state|government|congress|court|senate|economy|climate|war)\b/i.test(title)) {
     return 'people';
   }
-
   return '';
 }
-
 function inferArticleCategory(article = {}) {
   const peopleCategory = inferPeopleCategory(article);
   if (peopleCategory) return peopleCategory;
-
   return categorize(`${article.title || ''} ${article.description || ''} ${getArticleSourceName(article)}`);
 }
-
 function getArticleCategory(article = {}, fallbackTheme = '') {
   return resolveThemeValue(
     article.theme,
@@ -5518,12 +5106,9 @@ function buildArticleThemeLabel(article = {}, className = 'article-theme', theme
   const theme = getThemeToken(getArticleCategory(article, themeOverride));
   return `<span class="${className}" style="${getThemeInlineVars(theme)}color:${theme.color};"><span class="${className}-dot"></span>${escapeHtml(theme.label)}</span>`;
 }
-
 function getArticleTheme(article = {}, themeOverride = '') {
   return getThemeToken(getArticleCategory(article, themeOverride));
 }
-
-
 const THEMES = {
   politics: { ...getThemeToken('politics', { label: 'Politics', shape: MAIN_CLUSTER_SHAPE }), type: 'politics' },
   ukraine:  { ...getThemeToken('conflict', { label: 'Conflict', shape: MAIN_CLUSTER_SHAPE }), type: 'conflict' },
@@ -5543,12 +5128,10 @@ function badgeHTML(topicKey) {
   const t = THEMES[topicKey];
   return `<span class="badge" data-shape="${t.shape}" style="${getThemeInlineVars(t)}color:${t.color};"><span class="badge-shape" style="${getShapeStyle(t.shape, t.color)}"></span>${t.label}</span>`;
 }
-
 function sidebarTopicMarkHTML(topicKey) {
   const t = THEMES[topicKey];
   return `<span class="sb-topic-mark" style="${getThemeInlineVars(t)}background:${t.bg};color:${t.color}" aria-hidden="true"><span class="badge-shape" style="${getShapeStyle(t.shape, t.color)}"></span></span>`;
 }
-
 function hydrateStaticThemeElements() {
   document.querySelectorAll('.badge[data-theme-key]').forEach(badgeEl => {
     const theme = getThemeToken(badgeEl.dataset.themeKey || 'politics');
@@ -5562,7 +5145,6 @@ function hydrateStaticThemeElements() {
       shapeEl.setAttribute('style', getShapeStyle(badgeEl.dataset.shape, theme.color));
     }
   });
-
   document.querySelectorAll('.tc[data-topic-theme]').forEach(cardEl => {
     const theme = getThemeToken(cardEl.dataset.topicTheme || 'politics');
     cardEl.style.setProperty('--topic-theme-color', theme.color);
@@ -5570,26 +5152,21 @@ function hydrateStaticThemeElements() {
     cardEl.style.setProperty('--topic-theme-border', theme.border);
   });
 }
-
 function toUiKey(text = '') {
   return String(text)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'item';
 }
-
 function getMapMarkerId(marker = {}) {
   return marker.id || `map-${toUiKey(marker.label || marker.query || 'marker')}`;
 }
-
 function renderSidebarTop(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic || !THEMES[topicKey]) return;
-
   const focusTitle = cleanText(options.title || '');
   const summary = cleanText(options.summary || '');
   const showFocusTitle = focusTitle && focusTitle.toLowerCase() !== cleanText(topic.name).toLowerCase();
-
   document.getElementById('sb-top').innerHTML = `
     <div class="sb-top-primary">
       <div id="sb-badge">${sidebarTopicMarkHTML(topicKey)}</div>
@@ -5601,12 +5178,10 @@ function renderSidebarTop(topicKey, options = {}) {
     ${summary ? `<div class="sb-topic-summary" id="sb-topic-summary">${escapeHtml(summary)}</div>` : ''}
   `;
 }
-
 function scrollSidebarToTop() {
   const scrollEl = document.getElementById('sb-scroll');
   if (scrollEl) scrollEl.scrollTop = 0;
 }
-
 function syncMobileDrawerFromSidebar(isOpen = false) {
   if (window.innerWidth > MOBILE_BREAKPOINT) return;
   const drawer = document.getElementById('mobile-drawer');
@@ -5615,25 +5190,21 @@ function syncMobileDrawerFromSidebar(isOpen = false) {
   const sidebarTopic = document.getElementById('sb-topic-name')?.textContent || '';
   const sidebarTitle = document.getElementById('sb-title')?.textContent || '';
   if (!drawer || !drawerContent || !sidebarContent) return;
-
   const drawerHeader = sidebarTopic
     ? `<div class="drawer-summary">
         <div class="drawer-topic-name">${escapeHtml(sidebarTopic)}</div>
         ${sidebarTitle && sidebarTitle !== sidebarTopic ? `<div class="drawer-focus-title">${escapeHtml(sidebarTitle)}</div>` : ''}
       </div>`
     : '';
-
   drawerContent.innerHTML = `${drawerHeader}${sidebarContent.innerHTML}`;
   drawer.classList.toggle('open', Boolean(isOpen));
 }
-
 function setCanvasHint(text = '', visible = true) {
   const hint = document.getElementById('canvas-hint');
   if (!hint) return;
   hint.textContent = text;
   hint.style.display = visible ? '' : 'none';
 }
-
 /* ══════════════════════
    TOPIC DATA
 ══════════════════════ */
@@ -5642,13 +5213,13 @@ politics: {
       label:'US Politics',
       name:'US Politics',
       key:'politics',
-      summary:'An overview of elections, institutions, parties, media and policy in the current US political landscape.',
-        mainQuery: "\"US politics\" AND (White House OR Congress OR \"Supreme Court\" OR election OR campaign OR senate)",
+      summary:'Current US politics is centered on White House security, Trump administration policy fights, Congress, the courts, immigration and 2026 election map battles.',
+        mainQuery: "\"US politics\" AND (Trump OR \"White House\" OR Congress OR \"Supreme Court\" OR immigration OR redistricting OR Iran)",
     queries:{
-      elections:'US elections 2024 2025', congress:'US Congress legislation',
-      supremecourt:'Supreme Court ruling', history:'American democracy history',
-      policy:'US federal policy White House', parties:'Republican Democrat party',
-      media:'US political media', economy:'US economy inflation', foreign:'US foreign policy'
+      elections:'US elections 2026 redistricting House Senate', congress:'US Congress legislation Trump administration',
+      supremecourt:'Supreme Court Trump administration rulings', history:'American democracy history',
+      policy:'Trump administration federal policy White House', parties:'Republican Democrat party 2026',
+      media:'US political media White House security', economy:'US economy tariffs inflation politics', foreign:'US foreign policy Iran talks'
     },
 nodes: [
 { id:'politics-main', label:'US Politics', tier:'main', category:'politics' },
@@ -5673,6 +5244,22 @@ edges: [
 ],
 tlEvents: [
   {
+    id: 'white-house-dinner-shooting',
+    label: 'WHCD shooting',
+    date: '2026-04-27',
+    dateLabel: 'Apr 27',
+    x: 930,
+    hi: true,
+    pinToDetailTimeline: true,
+    eventType: 'story',
+    importance: 'high',
+    summaryQuery: 'White House Correspondents Dinner shooting suspect charges Trump Secret Service',
+    articleQuery: 'White House Correspondents Dinner shooting latest Trump Secret Service',
+    backgroundQuery: 'White House Correspondents Dinner shooting suspect charges Trump Secret Service overview',
+    latestQuery: 'White House Correspondents Dinner shooting latest Trump Secret Service',
+    whyItMatters: 'The shooting has put presidential-event security, Secret Service protocols and the political climate around Trump back at the center of the US politics story.'
+  },
+  {
     id: 'iran-strike',
     label: 'Iran strike',
     x: 860,
@@ -5689,7 +5276,6 @@ mapMarkers: [
   { x: 693, y: 250, label:'Washington D.C.', size:11, query:'Washington DC US politics congress white house' }
 ]
   },
-
 ukraine: {
       label:'Ukraine Conflict',
       name:'Ukraine Conflict',
@@ -5740,7 +5326,6 @@ mapMarkers: [
   { coords: [46.4825, 30.7233], label:'Odesa', size:8, query:'Odesa Ukraine war' }
 ]
   },
-
 climate: {
       label:'Climate',
       name:'Climate',
@@ -5793,7 +5378,6 @@ mapMarkers: [
 ]
   }
 };
-
 /* ══════════════════════
    STATE
 ══════════════════════ */
@@ -5822,7 +5406,6 @@ const MAP_VIEWBOXES = {
   ukraine: '110 45 740 400',
   climate: '55 55 900 410'
 };
-
 /* ══════════════════════
    NAVIGATION
 ══════════════════════ */
@@ -5830,7 +5413,6 @@ function openTopic(key) {
   // Stop any running animation loop immediately
   if (animId) { cancelAnimationFrame(animId); animId = null; }
   closeDrawer();
-
   currentTopic = key;
   selectedNode = null;
   selectedMapMarkerId = null;
@@ -5849,13 +5431,10 @@ function openTopic(key) {
   activeMapDetailRequest += 1;
   nodes = [];
   edgeList = [];
-
   activeTopicRequest += 1;
   const requestId = activeTopicRequest;
-
   const topic = TOPICS[key];
   const theme = THEMES[key];
-
   document.getElementById('landing').classList.remove('active');
   document.getElementById('explore').classList.add('active');
   document.getElementById('tb-title').textContent = topic.label;
@@ -5863,37 +5442,31 @@ function openTopic(key) {
   document.getElementById('vbtn-graph').classList.add('active');
   document.getElementById('vbtn-timeline').classList.remove('active');
   document.getElementById('vbtn-map').classList.remove('active');
+  document.getElementById('gc').classList.remove('hidden');
   document.getElementById('map-wrap').classList.remove('on');
   document.getElementById('timeline-wrap').classList.remove('on');
   setCanvasHint('Click a node to focus the sidebar', true);
-
 updateScrubShape(theme.shape, theme.color);
-
 // clear old visuals first
 const canvas = document.getElementById('gc');
 if (canvas) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 const mapSvg = document.getElementById('map-svg');
   if (mapSvg) {
     mapSvg.innerHTML = '';
   }
-
   renderMainTopicSidebarShell(key, {
     overviewCopy: 'Loading the main overview and strongest current signals.',
     summaryText: 'Loading summary...'
   });
-
 // wait one frame so the explore screen is fully visible before drawing
 requestAnimationFrame(() => {
   if (key !== currentTopic) return;
-
   renderTimeline(topic, theme);
   renderMap(topic, theme);
   initGraph(key);
-
   const mainNode = topic.nodes.find(n => n.tier === 'main');
   if (mainNode) {
     selectedNode = mainNode.id;
@@ -5901,7 +5474,6 @@ requestAnimationFrame(() => {
   }
 });
 }
-
 function goBack() {
   // stop old animation
   if (animId) {
@@ -5909,12 +5481,10 @@ function goBack() {
     animId = null;
   }
   closeDrawer();
-
   // invalidate all old async responses
   activeTopicRequest += 1;
   activeTimelineDetailRequest += 1;
   activeMapDetailRequest += 1;
-
   // reset state completely
   currentTopic = null;
   selectedNode = null;
@@ -5932,31 +5502,27 @@ function goBack() {
   activeTimelineEventId = null;
   timelineRailScrollTop = 0;
   shouldRevealTimelineSelection = false;
-
   // reset UI
   document.getElementById('explore').classList.remove('active');
   document.getElementById('landing').classList.add('active');
-
   document.getElementById('vbtn-graph').classList.add('active');
   document.getElementById('vbtn-timeline').classList.remove('active');
   document.getElementById('vbtn-map').classList.remove('active');
+  document.getElementById('gc').classList.remove('hidden');
   document.getElementById('map-wrap').classList.remove('on');
   document.getElementById('timeline-wrap').classList.remove('on');
   setCanvasHint('Click a node to focus the sidebar', true);
-
   // clear canvas
   const canvas = document.getElementById('gc');
   if (canvas) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
-
   // clear map completely
   const mapSvg = document.getElementById('map-svg');
   if (mapSvg) {
     mapSvg.innerHTML = '';
   }
-
   // reset sidebar
   document.getElementById('sb-top').innerHTML = `
     <div class="sb-top-primary">
@@ -5968,17 +5534,14 @@ function goBack() {
     </div>
     <div class="sb-topic-summary" id="sb-topic-summary">A short summary of the main topic appears here.</div>
   `;
-
   document.getElementById('sb-scroll').innerHTML = `
     <p class="sb-empty">Click any node in the graph to load recent coverage and context.</p>
     <div class="chip-row" id="chip-row"></div>
   `;
-
   // reset topbar text
   document.getElementById('tb-title').textContent = '';
   document.getElementById('tb-badge').innerHTML = '';
 }
-
 async function switchView(v) {
   closeDrawer();
   currentView = v;
@@ -5986,7 +5549,6 @@ async function switchView(v) {
     activeMapDetailRequest += 1;
   }
   const gc = document.getElementById('gc');
-
 if (v === 'graph') {
   gc.classList.remove('hidden');
 } else {
@@ -6004,7 +5566,6 @@ if (v === 'graph') {
   } else {
     setCanvasHint('', false);
   }
-
   if (v === 'map') {
     if (currentTopic) {
       requestAnimationFrame(() => {
@@ -6022,7 +5583,6 @@ if (v === 'graph') {
     }
     return;
   }
-
   if (v === 'graph' && currentTopic) {
     const topic = TOPICS[currentTopic];
     const mainNode = topic?.nodes?.find(node => node.tier === 'main');
@@ -6033,13 +5593,11 @@ if (v === 'graph') {
     }
     return;
   }
-
   if (v === 'timeline' && currentTopic) {
     await ensureTimelineSidebarReady(currentTopic);
     renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
   }
 }
-
 function renderSidebarDefault(topic) {
   const s=document.getElementById('sb-scroll');
   s.innerHTML='<p class="sb-empty">Click any node to load recent coverage and context for that perspective.</p>';
@@ -6056,7 +5614,6 @@ function renderSidebarDefault(topic) {
   });
   s.appendChild(row);
 }
-
 function updateScrubShape(shape, color) {
   const circ=document.getElementById('tl-scrub-circ');
   const rect=document.getElementById('tl-scrub-rect');
@@ -6069,7 +5626,6 @@ function updateScrubShape(shape, color) {
   else circ.setAttribute('display','block');
   prog.setAttribute('stroke',color);
 }
-
 function traceGraphNodeShape(ctx, x, y, radius, shape = 'circle') {
   if (shape === 'square') {
     const half = radius * 0.92;
@@ -6088,7 +5644,6 @@ function traceGraphNodeShape(ctx, x, y, radius, shape = 'circle') {
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
 }
-
 /* ══════════════════════
    GRAPH ENGINE
 ══════════════════════ */
@@ -6105,7 +5660,6 @@ function initGraph(key) {
   const centerX = isMobile ? W / 2 : W * 0.49;
   const centerY = isMobile ? H * 0.47 : H * 0.48;
   const outerRadius = Math.min(W, H) * (isMobile ? 0.31 : 0.42);
-
 nodes = TOPICS[key].nodes.map((n, i, arr) => {
   if (i === 0) {
     return {
@@ -6118,7 +5672,6 @@ nodes = TOPICS[key].nodes.map((n, i, arr) => {
       bt: now
     };
   }
-
   const count = Math.max(1, arr.length - 1);
   const angle = ((i - 1) / count) * Math.PI * 2 - Math.PI / 2 + (i % 2 ? 0.08 : -0.06);
   const tierFactor = n.tier === 'core' ? 0.86 : n.tier === 'context' ? 1.08 : 1;
@@ -6126,7 +5679,6 @@ nodes = TOPICS[key].nodes.map((n, i, arr) => {
   const radius = outerRadius * tierFactor * organicFactor;
   const driftX = Math.cos(angle * 2.1) * outerRadius * 0.035;
   const driftY = Math.sin(angle * 1.7) * outerRadius * 0.03;
-
   return {
     ...n,
     px: centerX + Math.cos(angle) * radius + driftX,
@@ -6141,12 +5693,10 @@ nodes = TOPICS[key].nodes.map((n, i, arr) => {
   if(animId) cancelAnimationFrame(animId);
   loop(key);
 }
-
 function loop(key) {
   const canvas = document.getElementById('gc');
   if (!canvas) return;
   if (!key || key !== currentTopic) return;
-
   const ctx = canvas.getContext('2d');
   const dpr = devicePixelRatio;
   const topic = TOPICS[key];
@@ -6158,7 +5708,6 @@ function loop(key) {
   ctx.scale(dpr, dpr);
   ctx.translate(panOffset.x, panOffset.y);
   ctx.scale(zoomScale, zoomScale);
-
   const cx = W / 2;
   const cy = H / 2 - 10;
   const aura = ctx.createRadialGradient(cx, cy, 20, cx, cy, Math.min(W, H) * 0.58);
@@ -6167,29 +5716,23 @@ function loop(key) {
   aura.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.fillStyle = aura;
   ctx.fillRect(0, 0, W, H);
-
   const nm={};
   nodes.forEach(n=>{
     const e=now-n.bt-n.bd;
     if(e>0){n.alpha=Math.min(1,e/460);n.scale=0.1+0.9*Math.min(1,e/360);}
     nm[n.id]=n;
   });
-
   // Edges
 // Edges — blended gradient between source and target category colors
   edgeList.forEach(edge => {
     const na = nm[edge.from];
     const nb = nm[edge.to];
     if (!na || !nb) return;
-
     const style = RELATION_STYLES[edge.rel] || RELATION_STYLES.context;
     const al = Math.min(na.alpha, nb.alpha) * style.alpha;
-
     const colorA = getNodeTheme(na).color;
     const colorB = getNodeTheme(nb).color;
-
     const mixed = blendColors(colorA, colorB, 0.52);
-
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(na.px, na.py);
@@ -6202,7 +5745,6 @@ ctx.shadowBlur = 0;
     ctx.stroke();
     ctx.restore();
   });
-
 // Nodes
   nodes.forEach(n=>{
     if(n.alpha<=0) return;
@@ -6210,15 +5752,12 @@ ctx.shadowBlur = 0;
     const hov=hoveredNodeId===n.id;
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
-
     const nodeTheme = getNodeTheme(n);
     const nodeFill  = nodeTheme.color;
     const nodeStroke = nodeTheme.stroke;
     const nodeLabel = n.tier === 'main' ? '#FDFCFA' : '#FDFCFA';
     const nodeShape = nodeTheme.shape || 'circle';
-
     ctx.save();
-
     if (n.tier !== 'main') {
       const angleFromHub = Math.atan2(n.py - nodes[0].py, n.px - nodes[0].px);
       const branchLength = r + 36;
@@ -6255,7 +5794,6 @@ ctx.shadowBlur = 0;
       ctx.fill();
       ctx.restore();
     }
-
     // Selection glow
     if(sel || hov){
       ctx.save();
@@ -6265,7 +5803,6 @@ ctx.shadowBlur = 0;
       ctx.fill();
       ctx.restore();
     }
-
   ctx.globalAlpha = n.alpha;
     const grad = ctx.createRadialGradient(n.px - r * 0.36, n.py - r * 0.42, r * 0.2, n.px, n.py, r * 1.18);
     grad.addColorStop(0, blendColors(nodeFill, '#FFFFFF', n.tier === 'main' ? 0.18 : 0.42));
@@ -6280,18 +5817,15 @@ ctx.shadowBlur = 0;
     ctx.lineWidth = n.tier === 'main' ? 2.4 : 1.4;
     ctx.strokeStyle = n.tier === 'main' ? rgbaFromHex(nodeFill, 0.55) : nodeStroke;
     ctx.stroke();
-
     if (n.tier !== 'main') {
       traceGraphNodeShape(ctx, n.px, n.py, Math.max(5, r * 0.34), nodeShape);
       ctx.fillStyle = rgbaFromHex(nodeFill, 0.26);
       ctx.fill();
     }
-
     // Label
     ctx.globalAlpha = n.alpha;
     ctx.fillStyle   = nodeLabel;
     ctx.textAlign   = 'center';
-
     if(n.tier === 'main'){
       ctx.textBaseline = 'middle';
       ctx.font = "600 16px 'Helvetica Neue', Helvetica, Arial, sans-serif";
@@ -6309,15 +5843,12 @@ ctx.shadowBlur = 0;
       const labelY = n.py + r + 17;
       ctx.fillText(n.label, n.px, labelY);
     }
-
     ctx.restore();
   });
     
-
   ctx.restore();
   animId=requestAnimationFrame(()=>loop(currentTopic));
 }
-
 /* ══════════════════════
    CANVAS EVENTS
 ══════════════════════ */
@@ -6328,31 +5859,24 @@ function lp(e){
       y: e.clientY - r.top
     };
 }
-
 function hitTest(pos) {
   for (const n of nodes) {
     const dx = pos.x - n.px;
     const dy = pos.y - n.py;
-
     const baseR = n.tier === 'main' ? 54 : 20;
     const r = baseR * n.scale;
-
     const hit = Math.sqrt(dx * dx + dy * dy) < r + 10;
-
     if (hit) return n;
   }
-
   return null;
 }
 function renderSidebarTimeline(topicKey, events) {
   const wrap = document.getElementById('sb-timeline-inline');
   if (!wrap) return;
-
   if (!events || events.length === 0) {
     wrap.innerHTML = `<div class="sb-empty">No major happenings found yet for this topic.</div>`;
     return;
   }
-
   wrap.innerHTML = events.map(ev => `
     <button class="sb-tl-item ${ev.active ? 'active' : ''}" onclick="selectTimelineEvent('${topicKey}', '${ev.id}')">
       <span class="sb-tl-date">${escapeHtml(getTimelineEventDisplayDate(ev, { includeYear: false }))}</span>
@@ -6366,33 +5890,26 @@ function renderSidebarTimeline(topicKey, events) {
     </button>
   `).join('');
 }
-
 function setTimelineActiveEvent(topicKey, eventId) {
   const data = timelineEventCache[topicKey];
   if (!data) return [];
-
   ['overviewEvents', 'detailEvents'].forEach(groupName => {
     data[groupName] = (data[groupName] || []).map(ev => ({
       ...ev,
       active: ev.id === eventId
     }));
   });
-
   activeTimelineEventId = eventId;
   return getCurrentTimelineEvents(topicKey);
 }
-
 function syncTimelineEventDateFromArticles(topicKey, eventId, articles = []) {
   const data = timelineEventCache[topicKey];
   if (!data || !eventId) return false;
-
   const featuredArticle = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles))[0];
   const syncedDateLabel = formatPublishedDate(featuredArticle);
   const syncedPublishedAt = cleanText(featuredArticle?.publishedAt || '');
   if (!syncedDateLabel || !syncedPublishedAt) return false;
-
   let didChange = false;
-
   ['overviewEvents', 'detailEvents'].forEach(groupName => {
     const events = data[groupName] || [];
     const nextEvents = events.map(event => {
@@ -6406,51 +5923,40 @@ function syncTimelineEventDateFromArticles(topicKey, eventId, articles = []) {
         date: syncedPublishedAt
       };
     });
-
     data[groupName] = sortTimelineEventsByDate(nextEvents, 'desc');
   });
-
   return didChange;
 }
-
 function getTimelineEventDateValue(event = {}) {
   const directDate = event.publishedAt || event.date || event.toDate || event.fromDate;
   if (directDate) {
     const parsed = new Date(directDate);
     if (!isNaN(parsed)) return parsed.getTime();
   }
-
   const label = cleanText(event.dateLabel || '').toLowerCase();
   const now = new Date();
-
   if (!label || label === 'now' || label === 'today' || label === 'this week') {
     return now.getTime();
   }
-
   if (label === 'yesterday') {
     return now.getTime() - 24 * 60 * 60 * 1000;
   }
-
   if (label === 'last week') {
     return now.getTime() - 7 * 24 * 60 * 60 * 1000;
   }
-
   const monthMatch = label.match(/^([a-z]{3,9})\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?$/i);
   if (monthMatch) {
     const monthIndex = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
       .indexOf(monthMatch[1].slice(0, 3).toLowerCase());
     const day = Number(monthMatch[2]);
     const year = monthMatch[3] ? Number(monthMatch[3]) : now.getFullYear();
-
     if (monthIndex >= 0 && day >= 1 && day <= 31) {
       return new Date(year, monthIndex, day).getTime();
     }
   }
-
   const parsedLabelDate = new Date(event.dateLabel || '');
   return !isNaN(parsedLabelDate) ? parsedLabelDate.getTime() : 0;
 }
-
 function sortTimelineEventsByDate(events = [], direction = 'desc') {
   const multiplier = direction === 'asc' ? 1 : -1;
   return [...(events || [])]
@@ -6462,7 +5968,6 @@ function sortTimelineEventsByDate(events = [], direction = 'desc') {
     })
     .map(item => item.event);
 }
-
 function getTimelineEventDisplayDate(event = {}, options = {}) {
   const includeYear = options.includeYear !== false;
   if (event.eventType === 'month') {
@@ -6474,7 +5979,6 @@ function getTimelineEventDisplayDate(event = {}, options = {}) {
         : monthMatch[1];
     }
   }
-
   const directDate = event.publishedAt || event.date || event.toDate || event.fromDate;
   const parsedDirectDate = directDate ? new Date(directDate) : null;
   if (parsedDirectDate && !isNaN(parsedDirectDate)) {
@@ -6482,17 +5986,14 @@ function getTimelineEventDisplayDate(event = {}, options = {}) {
       ? { month: 'short', day: 'numeric', year: 'numeric' }
       : { month: 'short', day: 'numeric' });
   }
-
   const rawLabel = cleanText(event.dateLabel || '');
   if (!rawLabel) return includeYear ? 'Now' : 'Now';
-
   const parsedLabelDate = new Date(rawLabel);
   if (!isNaN(parsedLabelDate)) {
     return parsedLabelDate.toLocaleDateString('en-US', includeYear
       ? { month: 'short', day: 'numeric', year: 'numeric' }
       : { month: 'short', day: 'numeric' });
   }
-
   const monthMatch = rawLabel.match(/^([a-z]{3,9})\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?$/i);
   if (monthMatch) {
     const monthIndex = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
@@ -6505,27 +6006,21 @@ function getTimelineEventDisplayDate(event = {}, options = {}) {
         : { month: 'short', day: 'numeric' });
     }
   }
-
   return rawLabel;
 }
-
 function dedupeTimelineEvents(events = []) {
   const byKey = new Map();
-
   (events || []).forEach((event, index) => {
     const labelKey = cleanText(event.label || '').toLowerCase();
     const queryKey = cleanText(event.backgroundQuery || event.latestQuery || '').toLowerCase();
     const key = labelKey || queryKey || cleanText(event.id || `event-${index}`).toLowerCase();
     const existing = byKey.get(key);
-
     if (!existing) {
       byKey.set(key, { ...event, _originalIndex: index });
       return;
     }
-
     const existingScore = getTimelineEventDateValue(existing) + (existing.importance === 'high' ? 1 : 0);
     const nextScore = getTimelineEventDateValue(event) + (event.importance === 'high' ? 1 : 0);
-
     if (nextScore > existingScore) {
       byKey.set(key, {
         ...existing,
@@ -6536,29 +6031,23 @@ function dedupeTimelineEvents(events = []) {
       });
       return;
     }
-
     byKey.set(key, {
       ...existing,
       active: existing.active || event.active,
       importance: existing.importance === 'high' || event.importance === 'high' ? 'high' : 'medium'
     });
   });
-
   return [...byKey.values()]
     .sort((a, b) => (a._originalIndex ?? 0) - (b._originalIndex ?? 0))
     .map(({ _originalIndex, ...event }) => event);
 }
-
 async function fetchTimelineEvents(topicKey, articles) {
   const cachedTimeline = timelineEventCache[topicKey];
   const hasCachedTimelineEvents =
     (cachedTimeline?.overviewEvents?.length || 0) > 0 ||
     (cachedTimeline?.detailEvents?.length || 0) > 0;
-
   if (hasCachedTimelineEvents) return cachedTimeline;
-
   const topic = TOPICS[topicKey];
-
   try {
     const res = await fetch('/api/timeline-events', {
       method: 'POST',
@@ -6570,20 +6059,16 @@ async function fetchTimelineEvents(topicKey, articles) {
         articles
       })
     });
-
     const text = await res.text();
     let data;
-
     try {
       data = JSON.parse(text);
     } catch {
       return { error: 'Timeline API returned HTML instead of JSON. Restart the server so the new /api/timeline-events route is loaded.' };
     }
-
     if (!res.ok || data.error) {
       return { error: data.error || 'Timeline request failed' };
     }
-
     const normalizeEvents = (events = []) => dedupeTimelineEvents(events.map((event, index) => ({
       ...event,
       id: event.id || `${topicKey}-event-${index + 1}`,
@@ -6592,39 +6077,43 @@ async function fetchTimelineEvents(topicKey, articles) {
       eventType: event.eventType || 'story',
       active: false
     })));
-
+    const pinnedDetailEvents = normalizeEvents((topic?.tlEvents || [])
+      .filter(event => event.pinToDetailTimeline)
+      .map(event => ({
+        ...event,
+        importance: event.importance || (event.hi ? 'high' : 'medium'),
+        backgroundQuery: event.backgroundQuery || event.summaryQuery || topic?.mainQuery || topicKey,
+        latestQuery: event.latestQuery || event.articleQuery || topic?.mainQuery || topicKey
+      })));
+    const generatedDetailEvents = normalizeEvents(data.detailEvents || []);
     timelineEventCache[topicKey] = {
       overviewEvents: sortTimelineEventsByDate(normalizeEvents(data.overviewEvents || data.events || []), 'desc'),
-      detailEvents: sortTimelineEventsByDate(normalizeEvents(data.detailEvents || []), 'desc')
+      detailEvents: sortTimelineEventsByDate(dedupeTimelineEvents([
+        ...pinnedDetailEvents,
+        ...generatedDetailEvents
+      ]), 'desc')
     };
-
     return timelineEventCache[topicKey];
   } catch (e) {
     return { error: e.message };
   }
 }
-
 function getTimelineZoomLevel() {
   return timelineViewLevel;
 }
-
 function getCurrentTimelineEvents(topicKey) {
   const data = timelineEventCache[topicKey];
   if (!data) return [];
   const detailEvents = data.detailEvents || [];
   const overviewEvents = data.overviewEvents || [];
-
   if (timelineViewLevel === 'detail' && detailEvents.length) {
     return sortTimelineEventsByDate(detailEvents, 'desc');
   }
-
   return sortTimelineEventsByDate(overviewEvents, 'desc');
 }
-
 function getPreferredTimelineEventId(topicKey) {
   const visibleEvents = getCurrentTimelineEvents(topicKey);
   if (!visibleEvents.length) return null;
-
   if (timelineViewLevel === 'overview') {
     const now = new Date();
     const currentMonthId = `${topicKey}-month-${new Date(Date.UTC(
@@ -6635,40 +6124,35 @@ function getPreferredTimelineEventId(topicKey) {
     const currentMonthEvent = visibleEvents.find(ev => ev.id === currentMonthId);
     if (currentMonthEvent) return currentMonthEvent.id;
   }
-
   return visibleEvents[0]?.id || null;
 }
-
 function getTimelineLevelLabel() {
   return timelineViewLevel === 'detail'
     ? 'Live happenings'
     : 'Big picture by month';
 }
-
 async function setTimelineViewLevel(level) {
   timelineViewLevel = level === 'detail' ? 'detail' : 'overview';
   if (!currentTopic) return;
-
   const visibleEvents = getCurrentTimelineEvents(currentTopic);
-  if (!visibleEvents.some(ev => ev.id === activeTimelineEventId)) {
+  if (timelineViewLevel === 'detail') {
+    activeTimelineEventId = getPreferredTimelineEventId(currentTopic);
+    timelineRailScrollTop = 0;
+  } else if (!visibleEvents.some(ev => ev.id === activeTimelineEventId)) {
     activeTimelineEventId = getPreferredTimelineEventId(currentTopic);
   }
-
   shouldRevealTimelineSelection = true;
   renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
   if (currentView === 'timeline' && activeTimelineEventId) {
     await selectTimelineEvent(currentTopic, activeTimelineEventId);
   }
 }
-
 function renderTimelineAxis() {
   return;
 }
-
 function syncTimelineToZoom() {
   return;
 }
-
 async function fetchEventOverview(topicKey, eventLabel, articles, options = {}) {
   try {
     const res = await fetch('/api/event-overview', {
@@ -6681,26 +6165,21 @@ async function fetchEventOverview(topicKey, eventLabel, articles, options = {}) 
         articles
       })
     });
-
     const text = await res.text();
     let data;
-
     try {
       data = JSON.parse(text);
     } catch {
       return { error: 'Event overview API returned HTML instead of JSON. Restart the server so the new /api/event-overview route is loaded.' };
     }
-
     if (!res.ok || data.error) {
       return { error: data.error || 'Event overview request failed' };
     }
-
     return data;
   } catch (e) {
     return { error: e.message };
   }
 }
-
 function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles, latestArticles) {
   const wrap = document.getElementById('sb-event-details');
   if (!wrap) return;
@@ -6718,20 +6197,17 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
   const summaryParagraphs = summaryParts.length ? summaryParts : [summaryText].filter(Boolean);
   const takeaway = event.whyItMatters || splitSummarySentences(summaryText)[1] || splitSummarySentences(summaryText)[0] || 'Coverage around this development is still moving.';
   const deck = event.whyItMatters || splitSummarySentences(summaryText)[0] || 'A key development inside this topic.';
-
   wrap.innerHTML = `
     <div class="story-panel" style="${getAccentInlineVars(theme)}">
-      <div class="story-head" style="border-left-color:${theme.color};">
-        <div class="story-deck">${escapeHtml(deck)}</div>
-      </div>
+
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
         </div>
       </div>
-      <div class="story-highlight story-info-box">
-        <div class="story-highlight-label">Why it matters</div>
-        <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
+      <div class="sb-highlight-box">
+        <div class="sb-highlight-label">What stands out</div>
+        <div class="sb-highlight-text">${escapeHtml(takeaway)}</div>
       </div>
       <div class="story-coverage">
         <div class="story-column">
@@ -6753,7 +6229,6 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
       </div>
     </div>
   `;
-
   renderEditorialCoverage('story-key-coverage', background.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (latest.length) {
     renderEditorialCoverage('story-deeper-reading', latest.slice(0, 4), { featured: false, limit: 4, themeKey: topicKey });
@@ -6764,7 +6239,6 @@ function renderTimelineEventPanel(topicKey, event, overview, backgroundArticles,
     `No source trail is available for ${event.label} yet.`
   );
 }
-
 const MONTH_SUMMARY_STOPWORDS = new Set([
   'about','after','again','also','amid','among','another','around','because','before','being','between',
   'both','could','during','first','from','have','into','just','last','latest','more','most','news',
@@ -6775,7 +6249,6 @@ const MONTH_SUMMARY_STOPWORDS = new Set([
   'headline','headlines','coverage','across','inside','toward','towards','after','earlier','later',
   'into','onto','when','what','were','them','than','then','that','your','ours','theirs','newsphere'
 ]);
-
 const MONTH_THEME_PHRASES = {
   politics: 'political maneuvering, institutional pressure, and policy decisions',
   conflict: 'military pressure, battlefield developments, and diplomatic positioning',
@@ -6786,7 +6259,6 @@ const MONTH_THEME_PHRASES = {
   domestic: 'domestic fallout, local responses, and national debate',
   people: 'leadership decisions, public-facing figures, and political messaging'
 };
-
 const MONTH_ANALYTICAL_CLOSE = {
   politics: 'Taken together, the month read as a stretch of strategic positioning, with institutions and political actors shaping the pace of the story.',
   conflict: 'Taken together, the month read as a period of shifting leverage, where developments on the ground and diplomatic signals were tightly linked.',
@@ -6797,7 +6269,6 @@ const MONTH_ANALYTICAL_CLOSE = {
   domestic: 'Taken together, the month read as a broad domestic shift, with local developments feeding into the wider national picture.',
   people: 'Taken together, the month read as a leadership-driven phase, with individual decisions and public messaging shaping the narrative.'
 };
-
 function formatNaturalList(items = []) {
   const cleanItems = [...new Set((items || []).map(item => cleanText(item)).filter(Boolean))];
   if (!cleanItems.length) return '';
@@ -6805,7 +6276,6 @@ function formatNaturalList(items = []) {
   if (cleanItems.length === 2) return `${cleanItems[0]} and ${cleanItems[1]}`;
   return `${cleanItems.slice(0, -1).join(', ')}, and ${cleanItems[cleanItems.length - 1]}`;
 }
-
 function getTopicStopwords(topicName = '') {
   return new Set(
     cleanText(topicName)
@@ -6813,16 +6283,13 @@ function getTopicStopwords(topicName = '') {
       .match(/[a-z][a-z'-]{2,}/g) || []
   );
 }
-
 function extractMonthSummaryTerms(articles = [], topicName = '', limit = 4) {
   const counts = new Map();
   const topicWords = getTopicStopwords(topicName);
-
   (articles || []).slice(0, 8).forEach(article => {
     const text = cleanText(`${article.title || ''} ${article.description || ''}`).toLowerCase();
     const tokens = text.match(/[a-z][a-z'-]{2,}/g) || [];
     const seenInArticle = new Set();
-
     tokens.forEach(token => {
       if (MONTH_SUMMARY_STOPWORDS.has(token) || topicWords.has(token)) return;
       if (token.length < 4) return;
@@ -6831,33 +6298,27 @@ function extractMonthSummaryTerms(articles = [], topicName = '', limit = 4) {
       counts.set(token, (counts.get(token) || 0) + 1);
     });
   });
-
   const ranked = [...counts.entries()]
     .sort((a, b) => {
       if (b[1] !== a[1]) return b[1] - a[1];
       return b[0].length - a[0].length;
     })
     .map(([term, count]) => ({ term, count }));
-
   const repeated = ranked.filter(item => item.count > 1);
   const picked = (repeated.length ? repeated : ranked).slice(0, limit);
   return picked.map(item => item.term);
 }
-
 function getDominantMonthCategories(articles = [], limit = 2) {
   const counts = new Map();
-
   (articles || []).slice(0, 8).forEach(article => {
     const cat = categorize(`${article.title || ''} ${article.description || ''}`);
     counts.set(cat, (counts.get(cat) || 0) + 1);
   });
-
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([cat]) => cat);
 }
-
 function buildFakeMonthOverview(topicKey, monthLabel, articles = []) {
   const topicName = TOPICS[topicKey]?.name || topicKey;
   const picked = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, 8);
@@ -6871,39 +6332,31 @@ function buildFakeMonthOverview(topicKey, monthLabel, articles = []) {
     .filter(Boolean)
     .slice(0, 2);
   const fallbackCategory = dominantCategories[0] || categorize(topicName);
-
   const sentences = [];
-
   sentences.push(
     `In ${monthLabel}, coverage of ${topicName} focused on ${formatNaturalList(themePhrases.length ? themePhrases : ['the clearest developments across the story'])}.`
   );
-
   if (recurringTerms.length) {
     sentences.push(
       `Reporting repeatedly returned to ${formatNaturalList(recurringTerms.slice(0, 3))}, which helped define the month across multiple angles.`
     );
   }
-
   if (leadDetails.length) {
     const detailSentence = leadDetails
       .map(text => text.replace(/\.+$/, ''))
       .join(' ')
       .slice(0, 220)
       .trim();
-
     if (detailSentence) {
       sentences.push(`${detailSentence.replace(/[^a-z0-9)\]]$/i, '')}.`);
     }
   }
-
   sentences.push(
     MONTH_ANALYTICAL_CLOSE[fallbackCategory] ||
       `Taken together, the month read as a meaningful shift in ${topicName}, with several related strands reinforcing the overall direction of the story.`
   );
-
   return sentences.slice(0, 4).join(' ');
 }
-
 function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
   const wrap = document.getElementById('sb-event-details');
   if (!wrap) return;
@@ -6914,19 +6367,13 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
   const introText = cleanText(overview || '');
   const summaryParagraphs = leadParagraphs.length ? leadParagraphs.slice(0, 3) : [introText].filter(Boolean);
   const takeaway = `Monthly overview of the biggest shifts in ${topicName} during ${event.label || 'this month'}.`;
-
   wrap.innerHTML = `
     <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
       <div class="story-grid story-grid-stacked">
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
         </div>
-        <aside class="story-side">
-          <div class="story-highlight">
-            <div class="story-highlight-label">What changed</div>
-            <div class="story-highlight-text">${escapeHtml(takeaway)}</div>
-          </div>
-        </aside>
+
       </div>
       <div class="story-coverage story-coverage-stacked">
         <div class="story-column">
@@ -6948,7 +6395,6 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
       </div>
     </div>
   `;
-
   renderEditorialCoverage('story-key-coverage', monthly.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (monthly.length > 4) {
     renderEditorialCoverage('story-deeper-reading', monthly.slice(4, 8), { featured: false, limit: 4, themeKey: topicKey });
@@ -6959,7 +6405,6 @@ function renderTimelineMonthPanel(topicKey, event, overview, monthArticles) {
     `No relevant sources were found for ${event.label}.`
   );
 }
-
 async function selectTimelineEvent(topicKey, eventId) {
   const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   const requestId = ++activeTimelineDetailRequest;
@@ -6969,7 +6414,6 @@ async function selectTimelineEvent(topicKey, eventId) {
   ];
   const event = events.find(ev => ev.id === eventId);
   if (!event) return;
-
   setTimelineActiveEvent(topicKey, eventId);
   shouldRevealTimelineSelection = true;
   renderTimelineSidebarShell(topicKey, {
@@ -6978,12 +6422,10 @@ async function selectTimelineEvent(topicKey, eventId) {
   });
   scrollSidebarToTop();
   renderTimeline(TOPICS[topicKey], THEMES[topicKey]);
-
   const detailWrap = document.getElementById('sb-event-details');
   if (detailWrap) {
     detailWrap.innerHTML = `<div class="art-loading"><span class="mini-spin" style="border-top-color:${THEMES[topicKey].color}"></span>Loading event overview...</div>`;
   }
-
   if (event.eventType === 'month') {
     const topic = TOPICS[topicKey];
     const monthArticles = await fetchNews(
@@ -6999,26 +6441,21 @@ async function selectTimelineEvent(topicKey, eventId) {
       }
     );
     if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
-
     if (!monthArticles || monthArticles.error) {
       if (detailWrap) {
         detailWrap.innerHTML = `<div class="err-box"><strong>Could not load topic articles</strong>${escapeHtml(monthArticles?.error || 'Unknown error')}</div>`;
       }
       return;
     }
-
     const monthlyArticles = Array.isArray(monthArticles) ? monthArticles : [];
     const overviewText = buildFakeMonthOverview(topicKey, event.label, monthlyArticles);
     renderTimelineMonthPanel(topicKey, event, overviewText, monthlyArticles);
     scrollSidebarToTop();
-
     if (isMobile) {
       syncMobileDrawerFromSidebar(true);
     }
-
     return;
   }
-
   const backgroundArticles = await fetchNews(event.backgroundQuery, `${event.id}-background`, {
     topicKey,
     kind: 'background',
@@ -7026,7 +6463,6 @@ async function selectTimelineEvent(topicKey, eventId) {
     sortBy: 'relevancy'
   });
   if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
-
   const latestArticles = await fetchNews(event.latestQuery, `${event.id}-latest`, {
     topicKey,
     kind: 'latest',
@@ -7034,33 +6470,27 @@ async function selectTimelineEvent(topicKey, eventId) {
     sortBy: 'publishedAt'
   });
   if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
-
   if (!backgroundArticles || backgroundArticles.error) {
     if (detailWrap) {
       detailWrap.innerHTML = `<div class="err-box"><strong>Could not load event</strong>${backgroundArticles?.error || 'Unknown error'}</div>`;
     }
     return;
   }
-
   const normalizedBackgroundArticles = Array.isArray(backgroundArticles) ? backgroundArticles : [];
   const normalizedLatestArticles = Array.isArray(latestArticles) ? latestArticles : [];
   const didSyncTimelineDate = syncTimelineEventDateFromArticles(topicKey, event.id, normalizedBackgroundArticles);
   if (didSyncTimelineDate) {
     renderTimeline(TOPICS[topicKey], THEMES[topicKey]);
   }
-
   const syncedEvent = [
     ...(timelineEventCache[topicKey]?.overviewEvents || []),
     ...(timelineEventCache[topicKey]?.detailEvents || [])
   ].find(ev => ev.id === event.id) || event;
-
   const overviewResponse = await fetchEventOverview(topicKey, syncedEvent.label, normalizedBackgroundArticles);
   if (requestId !== activeTimelineDetailRequest || topicKey !== currentTopic) return;
-
   const overviewText = overviewResponse.error
     ? `Coverage around ${syncedEvent.label} is still evolving across several reports.`
     : overviewResponse.overview;
-
   renderTimelineEventPanel(
     topicKey,
     syncedEvent,
@@ -7069,20 +6499,16 @@ async function selectTimelineEvent(topicKey, eventId) {
     normalizedLatestArticles
   );
   scrollSidebarToTop();
-
   if (isMobile) {
     syncMobileDrawerFromSidebar(true);
   }
 }
-
 function renderMainTopicSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
-
   renderSidebarTop(topicKey, {
     title: 'Overview'
   });
-
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section" id="sb-overview-section" style="${getAccentInlineVars(THEMES[topicKey])}">
       <div class="sb-section-title">Topic briefing</div>
@@ -7093,21 +6519,19 @@ function renderMainTopicSidebarShell(topicKey, options = {}) {
       <div class="sb-section-title sb-coverage-heading">Current coverage</div>
       <div class="sb-section-copy">A curated starting point from the strongest recent reporting across the topic.</div>
       <div id="sb-latest-articles"></div>
+      <div id="sb-expanded-coverage-trail"></div>
     </div>
   `;
 }
-
 function renderTimelineSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
   const sectionTitle = cleanText(options.sectionTitle || '');
   const sectionCopy = cleanText(options.sectionCopy || '');
-
   renderSidebarTop(topicKey, {
     title: options.title || (timelineViewLevel === 'detail' ? 'Closer view' : 'Monthly checkpoints'),
     summary: options.summary || ''
   });
-
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section sb-section-flat" id="sb-event-section">
       ${sectionTitle ? `<div class="sb-section-title">${escapeHtml(sectionTitle)}</div>` : ''}
@@ -7116,16 +6540,13 @@ function renderTimelineSidebarShell(topicKey, options = {}) {
     </div>
   `;
 }
-
 function renderMapSidebarShell(topicKey, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic) return;
-
   renderSidebarTop(topicKey, {
     title: options.title || 'Choose a marker',
     summary: options.summary || ''
   });
-
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section" id="sb-map-section">
       <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Location coverage')}</div>
@@ -7134,36 +6555,30 @@ function renderMapSidebarShell(topicKey, options = {}) {
     </div>
   `;
 }
-
 function renderMapDetailSidebarShell(topicKey, marker, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic || !marker) return;
-
   renderSidebarTop(topicKey, {
-    title: marker.label || 'Selected location',
+    title: options.title || 'Place brief',
     summary: options.summary || ''
   });
-
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section sb-section-flat" id="sb-map-section">
-      <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Place brief')}</div>
-      <div class="sb-section-copy">${escapeHtml(options.sectionCopy || 'Loading the newest reporting tied to this marker.')}</div>
+      <div class="sb-section-title">${escapeHtml(options.sectionTitle || marker.label || 'Selected location')}</div>
+
       <div id="sb-map-details" class="sb-empty">${options.bodyHtml || escapeHtml(options.bodyText || 'Loading location coverage...')}</div>
     </div>
   `;
 }
-
 function trimStoryDetail(text = '', maxLength = 230) {
   const cleaned = cleanText(text).replace(/\.+$/, '');
   if (!cleaned || cleaned.length <= maxLength) return cleaned;
-
   return cleaned
     .slice(0, maxLength)
     .replace(/\s+\S*$/, '')
     .replace(/[,\s]+$/, '')
     .trim();
 }
-
 function buildMapLocationBrief(topicKey, marker, articles = []) {
   const topicName = TOPICS[topicKey]?.name || topicKey;
   const locationName = cleanText(marker?.label || 'this location');
@@ -7175,33 +6590,27 @@ function buildMapLocationBrief(topicKey, marker, articles = []) {
   const recurringTerms = extractMonthSummaryTerms(picked, `${topicName} ${locationName}`, 3);
   const visibleSources = uniqueSourceNames(picked).slice(0, 3);
   const sentences = [];
-
   sentences.push(
     `Recent coverage around ${locationName} has focused on ${themePhrase} within the wider ${topicName} story.`
   );
-
   if (latestDetail) {
     sentences.push(
       `Most recently, reports have centered on ${latestDetail.replace(/[^a-z0-9)\]]$/i, '')}.`
     );
   }
-
   if (recurringTerms.length) {
     sentences.push(
       `Across the reporting, ${formatNaturalList(recurringTerms)} are the signals that keep reappearing.`
     );
   }
-
   const whyItMatters = visibleSources.length > 1
     ? `${locationName} matters because it gives the broader ${topicName} story a specific place to track, with reporting from ${formatNaturalList(visibleSources)} showing how the issue is playing out on the ground.`
     : `${locationName} matters because it gives the broader ${topicName} story a specific place to track as new reporting comes in.`;
-
   return {
     summary: sentences.slice(0, 3).join(' '),
     whyItMatters
   };
 }
-
 function renderMapLocationPanel(topicKey, marker, articles) {
   const wrap = document.getElementById('sb-map-details');
   if (!wrap) return;
@@ -7210,7 +6619,6 @@ function renderMapLocationPanel(topicKey, marker, articles) {
   const coverage = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
   const brief = buildMapLocationBrief(topicKey, marker, coverage);
   const summaryParagraphs = splitSummarySentences(brief.summary || '').slice(0, 3);
-
   wrap.classList.remove('sb-empty');
   wrap.innerHTML = `
     <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
@@ -7218,12 +6626,6 @@ function renderMapLocationPanel(topicKey, marker, articles) {
         <div class="story-intro">
           ${summaryParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}
         </div>
-        <aside class="story-side">
-          <div class="story-highlight">
-            <div class="story-highlight-label">Why it matters</div>
-            <div class="story-highlight-text">${escapeHtml(brief.whyItMatters)}</div>
-          </div>
-        </aside>
       </div>
       <div class="story-coverage story-coverage-stacked">
         <div class="story-column">
@@ -7245,7 +6647,6 @@ function renderMapLocationPanel(topicKey, marker, articles) {
       </div>
     </div>
   `;
-
   renderEditorialCoverage('map-key-coverage', coverage.slice(0, 4), { limit: 4, themeKey: topicKey });
   if (coverage.length > 4) {
     renderEditorialCoverage('map-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4, themeKey: topicKey });
@@ -7256,16 +6657,13 @@ function renderMapLocationPanel(topicKey, marker, articles) {
     `No source trail is available for ${locationName} yet.`
   );
 }
-
 function renderNodeStorySidebarShell(topicKey, node, options = {}) {
   const topic = TOPICS[topicKey];
   if (!topic || !node) return;
-
   renderSidebarTop(topicKey, {
     title: node.label || 'Selected node',
     summary: options.summary || ''
   });
-
   document.getElementById('sb-scroll').innerHTML = `
     <div class="sb-section sb-section-flat" id="sb-node-section">
       <div class="sb-section-title">${escapeHtml(options.sectionTitle || 'Node brief')}</div>
@@ -7274,7 +6672,6 @@ function renderNodeStorySidebarShell(topicKey, node, options = {}) {
     </div>
   `;
 }
-
 function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
   const topicName = TOPICS[topicKey]?.name || topicKey;
   const nodeName = cleanText(node?.label || 'this topic node');
@@ -7290,7 +6687,6 @@ function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
     ? staticData.facts.map(fact => cleanText(fact)).filter(Boolean)
     : [];
   const sentences = [];
-
   if (staticSummary) {
     sentences.push(splitSummarySentences(staticSummary)[0] || staticSummary);
   } else {
@@ -7298,13 +6694,11 @@ function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
       `Recent coverage around ${nodeName} is focused on ${themePhrase} within the wider ${topicName} story.`
     );
   }
-
   if (latestDetail) {
     sentences.push(
       `Most recently, reports have centered on ${latestDetail.replace(/[^a-z0-9)\]]$/i, '')}.`
     );
   }
-
   if (recurringTerms.length) {
     sentences.push(
       `Across the reporting, ${formatNaturalList(recurringTerms)} are the signals that keep reappearing.`
@@ -7312,18 +6706,15 @@ function buildNodeStoryBrief(topicKey, node, articles = [], staticData = null) {
   } else if (staticFacts.length) {
     sentences.push(staticFacts[0].replace(/[^a-z0-9)\]]$/i, '') + '.');
   }
-
   const whyItMatters = staticFacts[1] ||
     (visibleSources.length > 1
       ? `${nodeName} matters because it concentrates one important strand of the ${topicName} story, with reporting from ${formatNaturalList(visibleSources)} showing how that strand is developing.`
       : `${nodeName} matters because it concentrates one important strand of the ${topicName} story and gives the graph a clearer point of focus as new reporting comes in.`);
-
   return {
     summary: sentences.slice(0, 3).join(' '),
     whyItMatters: cleanText(whyItMatters)
   };
 }
-
 function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
   const wrap = document.getElementById('sb-node-details');
   if (!wrap) return;
@@ -7332,7 +6723,6 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
   const coverage = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
   const brief = buildNodeStoryBrief(topicKey, node, coverage, staticData);
   const summaryParagraphs = splitSummarySentences(brief.summary || '').slice(0, 3);
-
   wrap.classList.remove('sb-empty');
   wrap.innerHTML = `
     <div class="story-panel story-panel-minimal" style="${getAccentInlineVars(theme)}">
@@ -7343,9 +6733,9 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
             .join('')}
         </div>
         <aside class="story-side">
-          <div class="story-highlight">
-            <div class="story-highlight-label">Why it matters</div>
-            <div class="story-highlight-text">${escapeHtml(brief.whyItMatters)}</div>
+          <div class="sb-highlight-box">
+            <div class="sb-highlight-label">What stands out</div>
+            <div class="sb-highlight-text">${escapeHtml(brief.whyItMatters)}</div>
           </div>
         </aside>
       </div>
@@ -7369,7 +6759,6 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
       </div>
     </div>
   `;
-
   renderEditorialCoverage('node-key-coverage', coverage.slice(0, 4), { limit: 4, themeKey: getCat(node) });
   if (coverage.length > 4) {
     renderEditorialCoverage('node-deeper-reading', coverage.slice(4, 8), { featured: false, limit: 4, themeKey: getCat(node) });
@@ -7380,18 +6769,14 @@ function renderNodeStoryPanel(topicKey, node, articles, staticData = null) {
     `No source trail is available for ${nodeName} yet.`
   );
 }
-
 async function ensureTimelineSidebarReady(topicKey) {
   const topic = TOPICS[topicKey];
   if (!topic) return false;
-
   const requestId = ++activeTopicRequest;
   renderTimelineSidebarShell(topicKey, {
     eventText: 'Loading month overview...'
   });
-
   const hasOverviewEvents = (timelineEventCache[topicKey]?.overviewEvents?.length || 0) > 0;
-
   if (!hasOverviewEvents) {
     const articles = await fetchNews(topic.mainQuery || topic.label, `${topicKey}-main`, {
       topicKey,
@@ -7400,56 +6785,44 @@ async function ensureTimelineSidebarReady(topicKey) {
       sortBy: 'relevancy'
     });
     if (requestId !== activeTopicRequest || topicKey !== currentTopic) return false;
-
     if (!articles || articles.error) {
       document.getElementById('sb-event-details').innerHTML =
         `<div class="err-box"><strong>Could not load timeline</strong>${escapeHtml(articles?.error || 'Unknown fetch error')}</div>`;
       return false;
     }
-
     if (!articles.length) {
       document.getElementById('sb-event-details').textContent =
         `No articles found for query: ${topic.mainQuery || topic.label}`;
       return false;
     }
-
     const timelineEvents = await fetchTimelineEvents(topicKey, articles);
     if (requestId !== activeTopicRequest || topicKey !== currentTopic) return false;
-
     if (!timelineEvents || timelineEvents.error) {
       document.getElementById('sb-event-details').innerHTML =
         `<div class="err-box"><strong>Could not load timeline</strong>${timelineEvents?.error || 'Unknown error'}</div>`;
       return false;
     }
   }
-
   const visibleEvents = getCurrentTimelineEvents(topicKey);
   const nextEventId = visibleEvents.some(ev => ev.id === activeTimelineEventId)
     ? activeTimelineEventId
     : getPreferredTimelineEventId(topicKey);
-
   if (nextEventId) {
     await selectTimelineEvent(topicKey, nextEventId);
   } else {
     document.getElementById('sb-event-details').textContent = 'No monthly checkpoints are available for this topic yet.';
   }
-
   return true;
 }
-
 document.getElementById('gc').addEventListener('click', async e => {
   const n = hitTest(lp(e));
-
   if (n) {
     await selectNode(n.id);
     return;
   }
-
   if (!currentTopic) return;
-
   const topic = TOPICS[currentTopic];
   const mainNode = topic.nodes.find(node => node.tier === 'main');
-
   if (mainNode) {
     selectedNode = mainNode.id;
     hoveredNodeId = mainNode.id;
@@ -7468,18 +6841,18 @@ document.getElementById('gc').addEventListener('mouseleave', () => {
   document.getElementById('tt').classList.remove('show');
   document.getElementById('gc').style.cursor = 'default';
 });
-
 /* ══════════════════════
    ÖVERBLICKSPANEL NODE
 ══════════════════════ */
 function renderShortOverview(topicKey, shortSummary, articles, requestId) {
   const overviewSection = document.getElementById('sb-overview-section');
   if (!overviewSection) return;
+  const coverageTrail = document.getElementById('sb-expanded-coverage-trail');
+  if (coverageTrail) coverageTrail.innerHTML = '';
   const summaryText = cleanText(shortSummary || '');
   const summarySentences = splitSummarySentences(summaryText);
   const standout = summarySentences[1] || summarySentences[0] || getTopicIntro(topicKey);
   const visibleSources = uniqueSourceNames(articles).slice(0, 4);
-
   overviewSection.innerHTML = `
     <div class="sb-overview-layout">
       <div class="sb-overview-top">
@@ -7507,18 +6880,15 @@ function renderShortOverview(topicKey, shortSummary, articles, requestId) {
       </div>
     </div>
   `;
-
   document.getElementById('sb-more-btn').onclick = async () => {
     const longSummary = await fetchSummary(topicKey, articles, 'long');
     if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
     if (longSummary.error) return;
-
     renderLongOverview(topicKey, longSummary, articles, requestId);
     const sbScroll = document.getElementById('sb-scroll');
     if (sbScroll) sbScroll.scrollTop = 0;
   };
 }
-
 function renderLongOverview(topicKey, longSummary, articles, requestId) {
   const overviewSection = document.getElementById('sb-overview-section');
   if (!overviewSection) return;
@@ -7529,62 +6899,55 @@ function renderLongOverview(topicKey, longSummary, articles, requestId) {
   const summaryText = cleanText(longSummary.longSummary || '');
   const overviewParagraphs = paragraphs.length ? paragraphs : [summaryText].filter(Boolean);
   const standout = splitSummarySentences(summaryText)[1] || splitSummarySentences(summaryText)[0] || getTopicIntro(topicKey);
-
   overviewSection.innerHTML = `
     <div class="sb-overview-layout">
       <div class="sb-overview-top">
         <div>
           <div class="sb-section-title" style="margin-bottom:0;">Deep brief</div>
-          <div class="sb-section-copy">A longer read with extra context and a quieter source trail.</div>
         </div>
         <button class="sb-more-btn" id="sb-less-btn">Back</button>
       </div>
       <div class="sb-overview-stack">
         <div class="sb-overview-main">
           <div class="sb-main-summary sb-main-summary-long">${overviewParagraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join('')}</div>
-          <div class="sb-highlight-box">
-            <div class="sb-highlight-label">Why it matters</div>
-            <div class="sb-highlight-text">${escapeHtml(standout)}</div>
-          </div>
-          <div class="sb-sources">
-            <strong>Coverage trail</strong>
-            <div id="sb-overview-sources-list"></div>
-          </div>
         </div>
       </div>
     </div>
   `;
-
+  const coverageTrail = document.getElementById('sb-expanded-coverage-trail');
+  if (coverageTrail) {
+    coverageTrail.innerHTML = `
+      <div class="sb-sources">
+        <strong>Coverage trail</strong>
+        <div id="sb-overview-sources-list"></div>
+      </div>
+    `;
+  }
   renderSourceLinks(
     'sb-overview-sources-list',
     longSummary.sources || [],
     'No source links available for this overview yet.'
   );
-
   document.getElementById('sb-less-btn').onclick = async () => {
     const shortSummary = await fetchSummary(topicKey, articles, 'short');
     if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
     if (shortSummary.error) return;
-
     renderShortOverview(topicKey, shortSummary.shortSummary, articles, requestId);
     const sbScroll = document.getElementById('sb-scroll');
     if (sbScroll) sbScroll.scrollTop = 0;
   };
 }
-
 async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest) {
   const topic = TOPICS[topicKey];
   const mainQuery = topic.mainQuery || topic.label;
   activeTimelineDetailRequest += 1;
   selectedMapMarkerId = null;
   hoveredNodeId = selectedNode;
-
   renderMainTopicSidebarShell(topicKey, {
     overviewCopy: 'Loading the main overview and strongest current signals.',
     summaryText: 'Loading summary...'
   });
   scrollSidebarToTop();
-
   const articles = await fetchNews(mainQuery, `${topicKey}-main`, {
     topicKey,
     kind: 'main',
@@ -7592,44 +6955,35 @@ async function renderMainTopicOverview(topicKey, requestId = activeTopicRequest)
     sortBy: 'relevancy'
   });
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
   if (!articles || articles.error) {
     document.getElementById('sb-main-summary').textContent =
       `Could not load summary: ${articles?.error || 'Unknown fetch error'}`;
     return;
   }
-
   if (articles.length === 0) {
     document.getElementById('sb-main-summary').textContent =
       `No articles found for query: ${mainQuery}`;
     return;
   }
-
   const summary = await fetchSummary(topicKey, articles, 'short');
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
   if (summary.error) {
     document.getElementById('sb-main-summary').textContent =
       `Could not load summary: ${summary.error || 'Unknown error'} ${summary.details || ''}`;
   } else {
     renderShortOverview(topicKey, summary.shortSummary, articles, requestId);
   }
-
   renderEditorialCoverage('sb-latest-articles', articles, { limit: 6, themeKey: topicKey });
-
   const timelineEvents = await fetchTimelineEvents(topicKey, articles);
   if (requestId !== activeTopicRequest || topicKey !== currentTopic) return;
-
   if (!timelineEvents || timelineEvents.error) {
     return;
   }
-
   if (!activeTimelineEventId) {
     activeTimelineEventId = getPreferredTimelineEventId(topicKey);
   }
   renderTimeline(topic, THEMES[topicKey]);
 }
-
 /* ══════════════════════
    SELECT NODE
 ══════════════════════ */
@@ -7641,26 +6995,23 @@ async function selectMapMarker(marker) {
   const topicKey = currentTopic;
   const markerId = getMapMarkerId(marker);
   const requestId = ++activeMapDetailRequest;
-
   hoveredNodeId = null;
   selectedMapMarkerId = markerId;
   updateMapMarkerSelection(selectedMapMarkerId);
-
   renderMapDetailSidebarShell(topicKey, marker, {
-    sectionTitle: 'Place brief',
+    title: 'Place brief',
+    sectionTitle: marker.label || 'Selected location',
     sectionCopy: `Building the newest place-based read for ${marker.label || 'this marker'}.`,
     bodyHtml: `<div class="art-loading"><span class="mini-spin" style="border-top-color:${theme.color}"></span>Loading location coverage...</div>`
   });
   scrollSidebarToTop();
   syncMobileDrawerFromSidebar(true);
-
   const result = await fetchNews(marker.query || marker.label, `map-${topicKey}-${marker.label}`, {
     topicKey,
     kind: 'map',
     pageSize: 6,
     sortBy: 'relevancy'
   });
-
   if (
     requestId !== activeMapDetailRequest ||
     topicKey !== currentTopic ||
@@ -7669,9 +7020,7 @@ async function selectMapMarker(marker) {
   ) {
     return;
   }
-
   const detailWrap = document.getElementById('sb-map-details');
-
   if (!result || result.error) {
     if (detailWrap) {
       detailWrap.innerHTML = `<div class="err-box"><strong>Could not load location coverage</strong>${escapeHtml(result?.error || 'Unknown error')}</div>`;
@@ -7679,7 +7028,6 @@ async function selectMapMarker(marker) {
     syncMobileDrawerFromSidebar(true);
     return;
   }
-
   if (result.length === 0) {
     if (detailWrap) {
       detailWrap.innerHTML = `<div class="art-loading">No recent coverage found for this marker yet.</div>`;
@@ -7687,7 +7035,6 @@ async function selectMapMarker(marker) {
     syncMobileDrawerFromSidebar(true);
     return;
   }
-
   renderMapLocationPanel(topicKey, marker, result);
   syncMobileDrawerFromSidebar(true);
 }
@@ -7699,23 +7046,17 @@ async function selectNode(id) {
   selectedMapMarkerId = null;
   activeTimelineDetailRequest += 1;
   activeMapDetailRequest += 1;
-
   const topic = TOPICS[currentTopic];
   const theme = THEMES[currentTopic];
   if (!topic || !theme) return;
-
   const n = topic.nodes.find(x => x.id === id);
   if (!n) return;
-
   if (n.tier === 'main') {
     return renderMainTopicOverview(currentTopic, activeTopicRequest);
   }
-
   const nodeTheme = getNodeTheme(n);
-
   const s = document.getElementById('sb-scroll');
   if (!s) return;
-
   const st = topic.staticData && topic.staticData[id];
   renderNodeStorySidebarShell(currentTopic, n, {
     sectionTitle: 'Node brief',
@@ -7724,7 +7065,6 @@ async function selectNode(id) {
   });
   scrollSidebarToTop();
   syncMobileDrawerFromSidebar(true);
-
   const q = topic.queries[id] || n.label;
   const result = await fetchNews(q, id, {
     topicKey: currentTopic,
@@ -7733,9 +7073,7 @@ async function selectNode(id) {
     sortBy: 'relevancy'
   });
   if (requestId !== activeTopicRequest || topic.key !== currentTopic) return;
-
   const detailWrap = document.getElementById('sb-node-details');
-
   if (!result || result.error) {
     if (detailWrap) {
       detailWrap.innerHTML = `<div class="err-box"><strong>Could not load node coverage</strong>${escapeHtml(result?.error || 'Unknown error - is the server running?')}</div>`;
@@ -7747,18 +7085,14 @@ async function selectNode(id) {
   } else {
     renderNodeStoryPanel(currentTopic, n, result, st);
   }
-
   if (isMobile) {
     syncMobileDrawerFromSidebar(true);
   }
-
   return;
 }
-
 function closeDrawer() {
   document.getElementById('mobile-drawer').classList.remove('open');
 }
-
 /* ══════════════════════
    FETCH PROXY
 ══════════════════════ */
@@ -7774,7 +7108,6 @@ async function fetchNews(query, nodeId, options = {}) {
     pageSize: options.pageSize || '',
     sortBy: options.sortBy || ''
   });
-
   if (cache[requestKey]) {
     const meta = cacheMeta[requestKey] || {};
     console.info(
@@ -7782,7 +7115,6 @@ async function fetchNews(query, nodeId, options = {}) {
     );
     return cache[requestKey];
   }
-
   try {
     const params = new URLSearchParams({ q: query });
     if (options.topicKey) params.set('topicKey', options.topicKey);
@@ -7792,14 +7124,10 @@ async function fetchNews(query, nodeId, options = {}) {
     if (options.to) params.set('to', options.to);
     if (options.pageSize) params.set('pageSize', String(options.pageSize));
     if (options.sortBy) params.set('sortBy', options.sortBy);
-
     const res = await fetch(`/api/news?${params.toString()}`);
-
     const text = await res.text();
     const data = JSON.parse(text);
-
     if (data.error) return { error: data.error };
-
     cache[requestKey] = data.articles || [];
     cacheMeta[requestKey] = {
       provider: data.provider || 'unknown',
@@ -7808,7 +7136,6 @@ async function fetchNews(query, nodeId, options = {}) {
       warning: data.warning || '',
       articleCount: Array.isArray(data.articles) ? data.articles.length : 0
     };
-
     const providerLabel = data.provider === 'mixed'
       ? 'NewsAPI + The Guardian API'
       : data.provider === 'guardian'
@@ -7834,11 +7161,9 @@ async function fetchNews(query, nodeId, options = {}) {
     const warningSuffix = data.warning
       ? ` Warning: ${data.warning}`
       : '';
-
     console.info(
       `[news] ${nodeId} loaded ${cacheMeta[requestKey].articleCount} articles from ${providerLabel} for "${query}".${mixSuffix}${fallbackSuffix}${warningSuffix}`
     );
-
     if (data.provider === 'guardian') {
       const guardianMode = data.fallbackReason === 'forced_guardian_provider'
         ? 'forced Guardian source'
@@ -7847,28 +7172,22 @@ async function fetchNews(query, nodeId, options = {}) {
     } else if (data.provider === 'mixed') {
       console.info(`[news] ${nodeId} is using a mixed Guardian + NewsAPI feed.`);
     }
-
     if (data.warning) {
       console.warn(`[news] ${nodeId} warning: ${data.warning}`);
     }
-
     return cache[requestKey];
   } catch (e) {
     return { error: e.message };
   }
 }
-
 function renderArticleList(containerId, articles) {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
-
   wrap.innerHTML = '';
-
   if (!articles || articles.length === 0) {
     wrap.innerHTML = `<div class="art-loading">No articles found.</div>`;
     return;
   }
-
   appendArticleItems(wrap, articles);
 }
 function cleanText(text = '') {
@@ -7877,12 +7196,10 @@ function cleanText(text = '') {
     .replace(/\[[^\]]*\]/g, '')
     .trim();
 }
-
 function sentenceCase(text = '') {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
-
 function escapeHtml(text = '') {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -7891,7 +7208,6 @@ function escapeHtml(text = '') {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
-
 function safeUrl(url = '') {
   try {
     const parsed = new URL(String(url));
@@ -7900,33 +7216,27 @@ function safeUrl(url = '') {
     return '';
   }
 }
-
 function getArticleSourceName(article = {}) {
   const sourceName = cleanText(article.source?.name || '');
   if (sourceName) return sourceName;
-
   try {
     return new URL(article.url).hostname.replace(/^www\./, '');
   } catch {
     return 'Unknown source';
   }
 }
-
 function uniqueSourceNames(articles = []) {
   return [...new Set(
     articles.map(article => getArticleSourceName(article)).filter(Boolean)
   )];
 }
-
 function getRelevantSourceLinks(articles = [], limit = 6) {
   const seenUrls = new Set();
   const links = [];
-
   articles.forEach(article => {
     const url = safeUrl(article.url);
     const sourceName = getArticleSourceName(article);
     if (!url || !sourceName || seenUrls.has(url)) return;
-
     seenUrls.add(url);
     links.push({
       sourceName,
@@ -7934,14 +7244,11 @@ function getRelevantSourceLinks(articles = [], limit = 6) {
       url
     });
   });
-
   return links.slice(0, limit);
 }
-
 function renderSourceLinks(containerId, items = [], emptyText = 'No relevant sources available yet.') {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
-
   const links = (items || [])
     .map(item => ({
       sourceName: cleanText(item.sourceName || item.label || item.title || 'Source'),
@@ -7949,12 +7256,10 @@ function renderSourceLinks(containerId, items = [], emptyText = 'No relevant sou
       url: safeUrl(item.url)
     }))
     .filter(item => item.url);
-
   if (!links.length) {
     wrap.innerHTML = `<div class="sb-empty">${escapeHtml(emptyText)}</div>`;
     return;
   }
-
   wrap.innerHTML = links.map(link => `
     <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
       <span style="display:block;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);font-family:var(--serif);font-weight:700;margin-bottom:4px;">${escapeHtml(link.sourceName)}</span>
@@ -7962,7 +7267,6 @@ function renderSourceLinks(containerId, items = [], emptyText = 'No relevant sou
     </a>
   `).join('');
 }
-
 function formatPublishedDate(article = {}) {
   const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
   return publishedAt && !isNaN(publishedAt)
@@ -7973,31 +7277,26 @@ function formatPublishedDate(article = {}) {
       })
     : '';
 }
-
 function getPublishedAtValue(article = {}) {
   const publishedAt = article.publishedAt ? new Date(article.publishedAt) : null;
   return publishedAt && !isNaN(publishedAt) ? publishedAt.getTime() : 0;
 }
-
 function sortArticlesByPublishedDate(articles = [], direction = 'desc') {
   const multiplier = direction === 'asc' ? 1 : -1;
   return [...(articles || [])].sort((a, b) => {
     const dateDelta = getPublishedAtValue(a) - getPublishedAtValue(b);
     if (dateDelta !== 0) return dateDelta * multiplier;
-
     const titleA = cleanText(a?.title || a?.description || '');
     const titleB = cleanText(b?.title || b?.description || '');
     return titleA.localeCompare(titleB);
   });
 }
-
 function splitSummarySentences(text = '') {
   return cleanText(text)
     .split(/(?<=[.!?])\s+/)
     .map(part => part.trim())
     .filter(Boolean);
 }
-
 function dedupeArticlesByUrl(articles = []) {
   const seen = new Set();
   return (articles || []).filter(article => {
@@ -8009,7 +7308,6 @@ function dedupeArticlesByUrl(articles = []) {
     return true;
   });
 }
-
 function getTimelineNodeStyle(theme = {}) {
   if (theme.shape === 'square') {
     return 'border-radius:6px;';
@@ -8019,7 +7317,6 @@ function getTimelineNodeStyle(theme = {}) {
   }
   return 'border-radius:999px;';
 }
-
 function buildEditorialArticleMarkup(article, variant = 'list', options = {}) {
   const sourceName = getArticleSourceName(article);
   const articleUrl = safeUrl(article.url);
@@ -8028,7 +7325,6 @@ function buildEditorialArticleMarkup(article, variant = 'list', options = {}) {
   const theme = getArticleTheme(article, options.themeKey);
   const tag = articleUrl ? 'a' : 'article';
   const hrefAttrs = articleUrl ? ` href="${escapeHtml(articleUrl)}" target="_blank" rel="noopener noreferrer"` : '';
-
   return `
     <${tag} class="editorial-article editorial-article-${variant}" style="${getAccentInlineVars(theme)}"${hrefAttrs}>
       <div class="editorial-article-kicker">
@@ -8046,21 +7342,17 @@ function buildEditorialArticleMarkup(article, variant = 'list', options = {}) {
     </${tag}>
   `;
 }
-
 function renderEditorialCoverage(containerId, articles, options = {}) {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
-
   const items = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles)).slice(0, options.limit || 6);
   if (!items.length) {
     wrap.innerHTML = `<div class="art-loading">No articles found.</div>`;
     return;
   }
-
   const shouldFeature = options.featured !== false;
   const featuredArticle = shouldFeature ? items[0] : null;
   const listItems = shouldFeature ? items.slice(1) : items;
-
   wrap.innerHTML = `
     ${featuredArticle ? buildEditorialArticleMarkup(featuredArticle, 'feature', options) : ''}
     ${listItems.length
@@ -8068,16 +7360,13 @@ function renderEditorialCoverage(containerId, articles, options = {}) {
       : ''}
   `;
 }
-
 function getArticleDescription(article = {}, maxLength = 180) {
   const description = cleanText(article.description || '');
   if (!description || description.length <= maxLength) return description;
-
   const trimmed = description.slice(0, maxLength).trim();
   const lastSpace = trimmed.lastIndexOf(' ');
   return `${trimmed.slice(0, lastSpace > 80 ? lastSpace : trimmed.length).trim()}...`;
 }
-
 function createArticleItem(article, options = {}) {
   const variant = options.variant === 'feature' ? 'feature' : 'compact';
   const sourceName = options.showSource === false ? '' : getArticleSourceName(article);
@@ -8085,7 +7374,6 @@ function createArticleItem(article, options = {}) {
   const timestamp = formatPublishedDate(article);
   const description = variant === 'feature' ? getArticleDescription(article) : '';
   const theme = getArticleTheme(article, options.themeKey);
-
   const el = document.createElement(articleUrl ? 'a' : 'article');
   el.className = `article-item article-${variant}`;
   el.setAttribute('style', getAccentInlineVars(theme));
@@ -8106,35 +7394,28 @@ function createArticleItem(article, options = {}) {
     ${description ? `<div class="art-summary">${escapeHtml(description)}</div>` : ''}
     ${articleUrl ? '<div class="art-action">Read article</div>' : ''}
   `;
-
   return el;
 }
-
 function appendArticleItems(container, articles, options = {}) {
   const items = sortArticlesByPublishedDate(dedupeArticlesByUrl(articles));
   const feed = document.createElement('div');
   feed.className = 'article-feed';
-
   items.forEach((article, index) => {
     feed.appendChild(createArticleItem(article, {
       variant: index === 0 ? 'feature' : 'compact',
       themeKey: options.themeKey || ''
     }));
   });
-
   container.appendChild(feed);
 }
-
 function getTopicIntro(topicKey) {
   const intros = {
-    politics: 'US politics is moving through a period shaped by elections, institutions, party strategy, and legal or congressional decisions.',
+    politics: 'US politics is currently being shaped by White House security concerns, Trump administration policy fights, immigration and foreign-policy pressure, court rulings, Congress and 2026 election map battles.',
     ukraine: 'The war in Ukraine continues to evolve through battlefield updates, diplomacy, military aid, and reactions from Russia and its allies.',
     climate: 'Climate coverage is currently driven by extreme weather, emissions pressure, energy transition debates, and international policy responses.'
   };
-
   return intros[topicKey] || 'This topic is developing across several connected recent stories.';
 }
-
 function getBriefingFocus(topicKey) {
   const focus = {
     politics: 'institutions, elections, policy choices, and public reaction',
@@ -8143,15 +7424,12 @@ function getBriefingFocus(topicKey) {
   };
   return focus[topicKey] || 'the main actors, decisions, consequences, and public response';
 }
-
 function getTopicDisplayName(topicKey) {
   return TOPICS[topicKey]?.name || TOPICS[topicKey]?.label || 'This topic';
 }
-
 function cleanBriefingPoint(article = {}) {
   const raw = cleanText(article.title || article.description || '');
   if (!raw) return '';
-
   return raw
     .replace(/\s+[-|]\s+[^-|]{2,48}$/g, '')
     .replace(/\s+/g, ' ')
@@ -8159,37 +7437,30 @@ function cleanBriefingPoint(article = {}) {
     .slice(0, 150)
     .trim();
 }
-
 function uniqueBriefingPoints(articles = [], limit = 4) {
   const seen = new Set();
   const points = [];
-
   for (const article of articles) {
     const point = cleanBriefingPoint(article);
     const key = point.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 80);
     if (!point || seen.has(key)) continue;
-
     seen.add(key);
     points.push(point);
     if (points.length >= limit) break;
   }
-
   return points;
 }
-
 function joinBriefingPoints(points = []) {
   if (points.length <= 1) return points[0] || '';
   if (points.length === 2) return `${points[0]} and ${points[1]}`;
   return `${points.slice(0, -1).join(', ')}, and ${points[points.length - 1]}`;
 }
-
 function buildFakeShortSummary(topicKey, articles) {
   const topicName = getTopicDisplayName(topicKey);
   const picked = articles.slice(0, 5);
   const points = uniqueBriefingPoints(picked, 3);
   const sources = uniqueSourceNames(picked).slice(0, 3);
   const focus = getBriefingFocus(topicKey);
-
   const lead = points[0]
     ? `${topicName} is currently led by one clear development: ${points[0]}.`
     : `${topicName} is moving through several connected developments.`;
@@ -8197,15 +7468,10 @@ function buildFakeShortSummary(topicKey, articles) {
     ? `Related coverage also points to ${joinBriefingPoints(points.slice(1))}.`
     : `The story is best read through ${focus}.`;
   const third = `Together, the articles frame the topic through ${focus}.`;
-  const sourceNote = sources.length
-    ? `Sources in this brief include ${joinBriefingPoints(sources)}.`
-    : 'The brief is based on the latest articles available in this view.';
-
   return {
-    shortSummary: `${lead} ${second} ${third} ${sourceNote}`
+    shortSummary: `${lead} ${second} ${third}`
   };
 }
-
 function buildFakeLongSummary(topicKey, articles) {
   const topicName = getTopicDisplayName(topicKey);
   const picked = articles.slice(0, 6);
@@ -8213,62 +7479,50 @@ function buildFakeLongSummary(topicKey, articles) {
   const sources = uniqueSourceNames(picked).slice(0, 4);
   const sourceLinks = getRelevantSourceLinks(picked);
   const focus = getBriefingFocus(topicKey);
-
   const firstParagraph = points[0]
     ? `${topicName} is currently anchored by ${points[0]}. This is the lead item in the latest coverage, and it gives the topic its immediate direction.`
     : `${topicName} is currently moving through several connected developments. The latest coverage gives a broad view rather than one single settled storyline.`;
-
   const middlePoints = points.slice(1, 4);
   const secondParagraph = middlePoints.length
     ? `The surrounding coverage adds context around ${joinBriefingPoints(middlePoints)}. Read together, those updates show how the story connects across ${focus}.`
     : `The surrounding coverage is useful because it connects the immediate news to ${focus}.`;
-
   const thirdParagraph = sources.length
     ? `This brief draws on reporting from ${joinBriefingPoints(sources)}. The source trail below is there so you can open the original articles and check the details directly.`
     : 'The source trail below is there so you can open the original articles and check the details directly.';
-
   return {
     longSummary: `${firstParagraph}\n\n${secondParagraph}\n\n${thirdParagraph}`,
     sources: sourceLinks
   };
 }
-
 function buildFakeSummary(topicKey, articles, mode = 'short') {
   if (mode === 'long') {
     return buildFakeLongSummary(topicKey, articles);
   }
-
   return buildFakeShortSummary(topicKey, articles);
 }
-
 async function fetchSummary(topicKey, articles, mode = 'short') {
   if (USE_FAKE_AI_SUMMARY) {
     console.log('Using fake AI summary');
     return buildFakeSummary(topicKey, articles, mode);
   }
-
   try {
     const res = await fetch('/api/summary', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topicKey, mode, articles })
     });
-
     const data = await res.json();
     console.log('SUMMARY STATUS:', res.status);
     console.log('SUMMARY DATA:', data);
-
     if (!res.ok) {
       return { error: data.error || 'Summary request failed', details: data.details };
     }
-
     return data;
   } catch (e) {
     console.error('fetchSummary failed:', e);
     return { error: e.message };
   }
 }
-
 /* ══════════════════════
    TIMELINE
 ══════════════════════ */
@@ -8277,25 +7531,21 @@ function renderTimelineLegacyAxis(topic, theme) {
   if (!g) return;
   g.innerHTML = '';
   renderTimelineAxis();
-
   const events = getCurrentTimelineEvents(topic.key);
   const shape = theme.shape;
   const color = theme.color;
   const ns = 'http://www.w3.org/2000/svg';
   const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-
   if (!events.length) {
     document.getElementById('tl-date').textContent = 'Loading happenings...';
     document.getElementById('tl-prog').setAttribute('x2', 500);
     return;
   }
-
   events.forEach((ev, index) => {
     const cx = events.length === 1 ? 500 : Math.round((index / (events.length - 1)) * 940) + 30;
     const cy = 28;
     const active = ev.id === activeTimelineEventId;
     const size = active ? 8 : ev.importance === 'high' ? 6 : 5;
-
     const hit = document.createElementNS(ns, 'circle');
     hit.setAttribute('cx', cx);
     hit.setAttribute('cy', cy);
@@ -8303,7 +7553,6 @@ function renderTimelineLegacyAxis(topic, theme) {
     hit.setAttribute('fill', 'transparent');
     hit.style.cursor = 'pointer';
     hit.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
-
     let shapeEl;
     if (shape === 'circle') {
       shapeEl = document.createElementNS(ns, 'circle');
@@ -8321,13 +7570,11 @@ function renderTimelineLegacyAxis(topic, theme) {
       shapeEl = document.createElementNS(ns, 'polygon');
       shapeEl.setAttribute('points', `${cx},${cy-size*1.2} ${cx-size},${cy+size*.9} ${cx+size},${cy+size*.9}`);
     }
-
     shapeEl.setAttribute('fill', active ? color : `${color}${ev.importance === 'high' ? 'CC' : '88'}`);
     shapeEl.setAttribute('stroke', color);
     shapeEl.setAttribute('stroke-width', active ? '2' : '1');
     shapeEl.style.cursor = 'pointer';
     shapeEl.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
-
     const tx = document.createElementNS(ns, 'text');
     tx.setAttribute('x', cx);
     tx.setAttribute('y', active ? '12' : '14');
@@ -8339,14 +7586,11 @@ function renderTimelineLegacyAxis(topic, theme) {
     tx.textContent = isMobile && ev.label.length > 14 ? `${ev.label.slice(0, 13)}…` : ev.label;
     tx.style.cursor = 'pointer';
     tx.addEventListener('click', () => selectTimelineEvent(topic.key, ev.id));
-
     g.appendChild(tx);
     g.appendChild(shapeEl);
     g.appendChild(hit);
-
     ev.positionX = cx;
   });
-
   const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0];
   const x = activeEvent?.positionX || 500;
   timelineScrubPct = x / 1000;
@@ -8356,7 +7600,6 @@ function renderTimelineLegacyAxis(topic, theme) {
   document.getElementById('tl-prog').setAttribute('x2', x);
   document.getElementById('tl-date').textContent = `${getTimelineLevelLabel()} · ${activeEvent?.label || 'Happenings'}`;
 }
-
 let tlDrag=false;
 const tlSvg=document.getElementById('tl-svg');
 if (tlSvg) {
@@ -8372,7 +7615,6 @@ if (tlSvg) {
   }, { passive: true });
   document.addEventListener('touchend', () => { tlDrag = false; });
 }
-
 function moveScrub(e){
   if (!tlSvg) return;
   if (!currentTopic) return;
@@ -8381,7 +7623,6 @@ function moveScrub(e){
   timelineScrubPct = pct;
   const events = getCurrentTimelineEvents(currentTopic);
   if (!events.length) return;
-
   let nearest = events[0];
   let nearestDist = Infinity;
   events.forEach(ev => {
@@ -8392,18 +7633,15 @@ function moveScrub(e){
       nearest = ev;
     }
   });
-
   if (nearest && nearest.id !== activeTimelineEventId) {
     selectTimelineEvent(currentTopic, nearest.id);
   } else {
     renderTimeline(TOPICS[currentTopic], THEMES[currentTopic]);
   }
 }
-
 function renderTimelineLegacyCards(topic, theme) {
   const stage = document.getElementById('timeline-stage');
   if (!stage) return;
-
   const events = getCurrentTimelineEvents(topic.key);
   const activeEvent = events.find(ev => ev.id === activeTimelineEventId) || events[0] || null;
   const level = getTimelineLevelLabel();
@@ -8418,7 +7656,6 @@ function renderTimelineLegacyCards(topic, theme) {
   const metaText = isMonthView
     ? `${rangeStart} back to ${rangeEnd} · ${events.length} monthly snapshots · Click a month to read its overview and key coverage.`
     : `${events.length} live happenings visible · Scroll on desktop or tap the level buttons to change focus.`;
-
   if (!events.length) {
     stage.innerHTML = `
       <div class="timeline-empty">
@@ -8427,7 +7664,6 @@ function renderTimelineLegacyCards(topic, theme) {
     `;
     return;
   }
-
   const markerHtml = events.map((ev, index) => {
     const left = events.length === 1 ? 50 : 8 + (index / (events.length - 1)) * 84;
     return `
@@ -8438,7 +7674,6 @@ function renderTimelineLegacyCards(topic, theme) {
       </button>
     `;
   }).join('');
-
   const cardHtml = events.map(ev => `
     <article class="timeline-card ${ev.id === activeTimelineEventId ? 'active' : ''}" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
       <div class="timeline-card-top">
@@ -8450,11 +7685,9 @@ function renderTimelineLegacyCards(topic, theme) {
       <div class="timeline-card-action">${ev.id === activeTimelineEventId ? (isMonthView ? 'Open month in sidebar' : 'Open in sidebar') : (isMonthView ? 'View month' : 'Open happening')}</div>
     </article>
   `).join('');
-
   stage.innerHTML = `
     <div class="timeline-stage-top">
       <div>
-        <div class="timeline-kicker">${escapeHtml(topic.name)} timeline</div>
         <div class="timeline-headline">${escapeHtml(level)}</div>
         <div class="timeline-sub">${escapeHtml(subText)}</div>
       </div>
@@ -8471,7 +7704,6 @@ function renderTimelineLegacyCards(topic, theme) {
       <div class="timeline-card-grid">${cardHtml}</div>
     </div>
   `;
-
   const metaNoteEl = stage.querySelector('.timeline-meta-note');
   if (metaNoteEl) {
     metaNoteEl.textContent = isMonthView
@@ -8479,19 +7711,16 @@ function renderTimelineLegacyCards(topic, theme) {
       : `${events.length} live happenings visible - Scroll on desktop or tap the level buttons to change focus.`;
   }
 }
-
 /* ══════════════════════
    MAP
 ══════════════════════ */
 function renderTimeline(topic, theme) {
   const stage = document.getElementById('timeline-stage');
   if (!stage) return;
-
   const previousRail = stage.querySelector('.timeline-rail-shell');
   if (previousRail) {
     timelineRailScrollTop = previousRail.scrollTop;
   }
-
   const hasDetailEvents = (timelineEventCache[topic.key]?.detailEvents?.length || 0) > 0;
   const isDetailView = timelineViewLevel === 'detail' && hasDetailEvents;
   const events = getCurrentTimelineEvents(topic.key);
@@ -8521,7 +7750,6 @@ function renderTimeline(topic, theme) {
     `;
     return;
   }
-
   const flowHtml = events.map((ev, index) => {
     const side = index % 2 === 0 ? 'left' : 'right';
     const intensity = ev.importance === 'high' || ev.id === activeTimelineEventId || index === 0 ? 'focus' : 'context';
@@ -8533,14 +7761,11 @@ function renderTimeline(topic, theme) {
       : 'Open this checkpoint to read the clearest connected coverage from that month.');
     const cardHtml = `
       <button class="timeline-entry-card" type="button" onclick="selectTimelineEvent('${topic.key}', '${ev.id}')">
-        <div class="timeline-entry-meta">
-          <div class="timeline-entry-badge">${escapeHtml(badgeLabel)}</div>
-        </div>
+
         <div class="timeline-entry-title">${escapeHtml(ev.label || 'Happening')}</div>
         <div class="timeline-entry-copy">${escapeHtml(summaryCopy)}</div>
       </button>
     `;
-
     return `
       <article class="timeline-entry ${side} ${intensity} ${ev.id === activeTimelineEventId ? 'active' : ''}" data-event-id="${escapeHtml(ev.id)}" style="${getAccentInlineVars(theme)}">
         <div class="timeline-entry-side left">${side === 'left' ? cardHtml : ''}</div>
@@ -8552,13 +7777,10 @@ function renderTimeline(topic, theme) {
       </article>
     `;
   }).join('');
-
   const flowStyle = ` style="grid-template-rows:repeat(${events.length}, var(--timeline-row-height));"`;
-
   stage.innerHTML = `
     <div class="timeline-stage-top">
       <div>
-        <div class="timeline-kicker">${escapeHtml(topic.name)} timeline</div>
         <div class="timeline-headline">${escapeHtml(level)}</div>
         <div class="timeline-sub">${escapeHtml(subText)}</div>
       </div>
@@ -8567,17 +7789,13 @@ function renderTimeline(topic, theme) {
         <button class="timeline-scale-btn ${isDetailView ? 'active' : ''}" onclick="setTimelineViewLevel('detail')" ${hasDetailEvents ? '' : 'disabled'}>${hasDetailEvents ? 'Live happenings' : 'Months only'}</button>
       </div>
     </div>
-    <div class="timeline-meta-bar">
-      <div class="timeline-meta-note">${escapeHtml(metaText)}</div>
-    </div>
+
     <div class="timeline-rail-shell">
       <div class="timeline-flow"${flowStyle}>${flowHtml}</div>
     </div>
   `;
-
   const rail = stage.querySelector('.timeline-rail-shell');
   if (!rail) return;
-
   rail.scrollTop = Math.min(
     timelineRailScrollTop,
     Math.max(0, rail.scrollHeight - rail.clientHeight)
@@ -8585,7 +7803,6 @@ function renderTimeline(topic, theme) {
   rail.addEventListener('scroll', () => {
     timelineRailScrollTop = rail.scrollTop;
   }, { passive: true });
-
   if (shouldRevealTimelineSelection) {
     const activeEntry = rail.querySelector('.timeline-entry.active');
     if (activeEntry) {
@@ -8600,7 +7817,6 @@ function renderTimeline(topic, theme) {
     shouldRevealTimelineSelection = false;
   }
 }
-
 const MAP_BACKGROUNDS = {
   climate: `
     <rect width="100%" height="100%" fill="#D8E8F0"/>
@@ -8862,7 +8078,6 @@ const MAP_BACKGROUNDS = {
     <path d="M706.26,162.7L705.73,163.23L704.8,163.73L704.27,163.57L701.98,163.72L700.27,164.72L699.71,165.72L700.38,166.25L701.32,167.9L700.5,169.57L701.06,170.79L698.73,171.18L700,172.52L699.44,173.18L698.64,173.41L698.54,174.91L698.98,176.17L698.34,176.95L696.85,176.5L695.74,177.27L695.33,178.01L694.51,177.78L693.68,178.79L693.94,181.53L691.85,182.24L690.64,182.22L689.86,182.66L688.68,182.39L686.44,182.62L682.74,181.47L683.12,180.78L684.1,178.99L683.48,177.59L681.73,177.33L681.17,175.38L680.01,173.11L680.49,172.18L679.56,171.84L679.18,170.68L679.86,168.74L679.67,166.79L682.73,167.78L683.49,167.24L683.31,166.29L684.71,165.8L685.78,164.96L685.76,162.95L687.17,162.65L687.34,161.84L689.07,162.4L690.19,162.43L691.74,162.85L692.56,163.41L694.06,162.46L694.87,163.01L694.95,161.88L696.4,161.6L696.1,160.94L696.98,159.59L697.88,159.97L698.82,160.92L699.29,162.96L700.42,164.06L702.15,162.61L703.16,162.09L703.93,162.7L704.8,162.23Z" class="land" id="AF" title="Afghanistan"/>
     <path d="M424.22,214.13L423.91,214.19L424.02,213.8Z" class="land" id="AG" title="Antigua and Barbuda"/>
     <path d="M406.09,225.77L405.99,225.81L405.73,225.53L405.93,225.48Z" class="land" id="AW" title="Aruba"/>
-
       </g>
   `,
   politics: `
@@ -8952,28 +8167,23 @@ const MAP_BACKGROUNDS = {
     <path d="M505.52,171.06L505.46,171.81L507.49,173.02L508.14,174.01L512.87,175.1L513.25,176.25L511.76,178L514.11,180.1L514.74,179.18L516.19,180.34L517.11,182.83L518.98,183.75L518.84,188.75L521.04,191.51L522.94,191.08L523.64,192.56L524.85,192.6L525.82,193.89L526.31,195.99L529.74,196.97L531.29,198.62L531.98,200.41L533.71,202.21L534.1,204.42L532.82,205.64L531.56,205.67L531.47,207.01L532.93,211.11L534.69,211.63L534.79,212.72L531.73,212.55L529.41,211.52L527.3,211.32L525.93,210.08L524.6,212.93L524.93,213.84L526.56,214.87L529.89,216.27L530.83,217.42L532.51,217.68L534.74,217.23L536.62,218.46L538.48,217.61L540,217.74L539.75,218.51L537.34,220.63L536.94,221.78L537.71,222.58L541.91,223.61L540.28,226.3L541.26,228.95L542.43,229.8L539.63,230.84L537.22,230.53L534.89,230.69L534.2,231.64L531.67,231.77L529.16,230.55L528.01,228.77L525.99,226.98L525.38,228.06L523.33,227.64L522.31,225.62L518.98,225.71L518.06,226.66L517.84,229.89L515.05,231.1L515.93,232.2L515.79,233.61L513.83,233.69L511.27,232.67L510.57,233.52L507.33,233.86L502.92,232.07L500.91,232.92L499.12,232.72L498.79,234.35L496.3,233.96L495.02,235.47L493.51,238.83L491.66,239.41L488.92,241.45L488.5,242.36L486.59,242.43L485.64,240.99L483.96,241.42L483.46,240.6L480.52,240.84L479.92,241.77L476.85,241.97L476.2,241.09L473.84,240.61L467.88,241.25L464.81,240.46L462.59,240.54L460.52,241.32L459.68,242.83L459.61,245.5L458.13,245.95L457.37,247.18L459.02,248.26L459.05,250.06L455.93,250.22L454.8,249.32L452.99,249.73L452.68,251.89L450.38,252.2L447.88,253.04L446.68,254.18L444.42,253.05L443.2,255.5L442.46,255.64L440.25,254.18L437.28,254.61L438.44,253.48L438.9,251.74L438.02,249.81L435.74,248.79L437.2,246.89L435.22,245.86L431.51,243.06L432.15,241.59L431.67,240.75L427.83,239.74L427.08,236.82L426.08,236.32L425.68,233.91L423.97,233.67L422.51,232.47L422.38,231.57L423.73,229.47L421.29,228.62L420.48,227.26L421.51,225L423.84,223.16L423.41,221.07L423.72,218.6L424.02,219.87L425.17,220.97L428.49,220.58L429.82,219.6L430.94,217.66L431.74,217.58L430.97,215.11L433.35,214.29L434.01,213.65L435.76,214.05L436.46,215.8L438.05,213.94L440.45,213.85L440.35,216.35L443.03,216.55L446.93,217.29L449.2,212.7L450.35,212.07L452.29,213.84L455.32,211.87L457.89,212.51L460.16,213.67L462.68,212.6L465.11,212.7L466.61,212.36L467.31,210.06L469.44,209.29L470.37,207.07L472.26,206.12L472.53,203.59L474.25,202.4L473.4,201.73L473.9,199.57L475.53,197.44L475.14,196.13L475.21,192.53L474.19,191.9L475.01,189.93L474.5,188.94L476.34,188.71L477.33,187.45L479.88,186.84L480.4,186.27L479,184.25L477.52,183.62L477.09,182.37L481.51,182.36L482.09,183.72L481.92,185.9L482.96,187.73L484.36,188.58L487.28,187.78L488.05,186.31L489.07,186.32L489.59,188.76L493.31,189.03L494.88,185.75L495.77,185.01L496.26,183.52L500.06,183.86L499.19,181L501.95,179.48L498.97,179.21L498.79,177.08L500.93,176.02L499.9,175.42L501.9,172.17L503.59,172.99L504.44,171.39Z" class="land" id="UA-71" title="Cherkasy"/>
     <path d="M538.09,71.29L537.03,72.82L537.08,74.88L536.22,77.05L535.11,78.6L536.49,80.7L539.3,81.67L541.3,83.4L542.45,83.6L543.09,85.68L540.51,86.23L539.46,85.14L537.86,86.04L537.3,87.15L538.99,88.56L538.52,90.81L533.75,91.51L532.39,92.92L530.63,93.81L531.01,96.39L529.96,97.71L530.81,99.43L532.13,100.47L532.61,102.89L533.71,105.84L535.34,107.56L534.24,108.36L535.38,109.22L535.87,110.69L533.77,111.77L533.6,114.4L534.6,115.83L531.3,117.21L533.1,119.33L532.23,120.9L533.25,122.64L532.09,123.86L532.57,124.92L530.76,125.24L529.99,126.96L531.22,127.83L529.86,130.24L533.39,130.73L534.7,131.36L534.12,134.76L535.54,134.96L536.88,134.27L538.06,136.6L540.29,136.43L541.04,139.15L539.74,139.94L539.8,144.45L542.58,147.48L539.83,148.22L540.46,149.01L540.63,150.79L539.53,151.3L539.34,154.46L537.82,156.27L538.65,157.24L537.16,158.12L536.98,159.5L535.48,159.45L533.23,162.73L531.17,164.2L528.22,164.92L523.67,165.03L521.08,164.88L519.82,165.56L518.19,164.39L518.28,163.46L514.79,162.42L513.37,161.65L511.98,161.69L509.74,165.46L508.34,165L505.73,165.48L505.93,164.1L503.32,164.19L501.62,162.78L500.48,160.24L498.52,159.88L501.5,157.71L501.29,156.29L497.19,156.14L495.7,153.76L493.09,152.06L491.39,152.45L490.55,153.3L490.73,155.43L487.24,155.28L485.48,157.18L481.83,156.89L477.68,158.13L475.7,156.61L473.84,156.98L471.47,156.28L470.67,154.89L468.69,154.67L467.74,153.08L469.58,153.19L468.81,151.7L469.28,150.19L467.89,148.69L465.06,146.34L464.98,145.21L463.16,144.98L462.89,145.72L458.87,145.75L455.85,145.54L455.86,146.53L452.02,145.07L450.7,145.35L450.68,143.12L451.81,142.48L451.06,140.43L449.65,139.5L447.89,139.13L445.93,136.28L445.66,134.59L443.9,133.34L440.27,133.53L440.18,131.11L439.17,130.12L440.25,129.37L439.22,128.33L438.84,126.67L440.54,123.7L439.97,122.19L442.56,121.07L441.61,119.75L443.53,118.56L443.41,116.66L441.49,114.36L440.54,114.36L440.37,112.05L439.35,110.48L439.75,109.2L438.36,109.04L437.53,108.01L437.36,105.24L436.36,104.49L438.49,102.64L438.24,101.09L439.98,100.94L440.27,98.55L441.07,97.09L440.22,95.74L441.73,95.18L441.91,93.79L443.16,92.09L445.18,92.29L445.85,91.2L445.18,90.35L447.62,88.27L449.47,85.15L448.76,84.07L456.2,82.7L457.06,83.77L459.04,84.12L460.76,85.51L462.25,85.02L462.87,82.56L464.99,81.81L465.54,80.85L467.27,80.86L467.83,81.8L469.9,81.59L473.12,82.12L475.57,82.1L477.53,83L479.58,82.19L481.23,82.87L482.01,82.36L484.07,82.69L486.31,83.85L486.97,84.99L491.63,85.88L492.97,85.42L493.32,84.18L495.08,84.13L498.34,82.61L500.62,80.14L499.2,79.9L499.6,78.29L498.68,77.11L499.29,76.07L501.14,75.85L499.11,72.79L499.41,71.73L500.75,71.71L503.96,72.78L506.14,72.24L507.42,73.42L508.4,73.19L511.44,74.83L512.25,75.79L514.12,74.95L516.36,75.27L517,74.39L518.7,74.61L519.78,75.94L524.27,73.1L525.25,73.24L528.44,70.02L529.91,69.87L533.09,70.78L535.17,70.89L537.05,70.22Z" class="land" id="UA-74" title="Chernihiv"/>
     <path d="M273.72,245.02L276.93,245.54L278.31,246.76L279.14,244.93L280.33,245.28L283.38,248.52L285.63,248.9L286.98,247.49L288.41,248.08L288.97,246.49L290.05,246.6L290.47,248.22L289.77,249.29L291.92,251.51L293.04,250.79L291.61,248.57L293.41,248.55L293.82,251.01L295.81,252.11L298.4,251.4L299.82,252.89L301.75,252.94L303.04,251.63L304.95,251.5L306.08,251.11L308.66,253.89L309.51,255.28L311.96,255.44L311.39,253.56L314.82,253.96L315.17,251.87L318.03,250.11L321.26,251.33L323.3,249.63L328.86,250.56L330.81,249.67L332.53,249.43L334.82,250.19L335.42,249.34L334.28,248.17L335.8,247.43L337.41,248.55L339.19,247.08L342.33,248.54L343.79,251.36L343.87,252.92L344.76,254.11L346.11,254.71L343.92,255.56L343.15,257.52L340.79,257.44L340.55,256.35L338.29,256.01L337.47,259.22L335.51,259.29L333.83,258.36L332.91,259.07L331.32,259.02L329.96,257.59L327.84,257L328.48,258.97L326.76,259.02L326.55,260.05L322.77,258.87L321.84,257.14L320.9,257.42L318.19,257.19L317.38,258.13L315.83,257.89L318.01,260.24L320.2,260.73L320.64,262.21L320.21,263.13L315.65,261.51L314.04,262.63L313.05,264.07L313.25,265.72L311.48,265.65L311.54,266.68L309.85,267.21L307.71,266.67L307.27,267.35L304.81,268.27L302.8,268.39L302.99,269.57L301.77,270.79L301.17,273.23L299.05,274.7L298.28,277.44L295.49,278.2L293.77,277.75L289.67,278.59L288.26,278.29L287.4,279.08L284.95,278.95L283.17,280.09L279.73,279.95L278.33,279.58L276.19,280.15L274.24,280.21L266.85,281.29L262.75,282.81L261.49,285.93L259.6,288.19L259.43,288.91L256.69,290.32L255.45,289.89L252.24,290.24L252.83,287.04L254.02,285.4L254.39,284.1L252.87,283.07L252.53,281.09L250.97,279.76L250.3,277.38L250.34,275.86L253.06,272.77L253.19,271.4L255.53,270.8L255.99,268.47L257.58,268.59L257.96,267.79L256.59,266.42L257.86,265.38L259.08,265.33L261.83,261.53L264.3,259.15L266.61,258.29L269.2,257.92L271.25,258.19L272.22,258.91L274.74,258.9L274.88,257.31L273.97,255.76L273.77,252.26L273.35,249.9L272.27,247.06Z" class="land" id="UA-77" title="Chernivtsi"/>
-
        </g>
   `
 }; 
-
 function renderMap(topic, theme) {
   const svg = document.getElementById('map-svg');
   if (!svg) return;
   const ns = 'http://www.w3.org/2000/svg';
   const { color, shape } = theme;
   const markerColor = color;
-
   svg.innerHTML = MAP_BACKGROUNDS[topic.key];
   svg.dataset.mapTopic = topic.key;
   svg.setAttribute('viewBox', MAP_VIEWBOXES[topic.key] || DEFAULT_MAP_VIEWBOX);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   resetMapViewportState();
-
   const g = document.createElementNS(ns, 'g');
   g.setAttribute('id', 'map-markers');
   svg.appendChild(g);
-
   const resolvedMarkers = topic.mapMarkers
     .map(marker => ({
       ...marker,
@@ -8981,29 +8191,24 @@ function renderMap(topic, theme) {
       ...resolveMapMarkerPosition(marker, topic.key)
     }))
     .filter(marker => Number.isFinite(marker.x) && Number.isFinite(marker.y));
-
   resolvedMarkers.forEach(m => {
     const markerGroup = document.createElementNS(ns, 'g');
     markerGroup.classList.add('map-marker');
     markerGroup.dataset.markerId = m.id;
     markerGroup.setAttribute('transform', `translate(${m.x} ${m.y})`);
-
     const pulse = document.createElementNS(ns, 'circle');
     pulse.classList.add('map-marker-pulse');
     pulse.setAttribute('cx', '0');
     pulse.setAttribute('cy', '0');
     pulse.setAttribute('r', String(m.size + (theme.shape === 'circle' ? 11 : 6)));
     pulse.setAttribute('fill', markerColor);
-
     const hit = document.createElementNS(ns, 'circle');
     hit.classList.add('map-marker-hit');
     hit.setAttribute('cx', '0');
     hit.setAttribute('cy', '0');
     hit.setAttribute('r', String(Math.max(18, m.size + 12)));
     hit.setAttribute('fill', 'transparent');
-
     let markerGlyph;
-
     if (shape === 'circle') {
       markerGlyph = document.createElementNS(ns, 'circle');
       markerGlyph.setAttribute('cx', '0');
@@ -9020,13 +8225,11 @@ function renderMap(topic, theme) {
       markerGlyph = document.createElementNS(ns, 'polygon');
       markerGlyph.setAttribute('points', `0,${-m.size*1.1} ${-m.size},${m.size*.8} ${m.size},${m.size*.8}`);
     }
-
     markerGlyph.classList.add('map-marker-glyph');
     markerGlyph.setAttribute('fill', markerColor);
     markerGlyph.setAttribute('stroke', '#FFFFFF');
     markerGlyph.setAttribute('stroke-opacity', theme.shape === 'circle' ? '0.82' : '1');
     markerGlyph.setAttribute('stroke-width', theme.shape === 'circle' ? '1' : '1.5');
-
     const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
     const viewBox = getMapViewBox(svg);
     const labelShouldFlip = topic.key === 'climate' && viewBox && (m.x + 160 > viewBox.x + viewBox.width);
@@ -9040,19 +8243,16 @@ function renderMap(topic, theme) {
     lbl.setAttribute('font-family', "'Syne',sans-serif");
     lbl.setAttribute('font-weight', theme.shape === 'circle' ? '600' : '700');
     lbl.textContent = m.label;
-
     markerGroup.appendChild(pulse);
     markerGroup.appendChild(markerGlyph);
     markerGroup.appendChild(lbl);
     markerGroup.appendChild(hit);
     g.appendChild(markerGroup);
-
     markerGroup.addEventListener('click', async (e) => {
       e.stopPropagation();
       await selectMapMarker(m);
     });
   });
-
   updateMapMarkerSelection(selectedMapMarkerId);
   setupMapClicks(resolvedMarkers);
 }
@@ -9061,7 +8261,6 @@ function getTransformedBBox(el) {
   const box = el.getBBox();
   const matrix = typeof el.getCTM === 'function' ? el.getCTM() : null;
   if (!matrix) return box;
-
   const corners = [
     { x: box.x, y: box.y },
     { x: box.x + box.width, y: box.y },
@@ -9071,10 +8270,8 @@ function getTransformedBBox(el) {
     x: matrix.a * point.x + matrix.c * point.y + matrix.e,
     y: matrix.b * point.x + matrix.d * point.y + matrix.f
   }));
-
   const xs = corners.map(point => point.x);
   const ys = corners.map(point => point.y);
-
   return {
     x: Math.min(...xs),
     y: Math.min(...ys),
@@ -9082,7 +8279,6 @@ function getTransformedBBox(el) {
     height: Math.max(...ys) - Math.min(...ys)
   };
 }
-
 function getMapViewBox(svg) {
   const parts = (svg.getAttribute('viewBox') || '').split(/\s+/).map(Number);
   if (parts.length !== 4 || parts.some(part => !Number.isFinite(part))) return null;
@@ -9093,7 +8289,6 @@ function getMapViewBox(svg) {
     height: parts[3]
   };
 }
-
 const WORLD_NATURAL_EARTH = {
   scale: 158,
   translateX: 544,
@@ -9102,7 +8297,6 @@ const WORLD_NATURAL_EARTH = {
   groupY: 30,
   groupScale: 0.9
 };
-
 const UKRAINE_LINEAR_MAP = {
   anchorLat: 50.4501,
   anchorLng: 30.5234,
@@ -9114,14 +8308,12 @@ const UKRAINE_LINEAR_MAP = {
   groupY: 30,
   groupScale: 0.9
 };
-
 function applyMapGroupTransform(point, config) {
   return {
     x: config.groupX + point.x * config.groupScale,
     y: config.groupY + point.y * config.groupScale
   };
 }
-
 function naturalEarthPoint(lat, lng) {
   const lambda = lng * Math.PI / 180;
   const phi = lat * Math.PI / 180;
@@ -9132,102 +8324,82 @@ function naturalEarthPoint(lat, lng) {
   const y = phi * (
     1.007226 + phi2 * (0.015085 + phi2 * (-0.044475 + phi2 * (0.028874 + phi2 * -0.005916)))
   );
-
   return {
     x: WORLD_NATURAL_EARTH.translateX + WORLD_NATURAL_EARTH.scale * x,
     y: WORLD_NATURAL_EARTH.translateY - WORLD_NATURAL_EARTH.scale * y
   };
 }
-
 function projectWorldMarker(lat, lng) {
   return applyMapGroupTransform(naturalEarthPoint(lat, lng), WORLD_NATURAL_EARTH);
 }
-
 function projectUkraineMarker(lat, lng) {
   return applyMapGroupTransform({
     x: UKRAINE_LINEAR_MAP.anchorX + (lng - UKRAINE_LINEAR_MAP.anchorLng) * UKRAINE_LINEAR_MAP.xPerLng,
     y: UKRAINE_LINEAR_MAP.anchorY - (lat - UKRAINE_LINEAR_MAP.anchorLat) * UKRAINE_LINEAR_MAP.yPerLat
   }, UKRAINE_LINEAR_MAP);
 }
-
 function getMarkerLatLng(marker) {
   if (Array.isArray(marker.coords) && marker.coords.length >= 2) {
     const [lat, lng] = marker.coords.map(Number);
     return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
   }
-
   const lat = Number(marker.lat);
   const lng = Number(marker.lng ?? marker.lon ?? marker.longitude);
   return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
 }
-
 function projectMapMarker(marker, topicKey) {
   const latLng = getMarkerLatLng(marker);
   if (!latLng) return null;
-
   if (topicKey === 'climate') {
     return projectWorldMarker(latLng.lat, latLng.lng);
   }
-
   if (topicKey === 'ukraine') {
     return projectUkraineMarker(latLng.lat, latLng.lng);
   }
-
   return null;
 }
-
 function resolveMapMarkerPosition(marker, topicKey) {
   const projectedPoint = projectMapMarker(marker, topicKey);
   if (projectedPoint) {
     return projectedPoint;
   }
-
   if (!marker.regionId && !marker.regionIds) {
     return { x: marker.x, y: marker.y };
   }
-
   const targetIds = marker.regionIds || [marker.regionId];
   const boxes = targetIds
     .map(id => document.getElementById(id))
     .map(getTransformedBBox)
     .filter(Boolean);
-
   if (!boxes.length) {
     return { x: marker.x, y: marker.y };
   }
-
   const minX = Math.min(...boxes.map(box => box.x));
   const minY = Math.min(...boxes.map(box => box.y));
   const maxX = Math.max(...boxes.map(box => box.x + box.width));
   const maxY = Math.max(...boxes.map(box => box.y + box.height));
   const width = maxX - minX;
   const height = maxY - minY;
-
   return {
     x: minX + width * (marker.regionAnchorX ?? 0.5) + (marker.offsetX ?? 0),
     y: minY + height * (marker.regionAnchorY ?? 0.5) + (marker.offsetY ?? 0)
   };
 }
-
 function applyMapTransform() {
   const svg = document.getElementById('map-svg');
   if (!svg) return;
   svg.style.transform = '';
 }
-
 function resetMapViewportState() {
   applyMapTransform();
 }
-
 function updateMapMarkerSelection(activeMarkerId = selectedMapMarkerId) {
   const svg = document.getElementById('map-svg');
   if (!svg) return;
-
   svg.querySelectorAll('.map-marker').forEach(markerGroup => {
     markerGroup.classList.toggle('active', markerGroup.dataset.markerId === activeMarkerId);
   });
 }
-
 function getMapPoint(svg, clientX, clientY) {
   const ctm = typeof svg.getScreenCTM === 'function' ? svg.getScreenCTM() : null;
   if (!ctm) return null;
@@ -9239,20 +8411,16 @@ function getMapPoint(svg, clientX, clientY) {
   }
   return new DOMPoint(clientX, clientY).matrixTransform(ctm.inverse());
 }
-
 function setupMapClicks(markers) {
   const svg = document.getElementById('map-svg');
   svg.onclick = async (e) => {
     const point = getMapPoint(svg, e.clientX, e.clientY);
     if (!point) return;
-
     const clickX = point.x;
     const clickY = point.y;
-
     let closest = null;
     let closestDist = Infinity;
     const hitRadius = window.innerWidth <= MOBILE_BREAKPOINT ? 28 : 20;
-
     markers.forEach(m => {
       const dist = Math.sqrt((clickX - m.x) ** 2 + (clickY - m.y) ** 2);
       if (dist < hitRadius + m.size && dist < closestDist) {
@@ -9260,12 +8428,10 @@ function setupMapClicks(markers) {
         closest = m;
       }
     });
-
     if (closest) {
       await selectMapMarker(closest);
       return;
     }
-
     selectedMapMarkerId = null;
     activeMapDetailRequest += 1;
     updateMapMarkerSelection(null);
@@ -9276,9 +8442,7 @@ function setupMapClicks(markers) {
     }
   };
 }
-
 hydrateStaticThemeElements();
-
 window.addEventListener('resize', () => {
   if (currentTopic && document.getElementById('explore').classList.contains('active')) {
     initGraph(currentTopic);
@@ -9301,3 +8465,4 @@ window.addEventListener('resize', () => {
 </div>
 </body> 
 </html>
+server.js

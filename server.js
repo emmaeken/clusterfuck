@@ -195,8 +195,8 @@ function prioritizeArticles(articles = [], query = '', limit = 5) {
 function getTopicSearchProfile(topicKey = '') {
   const profiles = {
     politics: {
-      newsApiQuery: '"US politics" AND (White House OR Congress OR "Supreme Court" OR election OR campaign OR senate)',
-      guardianQuery: '"US politics" OR White House OR Congress OR "Supreme Court" OR election OR campaign OR senate',
+      newsApiQuery: '"US politics" AND (Trump OR "White House" OR Congress OR "Supreme Court" OR immigration OR redistricting OR Iran)',
+      guardianQuery: '"US politics" OR Trump OR "White House" OR Congress OR "Supreme Court" OR immigration OR redistricting OR Iran',
       guardianSection: 'us-news'
     },
     ukraine: {
@@ -434,7 +434,7 @@ async function fetchGuardianArticles({
 
 function getBriefingFocus(topicKey = '') {
   const focus = {
-    politics: 'institutions, elections, policy choices, and public reaction',
+    politics: 'White House security, Trump administration policy, courts, Congress, immigration, foreign policy, and 2026 election map fights',
     ukraine: 'battlefield conditions, diplomacy, military support, and civilian impact',
     climate: 'policy decisions, emissions pressure, energy choices, and visible climate impacts'
   };
@@ -518,12 +518,9 @@ function buildFallbackTopicSummary(mode = 'short', articles = [], topicKey = '')
     ? `Related coverage also points to ${joinBriefingPoints(points.slice(1))}.`
     : `The story is best read through ${focus}.`;
   const third = `Together, the articles frame the topic through ${focus}.`;
-  const sourceNote = sources.length
-    ? `Sources in this brief include ${joinBriefingPoints(sources)}.`
-    : 'The brief is based on the latest articles available in this view.';
 
   return {
-    shortSummary: `${lead} ${second} ${third} ${sourceNote}`
+    shortSummary: `${lead} ${second} ${third}`
   };
 }
 
@@ -556,6 +553,23 @@ function buildFallbackTimelineEvents(topicKey, topicName, articles = []) {
       whyItMatters: cleanArticleText(article.description || article.title).slice(0, 180) || `A major live development inside ${topicName}.`
     };
   });
+}
+
+function getPinnedDetailTimelineEvents(topicKey = '') {
+  if (topicKey !== 'politics') return [];
+  return [
+    {
+      id: 'white-house-dinner-shooting',
+      label: 'WHCD shooting',
+      date: '2026-04-27',
+      dateLabel: 'Apr 27',
+      importance: 'high',
+      eventType: 'story',
+      backgroundQuery: 'White House Correspondents Dinner shooting suspect charges Trump Secret Service overview',
+      latestQuery: 'White House Correspondents Dinner shooting latest Trump Secret Service',
+      whyItMatters: 'The shooting has put presidential-event security, Secret Service protocols and the political climate around Trump back at the center of the US politics story.'
+    }
+  ];
 }
 
 function formatIsoDate(date) {
@@ -604,8 +618,7 @@ function getBroadTopicEvents(topicKey, topicName, mainQuery = '') {
       fromDate: formatIsoDate(monthStart),
       toDate: formatIsoDate(monthEnd),
       backgroundQuery: cleanedQuery,
-      latestQuery: cleanedQuery,
-      whyItMatters: `Monthly overview of the biggest shifts in ${topicName} during ${longLabel}.`
+      latestQuery: cleanedQuery
     };
   });
 }
@@ -613,7 +626,10 @@ function getBroadTopicEvents(topicKey, topicName, mainQuery = '') {
 function buildTimelineEventPayload(topicKey, topicName, mainQuery = '', articles = []) {
   return {
     overviewEvents: getBroadTopicEvents(topicKey, topicName, mainQuery),
-    detailEvents: buildFallbackTimelineEvents(topicKey, topicName, articles)
+    detailEvents: [
+      ...getPinnedDetailTimelineEvents(topicKey),
+      ...buildFallbackTimelineEvents(topicKey, topicName, articles)
+    ]
   };
 }
 
